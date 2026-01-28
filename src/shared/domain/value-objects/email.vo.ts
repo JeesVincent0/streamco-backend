@@ -1,0 +1,27 @@
+export class Email {
+  private readonly _value: string;
+
+  private constructor(email: string) {
+    this._value = email;
+  }
+
+  static create(email: string): Email {
+    if (!email) throw new Error('Email is required');
+
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (!Email.isValid(normalizedEmail))
+      throw new Error('Invallid email fromat');
+
+    return new Email(normalizedEmail);
+  }
+
+  private static isValid(email: string): boolean {
+    const EMAIL_REGEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+    return EMAIL_REGEX.test(email);
+  }
+
+  equals(other: Email): boolean {
+    return this._value === other._value;
+  }
+}
