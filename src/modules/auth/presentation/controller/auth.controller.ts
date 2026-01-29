@@ -1,15 +1,19 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { RegisterDto } from '../dto/auth-register.dot';
+import { UserRegisterDto } from '../dto/auth-register.dot';
 
 @Controller('auth')
 export class AuthController {
   @Post('register')
-  register(@Body() dto: RegisterDto) {
-    console.log('this is dto from register: ', dto);
+  registerUser(@Body() dto: UserRegisterDto) {
     return {
       success: true,
       message: `data fetched successfully from auth controller (register)`,
       data: dto,
     };
+  }
+
+  @Post('register/advertiser')
+  registerAdvertiser() {
+    return `hello, this is from advertiser`;
   }
 }

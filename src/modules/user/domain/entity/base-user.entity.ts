@@ -10,6 +10,9 @@ import { UserStatus } from '@/shared/domain/enums';
  */
 export abstract class BaseUser {
   protected constructor(
+
+
+
     protected readonly id: string,
     protected firstName: string,
     protected lastName: string,

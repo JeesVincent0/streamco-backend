@@ -7,19 +7,16 @@ import {
   IsDateString,
 } from 'class-validator';
 
-import { UserRole, UserGender } from '@/shared/domain/enums';
+import { UserGender } from '@/shared/domain/enums';
 
-export class RegisterDto {
-  @IsEnum(UserRole)
-  role: UserRole;
+export class UserRegisterDto {
+  @IsString()
+  @IsNotEmpty()
+  firstName: string;
 
   @IsString()
   @IsNotEmpty()
-  first_name: string;
-
-  @IsString()
-  @IsNotEmpty()
-  last_name: string;
+  lastName: string;
 
   @IsEmail()
   email: string;

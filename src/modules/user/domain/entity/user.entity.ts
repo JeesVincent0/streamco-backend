@@ -8,6 +8,7 @@ import {
 
 import { BaseUser } from '@/modules/user/domain/entity';
 import { Email, Password, SocialLink } from '@/shared/domain/value-objects';
+import { CreateUserProps } from './user.types';
 
 /**
  * User
@@ -30,14 +31,14 @@ export class User extends BaseUser {
     displayName: string,
     email: Email,
     password: Password,
+    gender: UserGender,
+    dateOfBirth: Date,
+    contentType: UserContentType,
     role: UserRole,
     status: UserStatus,
     createdAt: Date,
-    contentType: UserContentType,
 
     avatarUrl?: string,
-    gender?: UserGender,
-    dateOfBirth?: Date,
     bio?: string,
     location?: string,
     socialLinks: SocialLink[] = [],
@@ -197,5 +198,23 @@ export class User extends BaseUser {
     }
 
     this.touch();
+  }
+
+  static create(props: CreateUserProps): User {
+    const displayName = `${props.firstName} ${props.lastName}`;
+    return new User(
+      props.id,
+      props.firstName,
+      props.lastName,
+      displayName,
+      props.email,
+      props.password,
+      props.gender,
+      props.dob,
+      UserContentType.SAFE_MODE,
+      UserRole.USER,
+      UserStatus.ACTIVE,
+      new Date(),
+    );
   }
 }
