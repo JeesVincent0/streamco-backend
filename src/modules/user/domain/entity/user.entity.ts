@@ -7,7 +7,11 @@ import {
 } from '@/shared/domain/enums';
 
 import { BaseUser } from '@/modules/user/domain/entity';
-import { Email, Password, SocialLink } from '@/shared/domain/value-objects';
+import {
+  Email,
+  HashedPassword,
+  SocialLink,
+} from '@/shared/domain/value-objects';
 import { CreateUserProps } from './user.types';
 
 /**
@@ -17,8 +21,8 @@ import { CreateUserProps } from './user.types';
  * Encapsulates profile-related behavior.
  */
 export class User extends BaseUser {
-  private dateOfBirth?: Date;
-  private gender?: UserGender;
+  private dateOfBirth: Date;
+  private gender: UserGender;
   private bio?: string;
   private location?: string;
   private socialLinks: SocialLink[] = [];
@@ -30,7 +34,7 @@ export class User extends BaseUser {
     lastName: string,
     displayName: string,
     email: Email,
-    password: Password,
+    password: HashedPassword,
     gender: UserGender,
     dateOfBirth: Date,
     contentType: UserContentType,

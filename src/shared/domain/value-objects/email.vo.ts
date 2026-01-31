@@ -24,4 +24,8 @@ export class Email {
   equals(other: Email): boolean {
     return this._value === other._value;
   }
+
+  getValue(): string {
+    return this._value;
+  }
 }

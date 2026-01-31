@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["node", "bcrypt"],
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "resolvePackageJsonExports": true,

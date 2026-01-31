@@ -18,4 +18,8 @@ export class Password {
     const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
     return PASSWORD_REGEX.test(passwrod);
   }
+
+  getValue(): string {
+    return this._value;
+  }
 }

@@ -1,4 +1,4 @@
-import { Email, Password } from '@/shared/domain/value-objects';
+import { Email, HashedPassword } from '@/shared/domain/value-objects';
 import { UserRole } from '@/shared/domain/enums';
 import { UserStatus } from '@/shared/domain/enums';
 
@@ -10,15 +10,12 @@ import { UserStatus } from '@/shared/domain/enums';
  */
 export abstract class BaseUser {
   protected constructor(
-
-
-
     protected readonly id: string,
     protected firstName: string,
     protected lastName: string,
     protected displayName: string,
     protected email: Email,
-    protected password: Password,
+    protected password: HashedPassword,
     protected role: UserRole,
     protected status: UserStatus,
     protected readonly createdAt: Date,
@@ -119,7 +116,7 @@ export abstract class BaseUser {
     this.touch();
   }
 
-  changePassword(password: Password): void {
+  changePassword(password: HashedPassword): void {
     this.ensureNotDeleted();
     this.password = password;
     this.touch();

@@ -1,6 +1,6 @@
 export enum UserSocialMediaType {
-  INSTAGRAM = 'instagram',
-  FACEBOOK = 'facebook',
-  X = 'x',
-  YOUTUTBE = 'yoututbe',
+  INSTAGRAM = 'INSTAGRAM',
+  FACEBOOK = 'FACEBOOK',
+  X = 'X',
+  YOUTUTBE = 'YOUTUTBE',
 }

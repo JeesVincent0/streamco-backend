@@ -1,4 +1,4 @@
 export enum UserContentType {
-  SAFE_MODE = 'safe_mode',
-  UNRESTRICTED = 'unrestricted',
+  SAFE_MODE = 'SAFE_MODE',
+  UNRESTRICTED = 'UNRESTRICTED',
 }

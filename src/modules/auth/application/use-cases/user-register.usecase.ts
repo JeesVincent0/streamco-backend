@@ -1,40 +1,44 @@
-import { Email, Password } from '@/shared/domain/value-objects';
-import { RegisterInputDto } from '../dto/register-input.dto';
+import { OtpService } from '../ports/otp-service';
+import { MailService } from '../ports/mail-sevice';
+import { RegisterInputDto } from '../dto/register.dto';
 import { PasswordHasher } from '../ports/password-hasher';
-import { UserRepository } from '../ports/user-repository';
-import { User } from '@/modules/user/domain/entity';
-import { CreateUniqueId } from '../ports/create-id';
+import { Email, Password } from '@/shared/domain/value-objects';
+import { AuthCachedUserRepository } from '../ports/user-cache-repository';
+import { UserRepository } from '@/modules/user/application/ports/user-repository';
 
-export class UserRegisterUseCase {
-  private constructor(
-    private userRepo: UserRepository,
-    private passwordHasher: PasswordHasher,
-    private createUniqueId: CreateUniqueId,
+export class RegisterUseCase {
+  constructor(
+    private readonly _otpService: OtpService,
+    private readonly _mailService: MailService,
+    private readonly _userRepo: UserRepository,
+    private readonly _passwordHaser: PasswordHasher,
+    private readonly _cachedUserRepo: AuthCachedUserRepository,
   ) {}
 
   async execute(input: RegisterInputDto) {
     const email = Email.create(input.email);
     const password = Password.create(input.password);
 
-    const existingUser = await this.userRepo.findByEmail(email);
+    const cachedUser = await this._cachedUserRepo.get(email);
+    if (cachedUser) throw new Error('OTP already send, please verify');
 
-    if (existingUser) {
-      throw new Error('User already exists');
-    }
+    const exstingUser = await this._userRepo.findByEmail(email);
+    if (exstingUser) throw new Error('User already existing');
 
-    const hashedPassword = await this.passwordHasher.hash(password);
-    const id = await this.createUniqueId.create();
+    const hashedPassword = await this._passwordHaser.hash(password);
+    input.password = hashedPassword;
 
-    const user = User.create({
-      id,
-      firstName: input.firstName,
-      lastName: input.lastName,
+    const otp = this._otpService.generate();
+
+    await this._cachedUserRepo.save(
       email,
-      password: hashedPassword,
-      dob: new Date(input.dob),
-      gender: input.gender,
-    });
+      {
+        ...input,
+        otp,
+      },
+      300,
+    );
 
-    await this.userRepo.save(user);
+    await this._mailService.sendOtp(email, otp);
   }
 }

@@ -1,8 +1,8 @@
 export class HashedPassword {
-  private readonly value: string;
+  private readonly _value: string;
 
   private constructor(hash: string) {
-    this.value = hash;
+    this._value = hash;
   }
 
   static create(hash: string): HashedPassword {
@@ -14,6 +14,6 @@ export class HashedPassword {
   }
 
   getValue(): string {
-    return this.value;
+    return this._value;
   }
 }
