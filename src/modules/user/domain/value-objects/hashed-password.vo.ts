@@ -13,6 +13,10 @@ export class HashedPassword {
     return new HashedPassword(hash);
   }
 
+  static restore(hash: string): HashedPassword {
+    return new HashedPassword(hash);
+  }
+
   getValue(): string {
     return this._value;
   }

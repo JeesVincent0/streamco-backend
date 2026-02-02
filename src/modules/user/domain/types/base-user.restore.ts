@@ -1,0 +1,16 @@
+import { UserRole, UserStatus } from '../enums';
+
+export interface BaseUserRestoreProps {
+  id: string;
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  email: string;
+  password: string;
+  role: UserRole;
+  status: UserStatus;
+  createdAt: Date;
+  avatarUrl?: string;
+  updatedAt?: Date;
+  deletedAt?: Date;
+}

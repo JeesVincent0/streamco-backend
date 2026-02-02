@@ -1,3 +1,3 @@
-export interface OtpService {
-  generate(): number;
+export abstract class OtpService {
+  abstract generate(): number;
 }

@@ -1,5 +1,6 @@
 import { Document } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { UserRole, UserStatus } from '../../domain/enums';
 
 @Schema({ discriminatorKey: 'role', timestamps: true })
 export class BaseUserDocument extends Document {
@@ -21,10 +22,10 @@ export class BaseUserDocument extends Document {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: true, enum: ['ADMIN', 'USER', 'ADVERTISER'] })
-  role: string;
+  @Prop({ required: true, enum: Object.values(UserRole) })
+  role: UserRole;
 
-  @Prop({ required: true, enum: ['DELETED', 'SUSPENDED', 'ACTIVE'] })
+  @Prop({ required: true, enum: Object.values(UserStatus) })
   status: string;
 
   @Prop({ required: false })
@@ -32,6 +33,9 @@ export class BaseUserDocument extends Document {
 
   @Prop({ required: false })
   deletedAt?: Date;
+
+  @Prop({ required: true })
+  createdAt: Date;
 }
 
 export const BaseUserSchema = SchemaFactory.createForClass(BaseUserDocument);

@@ -1,4 +1,4 @@
-import { Email } from '@/shared/domain/value-objects';
+import { Email } from '@/modules/user/domain/value-objects';
 import { OtpDto } from '../dto/otp.dto';
 import { AuthCachedUserRepository } from '../ports/user-cache-repository';
 

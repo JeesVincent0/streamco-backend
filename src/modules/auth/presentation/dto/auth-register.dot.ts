@@ -7,7 +7,7 @@ import {
   IsDateString,
 } from 'class-validator';
 
-import { UserGender } from '@/shared/domain/enums';
+import { UserGender } from '@/modules/user/domain/enums';
 
 export class UserRegisterDto {
   @IsString()

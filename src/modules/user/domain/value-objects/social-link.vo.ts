@@ -1,4 +1,4 @@
-import { UserSocialMediaType } from '@/shared/domain/enums';
+import { UserSocialMediaType } from '@/modules/user/domain/enums';
 
 export class SocialLink {
   private constructor(
@@ -13,6 +13,10 @@ export class SocialLink {
     const normalizedUrl = url.trim().toLowerCase();
 
     return new SocialLink(type, normalizedUrl);
+  }
+
+  static restore(type: UserSocialMediaType, url: string): SocialLink {
+    return new SocialLink(type, url);
   }
 
   getType(): UserSocialMediaType {

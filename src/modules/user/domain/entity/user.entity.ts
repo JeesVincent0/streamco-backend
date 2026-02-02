@@ -4,15 +4,16 @@ import {
   UserRole,
   UserSocialMediaType,
   UserStatus,
-} from '@/shared/domain/enums';
+} from '@/modules/user/domain/enums';
 
-import { BaseUser } from '@/modules/user/domain/entity';
+import { BaseUser } from '@/modules/user/domain/entity/base-user.entity';
 import {
   Email,
   HashedPassword,
   SocialLink,
-} from '@/shared/domain/value-objects';
-import { CreateUserProps } from './user.types';
+} from '@/modules/user/domain/value-objects';
+import { CreateUserProps } from '../types';
+import { UserRestoreProps } from '../types';
 
 /**
  * User
@@ -219,6 +220,27 @@ export class User extends BaseUser {
       UserRole.USER,
       UserStatus.ACTIVE,
       new Date(),
+    );
+  }
+
+  static restore(props: UserRestoreProps) {
+    return new User(
+      props.id,
+      props.firstName,
+      props.lastName,
+      props.displayName,
+      Email.restore(props.email),
+      HashedPassword.restore(props.password),
+      props.gender,
+      props.dateOfBirth,
+      props.contentType,
+      props.role,
+      props.status,
+      props.createdAt,
+      props.avatarUrl,
+      props.bio,
+      props.location,
+      props.socialLinks.map((link) => SocialLink.restore(link.type, link.url)),
     );
   }
 }

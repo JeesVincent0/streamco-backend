@@ -16,6 +16,10 @@ export class Email {
     return new Email(normalizedEmail);
   }
 
+  static restore(email: string): Email {
+    return new Email(email);
+  }
+
   private static isValid(email: string): boolean {
     const EMAIL_REGEX = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
     return EMAIL_REGEX.test(email);

@@ -1,7 +1,7 @@
-import { User } from '@/modules/user/domain/entity';
-import { Email } from '@/shared/domain/value-objects';
+import { BaseUser } from '../../domain/entity';
+import { Email } from '../../domain/value-objects/email.vo';
 
-export interface UserRepository {
-  findByEmail(email: Email): Promise<User | null>;
-  save(user: User): Promise<void>;
+export abstract class UserRepository {
+  abstract findByEmail(email: Email): Promise<BaseUser | null>;
+  // abstract save(user: User): Promise<void>;
 }

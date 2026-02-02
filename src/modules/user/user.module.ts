@@ -1,9 +1,15 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from './infrastructure/schemas/user-shema';
 import { UserController } from './presentation/controller/user.controller';
-import { BaseUserSchema } from './infrastructure/schemas/base-user.schema';
-import { AdvertiserSchema } from './infrastructure/schemas/advertiser.schema';
+
+import {
+  BaseUserSchema,
+  UserSchema,
+  AdvertiserSchema,
+} from './infrastructure/schemas';
+
+import { UserRepository } from './application/ports/user-repository';
+import { MongoRepository } from './infrastructure/repositories/user-repository.impl';
 
 @Module({
   imports: [
@@ -12,6 +18,7 @@ import { AdvertiserSchema } from './infrastructure/schemas/advertiser.schema';
         name: 'User',
         useFactory: () => {
           const schema = BaseUserSchema;
+
           schema.discriminator('USER', UserSchema);
           schema.discriminator('ADVERTISER', AdvertiserSchema);
 
@@ -21,5 +28,12 @@ import { AdvertiserSchema } from './infrastructure/schemas/advertiser.schema';
     ]),
   ],
   controllers: [UserController],
+  providers: [
+    {
+      provide: UserRepository, // ✅ provider exists
+      useClass: MongoRepository, // ✅ implementation
+    },
+  ],
+  exports: [UserRepository], // ✅ export only what you provide
 })
 export class UserModule {}

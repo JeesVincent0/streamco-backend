@@ -1,6 +1,6 @@
-import { Email, HashedPassword } from '@/shared/domain/value-objects';
-import { UserRole } from '@/shared/domain/enums';
-import { UserStatus } from '@/shared/domain/enums';
+import { Email, HashedPassword } from '@/modules/user/domain/value-objects';
+import { UserRole } from '@/modules/user/domain/enums';
+import { UserStatus } from '@/modules/user/domain/enums';
 
 /**
  * BaseUser

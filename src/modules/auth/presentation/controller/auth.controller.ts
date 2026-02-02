@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { UserRegisterDto } from '../dto/auth-register.dot';
-import { FileLogger } from '@/common/logger/file-logger';
+import { FileLogger } from '@/shared/logger/file-logger';
 
 @Controller('auth')
 export class AuthController {

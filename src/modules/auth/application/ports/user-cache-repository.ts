@@ -1,6 +1,6 @@
-import { Email } from '@/shared/domain/value-objects';
+import { Email } from '@/modules/user/domain/value-objects';
 
-export interface AuthCachedUserRepository {
-  get<T>(key: Email): Promise<T | null>;
-  save(key: Email, value: any, ttlSeconds: number): Promise<void>;
+export abstract class AuthCachedUserRepository {
+  abstract get<T>(key: Email): Promise<T | null>;
+  abstract save(key: Email, value: any, ttlSeconds: number): Promise<void>;
 }

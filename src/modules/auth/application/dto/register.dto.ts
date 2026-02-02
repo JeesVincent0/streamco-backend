@@ -1,4 +1,4 @@
-import { UserGender } from '@/shared/domain/enums';
+import { UserGender } from '@/modules/user/domain/enums';
 
 export interface RegisterInputDto {
   firstName: string;

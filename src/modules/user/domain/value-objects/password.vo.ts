@@ -14,6 +14,10 @@ export class Password {
     return new Password(password);
   }
 
+  static restore(password: string): Password {
+    return new Password(password);
+  }
+
   private static isStrong(passwrod: string): boolean {
     const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
     return PASSWORD_REGEX.test(passwrod);

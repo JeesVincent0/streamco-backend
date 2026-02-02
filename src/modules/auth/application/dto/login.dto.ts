@@ -1,4 +1,4 @@
-import { UserRole } from '@/shared/domain/enums';
+import { UserRole } from '@/modules/user/domain/enums';
 
 export interface LoginInputDto {
   role: UserRole;

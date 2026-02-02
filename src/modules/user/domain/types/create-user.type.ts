@@ -1,5 +1,5 @@
-import { UserGender } from '@/shared/domain/enums';
-import { Email, HashedPassword } from '@/shared/domain/value-objects';
+import { UserGender } from '@/modules/user/domain/enums';
+import { Email, HashedPassword } from '@/modules/user/domain/value-objects';
 
 export interface CreateUserProps {
   id: string;

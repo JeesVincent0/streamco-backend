@@ -1,6 +1,6 @@
-import { Password } from '@/shared/domain/value-objects';
+import { Password } from '@/modules/user/domain/value-objects';
 
-export interface PasswordHasher {
-  hash(password: Password): Promise<string>;
-  compare(password: Password, hash: string): Promise<boolean>;
+export abstract class PasswordHasher {
+  abstract hash(password: Password): Promise<string>;
+  abstract compare(password: Password, hash: string): Promise<boolean>;
 }

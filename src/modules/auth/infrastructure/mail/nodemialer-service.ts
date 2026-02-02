@@ -1,12 +1,13 @@
-import { Email } from '@/shared/domain/value-objects';
+import { Email } from '@/modules/user/domain/value-objects';
 import { MailService } from '../../application/ports';
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 
-export class NodemailerService implements MailService {
+export class NodemailerService extends MailService {
   private readonly transporter: Transporter;
 
   constructor() {
+    super();
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

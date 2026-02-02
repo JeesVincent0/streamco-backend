@@ -2,12 +2,14 @@ import { OtpService } from '../ports/otp-service';
 import { MailService } from '../ports/mail-sevice';
 import { RegisterInputDto } from '../dto/register.dto';
 import { PasswordHasher } from '../ports/password-hasher';
-import { Email, Password } from '@/shared/domain/value-objects';
+import { Email, Password } from '@/modules/user/domain/value-objects';
 import { AuthCachedUserRepository } from '../ports/user-cache-repository';
 import { UserRepository } from '@/modules/user/application/ports/user-repository';
+import { Logger } from '@nestjs/common';
 
-export class RegisterUseCase {
+export class RegisterUserUseCase {
   constructor(
+    private logger: Logger,
     private readonly _otpService: OtpService,
     private readonly _mailService: MailService,
     private readonly _userRepo: UserRepository,
@@ -16,6 +18,7 @@ export class RegisterUseCase {
   ) {}
 
   async execute(input: RegisterInputDto) {
+    this.logger.debug('hello');
     const email = Email.create(input.email);
     const password = Password.create(input.password);
 

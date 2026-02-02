@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [MongooseModule.forRoot(process.env.MONGODB_URL!)],
+  imports: [MongooseModule.forRoot('mongodb://localhost:27017/streamco')],
   exports: [MongooseModule],
 })
 export class MongoDatabaseModule {}
