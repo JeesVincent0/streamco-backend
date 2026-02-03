@@ -46,6 +46,6 @@ export class RegisterUserUseCase {
       300,
     );
     this._logger.debug({ email, otp });
-    // await this._mailService.sendOtp(email, otp);
+    await this._mailService.sendOtp(email, otp);
   }
 }

@@ -2,8 +2,25 @@ import { User } from '../../domain/entity';
 import { UserStatus } from '../../domain/enums';
 import { UserRestoreProps } from '../../domain/types/user.restore';
 import { UserDiscriminatorUserDocument } from '../schemas';
+import { UserMongoDocument } from '../types/user-document.type';
 
 export class UserMappers {
+  // static toPersistence(user: User): Partial<BaseUserDocument> {
+  //   return {
+  //     firstName: user.getFirstName(),
+  //     lastName: user.getLastName(),
+  //     email: user.getEmail().getValue(),
+  //     password: user.getPassword().getValue(),
+  //     role: user.getRole(),
+  //     status: user.getStatus(),
+  //     avatarUrl: user.getAvatarUrl(),
+  //     deletedAt: user.getDeletedAt(),
+  //     createdAt: user.getCreatedAt(),
+  //     gender: user.getGender(),
+  //     dob: user.getDateOfBirth(),
+  //   };
+  // }
+
   static toDomain(doc: UserDiscriminatorUserDocument): User {
     const props: UserRestoreProps = {
       id: doc.id,
@@ -31,29 +48,23 @@ export class UserMappers {
     return User.restore(props);
   }
 
-  // static toPersistence(user: User): Partial<UserDocument> {
-  //   return {
-  //     id: user.getId(),
-  //     firstName: user.getFirstName(),
-  //     lastName: user.getLastName(),
-  //     displayName: user.getDisplayName(),
-  //     email: user.getEmail().getValue(),
-  //     password: user.getPassword().getValue(),
-  //     role: 'USER',
-  //     status: user.getStatus(),
-  //     avatarUrl: user.getAvatarUrl(),
-  //     createdAt: user.getCreatedAt(),
-
-  //     dateOfBirth: user.getDateOfBirth(),
-  //     gender: user.getGender(),
-  //     bio: user.getBio(),
-  //     location: user.getLocation(),
-  //     contentType: user.getContentType(),
-
-  //     socialLinks: user.getSocialLinks().map((link) => ({
-  //       type: link.getType(),
-  //       url: link.getUrl(),
-  //     })),
-  //   };
-  // }
+  static toPersistence(user: User): Partial<UserMongoDocument> {
+    return {
+      id: user.getId(),
+      firstName: user.getFirstName(),
+      lastName: user.getLastName(),
+      displayName: user.getDisplayName(),
+      email: user.getEmail().getValue(),
+      password: user.getPassword().getValue(),
+      role: user.getRole(),
+      status: user.getStatus(),
+      dateOfBirth: user.getDateOfBirth(),
+      avatarUrl: user.getAvatarUrl(),
+      createdAt: user.getCreatedAt(),
+      bio: user.getBio(),
+      location: user.getLocation(),
+      gender: user.getGender(),
+      contentType: user.getContentType(),
+    };
+  }
 }

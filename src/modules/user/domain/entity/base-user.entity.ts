@@ -48,6 +48,10 @@ export abstract class BaseUser {
     return this.email;
   }
 
+  getPassword(): HashedPassword {
+    return this.password;
+  }
+
   getRole(): UserRole {
     return this.role;
   }

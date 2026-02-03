@@ -21,4 +21,8 @@ export class RedisAuthCachedUserRepository extends AuthCachedUserRepository {
   async save(key: Email, value: any, ttlSeconds: number): Promise<void> {
     await this.redisService.set(this.buildKey(key), value, ttlSeconds);
   }
+
+  async del(key: Email): Promise<void> {
+    await this.redisService.del(this.buildKey(key));
+  }
 }

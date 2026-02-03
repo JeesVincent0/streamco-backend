@@ -22,11 +22,14 @@ export const authProviders = [
     provide: OtpVerificationUseCase,
     useFactory: (
       authCachedUserRepository: AuthCachedUserRepository,
-      logger: FileLogger,
+      userRepository: UserRepository,
     ) => {
-      return new OtpVerificationUseCase(authCachedUserRepository, logger);
+      return new OtpVerificationUseCase(
+        authCachedUserRepository,
+        userRepository,
+      );
     },
-    inject: [AuthCachedUserRepository, FileLogger],
+    inject: [AuthCachedUserRepository, UserRepository],
   },
   {
     provide: RegisterUserUseCase,

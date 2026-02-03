@@ -3,5 +3,5 @@ import { Email } from '../../domain/value-objects/email.vo';
 
 export abstract class UserRepository {
   abstract findByEmail(email: Email): Promise<BaseUser | null>;
-  // abstract save(user: User): Promise<void>;
+  abstract save(user): Promise<void>;
 }
