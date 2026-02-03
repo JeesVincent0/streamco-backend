@@ -5,18 +5,17 @@ import { PasswordHasher } from '../ports/password-hasher';
 import { Email, Password } from '@/modules/user/domain/value-objects';
 import { AuthCachedUserRepository } from '../ports/user-cache-repository';
 import { UserRepository } from '@/modules/user/application/ports/user-repository';
-import { Injectable } from '@nestjs/common';
-// import { FileLogger } from '@/shared/logger/file-logger';
+import { FileLogger } from '@/shared/logger/file-logger';
+import { BadRequestError } from '@/shared/errors';
 
-@Injectable()
 export class RegisterUserUseCase {
   constructor(
-    // private logger: FileLogger,
-    private readonly _otpService: OtpService,
-    private readonly _mailService: MailService,
     private readonly _userRepo: UserRepository,
     private readonly _passwordHaser: PasswordHasher,
+    private readonly _otpService: OtpService,
+    private readonly _mailService: MailService,
     private readonly _cachedUserRepo: AuthCachedUserRepository,
+    private readonly _logger: FileLogger,
   ) {}
 
   async execute(input: RegisterInputDto) {
@@ -24,10 +23,14 @@ export class RegisterUserUseCase {
     const password = Password.create(input.password);
 
     const cachedUser = await this._cachedUserRepo.get(email);
-    if (cachedUser) throw new Error('OTP already send, please verify');
+    if (cachedUser) {
+      throw new BadRequestError('OTP already send, please verify');
+    }
 
     const exstingUser = await this._userRepo.findByEmail(email);
-    if (exstingUser) throw new Error('User already existing');
+    if (exstingUser) {
+      throw new BadRequestError('User already existing');
+    }
 
     const hashedPassword = await this._passwordHaser.hash(password);
     input.password = hashedPassword;
@@ -42,8 +45,7 @@ export class RegisterUserUseCase {
       },
       300,
     );
-
-    await this._mailService.sendOtp(email, otp);
-    console.log('final');
+    this._logger.debug({ email, otp });
+    // await this._mailService.sendOtp(email, otp);
   }
 }

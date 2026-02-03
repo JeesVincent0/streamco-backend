@@ -1,3 +1,5 @@
+import { BadRequestError } from '@/shared/errors';
+
 export class Email {
   private readonly _value: string;
 
@@ -6,12 +8,12 @@ export class Email {
   }
 
   static create(email: string): Email {
-    if (!email) throw new Error('Email is required');
+    if (!email) throw new BadRequestError('Email is required');
 
     const normalizedEmail = email.trim().toLowerCase();
 
     if (!Email.isValid(normalizedEmail))
-      throw new Error('Invallid email fromat');
+      throw new BadRequestError('Invallid email fromat');
 
     return new Email(normalizedEmail);
   }

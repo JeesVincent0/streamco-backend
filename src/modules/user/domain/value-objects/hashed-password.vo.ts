@@ -1,3 +1,5 @@
+import { BadRequestError } from '@/shared/errors';
+
 export class HashedPassword {
   private readonly _value: string;
 
@@ -7,7 +9,7 @@ export class HashedPassword {
 
   static create(hash: string): HashedPassword {
     if (!hash) {
-      throw new Error('Hashed password is required');
+      throw new BadRequestError('Hashed password is required');
     }
 
     return new HashedPassword(hash);

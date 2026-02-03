@@ -1,6 +1,7 @@
 import { Email, HashedPassword } from '@/modules/user/domain/value-objects';
 import { UserRole } from '@/modules/user/domain/enums';
 import { UserStatus } from '@/modules/user/domain/enums';
+import { BadRequestError } from '@/shared/errors';
 
 /**
  * BaseUser
@@ -83,7 +84,7 @@ export abstract class BaseUser {
 
   protected ensureNotDeleted(): void {
     if (this.deletedAt) {
-      throw new Error('User is deleted and cannot be modified');
+      throw new BadRequestError('User is deleted and cannot be modified');
     }
   }
 

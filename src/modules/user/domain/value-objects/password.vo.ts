@@ -1,3 +1,5 @@
+import { BadRequestError } from '@/shared/errors';
+
 export class Password {
   private readonly _value: string;
 
@@ -6,10 +8,10 @@ export class Password {
   }
 
   static create(password: string): Password {
-    if (!password) throw new Error('Password is required');
+    if (!password) throw new BadRequestError('Password is required');
 
     if (!Password.isStrong(password))
-      throw new Error('Password is not strong enough');
+      throw new BadRequestError('Password is not strong enough');
 
     return new Password(password);
   }

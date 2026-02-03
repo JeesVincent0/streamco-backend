@@ -14,6 +14,7 @@ import {
 } from '@/modules/user/domain/value-objects';
 import { CreateUserProps } from '../types';
 import { UserRestoreProps } from '../types';
+import { BadRequestError } from '@/shared/errors';
 
 /**
  * User
@@ -118,11 +119,11 @@ export class User extends BaseUser {
     this.ensureNotDeleted();
 
     if (dateOfBirth > new Date()) {
-      throw new Error('Date of birth cannot be in the future');
+      throw new BadRequestError('Date of birth cannot be in the future');
     }
 
     if (!this.isAtLeast12YearsOld(dateOfBirth)) {
-      throw new Error('User must be at least 12 years old');
+      throw new BadRequestError('User must be at least 12 years old');
     }
 
     this.dateOfBirth = new Date(dateOfBirth);
@@ -139,7 +140,7 @@ export class User extends BaseUser {
     this.ensureNotDeleted();
 
     if (bio.length > 500) {
-      throw new Error('Bio must not exceed 500 characters');
+      throw new BadRequestError('Bio must not exceed 500 characters');
     }
 
     this.bio = bio;
@@ -150,7 +151,7 @@ export class User extends BaseUser {
     this.ensureNotDeleted();
 
     if (location.length > 100) {
-      throw new Error('Location must not exceed 100 characters');
+      throw new BadRequestError('Location must not exceed 100 characters');
     }
 
     this.location = location;
@@ -171,7 +172,7 @@ export class User extends BaseUser {
     const exists = this.socialLinks.some((l) => l.getType() === link.getType());
 
     if (exists) {
-      throw new Error(`${link.getType()} already exists`);
+      throw new BadRequestError(`${link.getType()} already exists`);
     }
 
     this.socialLinks.push(link);
@@ -184,7 +185,7 @@ export class User extends BaseUser {
     const index = this.socialLinks.findIndex((l) => l.getType() === type);
 
     if (index === -1) {
-      throw new Error(`Social link ${type} not found`);
+      throw new BadRequestError(`Social link ${type} not found`);
     }
 
     this.socialLinks[index] = SocialLink.create(type, url);
@@ -199,7 +200,7 @@ export class User extends BaseUser {
     this.socialLinks = this.socialLinks.filter((l) => l.getType() !== type);
 
     if (this.socialLinks.length === initialLength) {
-      throw new Error(`Social link ${type} not found`);
+      throw new BadRequestError(`Social link ${type} not found`);
     }
 
     this.touch();

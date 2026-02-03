@@ -1,4 +1,5 @@
 import { UserSocialMediaType } from '@/modules/user/domain/enums';
+import { BadRequestError } from '@/shared/errors';
 
 export class SocialLink {
   private constructor(
@@ -8,7 +9,7 @@ export class SocialLink {
 
   static create(type: UserSocialMediaType, url: string): SocialLink {
     if (!url.startsWith('https')) {
-      throw new Error(`Invalid url for ${type}`);
+      throw new BadRequestError(`Invalid url for ${type}`);
     }
     const normalizedUrl = url.trim().toLowerCase();
 
