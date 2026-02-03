@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Global, Injectable } from '@nestjs/common';
 import { RedisService } from '../redis.service';
 import { AuthCachedUserRepository } from '@/modules/auth/application/ports';
 import { Email } from '@/modules/user/domain/value-objects';
 
+@Global()
 @Injectable()
 export class RedisAuthCachedUserRepository extends AuthCachedUserRepository {
   constructor(private readonly redisService: RedisService) {

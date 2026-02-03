@@ -5,11 +5,13 @@ import { PasswordHasher } from '../ports/password-hasher';
 import { Email, Password } from '@/modules/user/domain/value-objects';
 import { AuthCachedUserRepository } from '../ports/user-cache-repository';
 import { UserRepository } from '@/modules/user/application/ports/user-repository';
-import { Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+// import { FileLogger } from '@/shared/logger/file-logger';
 
+@Injectable()
 export class RegisterUserUseCase {
   constructor(
-    private logger: Logger,
+    // private logger: FileLogger,
     private readonly _otpService: OtpService,
     private readonly _mailService: MailService,
     private readonly _userRepo: UserRepository,
@@ -18,7 +20,6 @@ export class RegisterUserUseCase {
   ) {}
 
   async execute(input: RegisterInputDto) {
-    this.logger.debug('hello');
     const email = Email.create(input.email);
     const password = Password.create(input.password);
 
@@ -43,5 +44,6 @@ export class RegisterUserUseCase {
     );
 
     await this._mailService.sendOtp(email, otp);
+    console.log('final');
   }
 }

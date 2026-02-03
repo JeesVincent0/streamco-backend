@@ -1,10 +1,10 @@
 import { User } from '../../domain/entity';
-import { UserContentType, UserStatus } from '../../domain/enums';
+import { UserStatus } from '../../domain/enums';
 import { UserRestoreProps } from '../../domain/types/user.restore';
-import { UserDocument } from '../schemas';
+import { UserDiscriminatorUserDocument } from '../schemas';
 
 export class UserMappers {
-  static toDomain(doc: UserDocument): User {
+  static toDomain(doc: UserDiscriminatorUserDocument): User {
     const props: UserRestoreProps = {
       id: doc.id,
       firstName: doc.firstName,
@@ -14,7 +14,7 @@ export class UserMappers {
       password: doc.password,
       gender: doc.gender,
       dateOfBirth: doc.dateOfBirth,
-      contentType: doc.contentType as UserContentType,
+      contentType: doc.contentType,
       role: doc.role,
       status: doc.status as UserStatus,
       createdAt: doc.createdAt,

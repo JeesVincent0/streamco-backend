@@ -25,4 +25,9 @@ export class RedisService implements OnModuleDestroy {
   async onModuleDestroy() {
     await this.redis.quit();
   }
+
+  async ping(): Promise<boolean> {
+    const result = await this.redis.ping();
+    return result === 'PONG';
+  }
 }

@@ -1,6 +1,12 @@
-import { Document } from 'mongoose';
+import { Document, HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { UserRole, UserStatus } from '../../domain/enums';
+import {
+  UserContentType,
+  UserGender,
+  UserRole,
+  UserStatus,
+} from '../../domain/enums';
+import { SocialLink } from '../../domain/value-objects';
 
 @Schema({ discriminatorKey: 'role', timestamps: true })
 export class BaseUserDocument extends Document {
@@ -39,3 +45,13 @@ export class BaseUserDocument extends Document {
 }
 
 export const BaseUserSchema = SchemaFactory.createForClass(BaseUserDocument);
+
+export type UserDiscriminatorUserDocument =
+  HydratedDocument<BaseUserDocument> & {
+    dateOfBirth: Date;
+    gender: UserGender;
+    contentType: UserContentType;
+    bio?: string;
+    location?: string;
+    socialLinks?: SocialLink[];
+  };

@@ -4,6 +4,7 @@ import { LoggerModule } from '@/shared/logger/logger.module';
 import { UserModule } from '@/modules/user/user.module';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { MongoDatabaseModule } from '@/shared/infrastructure/database/mongo/mongo.module';
+import { HealthController } from './shared/health/health.controller';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { MongoDatabaseModule } from '@/shared/infrastructure/database/mongo/mong
       isGlobal: true,
     }),
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [],
 })
 export class AppModule {}

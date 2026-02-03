@@ -26,7 +26,7 @@ export class FileLogger extends Logger {
     this.writeToFile(`[ERROR] ${new Date().toISOString()} - ${data}`);
   }
 
-  debug(data: any) {
+  debug(data: string) {
     super.debug(data);
     this.writeToFile(`[DEBUG] ${new Date().toISOString()} - ${data}`);
   }
