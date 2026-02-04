@@ -1,11 +1,11 @@
 import { Email, HashedPassword } from '@/modules/user/domain/value-objects';
-import { OtpDto } from '../dto';
 import { AuthCachedUserRepository } from '../ports';
 import { CachedUser } from '../types/user-cache.types';
 import { BadRequestError } from '@/shared/errors';
 import { UserRepository } from '@/modules/user/application/ports';
 import { User } from '@/modules/user/domain/entity';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers/user-gender.mapper';
+import { OtpInput } from '../inputs';
 
 /*
   OTP verification
@@ -16,7 +16,7 @@ export class OtpVerificationUseCase {
     private readonly _userRepo: UserRepository,
   ) {}
 
-  async execute(input: OtpDto) {
+  async execute(input: OtpInput) {
     const email = Email.create(input.email);
 
     // Verifying OTP from cache DB.

@@ -1,6 +1,6 @@
 import { UserGender } from '@/modules/user/domain/enums';
 
-export interface RegisterInputDto {
+export interface RegisterInput {
   firstName: string;
   lastName: string;
   email: string;
