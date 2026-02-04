@@ -1,15 +1,16 @@
-import { BaseUser, User } from '../../domain/entity';
+import { Advertiser, BaseUser, User } from '../../domain/entity';
 import { UserRole } from '../../domain/enums';
 import { BaseUserDocument, UserDiscriminatorUserDocument } from '../schemas';
+import { AdvertiserMapper } from './advertiser.mappers';
 import { UserMappers } from './user.mapper';
 
 export class BaseUserMapper {
-  static toPersistence(user: User) {
+  static toPersistence(user) {
     switch (user.getRole()) {
       case UserRole.USER:
         return UserMappers.toPersistence(user);
       default:
-        return UserMappers.toPersistence(user);
+        return AdvertiserMapper.toPersistence(user);
     }
   }
 

@@ -1,5 +1,10 @@
-import { Schema } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-export const AdvertiserSchema = new Schema({
-  comapanyName: { type: String, required: true },
-});
+@Schema()
+export class AdvertiserDocument {
+  @Prop({ required: true })
+  companyName: string;
+}
+
+export const AdvertiserSchema =
+  SchemaFactory.createForClass(AdvertiserDocument);

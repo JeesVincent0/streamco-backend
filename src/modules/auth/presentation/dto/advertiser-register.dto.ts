@@ -10,11 +10,9 @@ export class AdvertiserRegisterDto {
   lastName: string;
 
   @IsEmail()
-  @IsNotEmpty()
   email: string;
 
   @MinLength(8)
-  @IsNotEmpty()
   password: string;
 
   @IsString()

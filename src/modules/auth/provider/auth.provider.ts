@@ -13,7 +13,7 @@ import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/rep
 import { UserRepository } from '@/modules/user/application/ports';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { OtpVerificationUseCase } from '../application/use-cases/otp-verification.usecase';
-import { AdvertiserRegisterUseCase } from '../application/use-cases';
+// import { AdvertiserRegisterUseCase } from '../application/use-cases';
 
 export const authProviders = [
   /**
@@ -36,13 +36,13 @@ export const authProviders = [
   },
 
   // Use case factory for - Admin registration
-  {
-    provide: AdvertiserRegisterUseCase,
-    useFactory: (logger: FileLogger) => {
-      return new AdvertiserRegisterUseCase(logger);
-    },
-    inject: [FileLogger],
-  },
+  // {
+  //   provide: AdvertiserRegisterUseCase,
+  //   useFactory: (logger: FileLogger) => {
+  //     return new AdvertiserRegisterUseCase(logger);
+  //   },
+  //   inject: [FileLogger],
+  // },
 
   // Use case factory for - Normal User registration
   {

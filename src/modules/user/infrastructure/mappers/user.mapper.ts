@@ -5,22 +5,6 @@ import { UserDiscriminatorUserDocument } from '../schemas';
 import { UserMongoDocument } from '../types/user-document.type';
 
 export class UserMappers {
-  // static toPersistence(user: User): Partial<BaseUserDocument> {
-  //   return {
-  //     firstName: user.getFirstName(),
-  //     lastName: user.getLastName(),
-  //     email: user.getEmail().getValue(),
-  //     password: user.getPassword().getValue(),
-  //     role: user.getRole(),
-  //     status: user.getStatus(),
-  //     avatarUrl: user.getAvatarUrl(),
-  //     deletedAt: user.getDeletedAt(),
-  //     createdAt: user.getCreatedAt(),
-  //     gender: user.getGender(),
-  //     dob: user.getDateOfBirth(),
-  //   };
-  // }
-
   static toDomain(doc: UserDiscriminatorUserDocument): User {
     const props: UserRestoreProps = {
       id: doc.id,

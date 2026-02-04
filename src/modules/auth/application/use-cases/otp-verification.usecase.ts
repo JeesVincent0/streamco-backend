@@ -3,9 +3,10 @@ import { AuthCachedUserRepository } from '../ports';
 import { CachedUser } from '../types/user-cache.types';
 import { BadRequestError } from '@/shared/errors';
 import { UserRepository } from '@/modules/user/application/ports';
-import { User } from '@/modules/user/domain/entity';
+import { Advertiser, User } from '@/modules/user/domain/entity';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers/user-gender.mapper';
 import { OtpInput } from '../inputs';
+import { UserRole } from '@/modules/user/domain/enums';
 
 /*
   OTP verification
@@ -25,28 +26,38 @@ export class OtpVerificationUseCase {
       throw new BadRequestError('OTP expired or invalid');
     }
 
-    // Creating new User Object
-    const user = User.create({
-      firstName: cachedUser.firstName,
-      lastName: cachedUser.lastName,
-      email: Email.create(cachedUser.email),
-      password: HashedPassword.create(cachedUser.password),
-      gender: GenderMapper.mapGender(cachedUser.gender),
-      dob: cachedUser.dob,
-    });
+    let user;
+
+    if (cachedUser.role === UserRole.USER) {
+      user = User.create({
+        firstName: cachedUser.firstName,
+        lastName: cachedUser.lastName,
+        email: Email.create(cachedUser.email),
+        password: HashedPassword.create(cachedUser.password),
+        gender: GenderMapper.mapGender(cachedUser.gender),
+        dob: cachedUser.dob,
+      });
+    } else {
+      user = Advertiser.create({
+        firstName: cachedUser.firstName,
+        lastName: cachedUser.lastName,
+        email: Email.create(cachedUser.email),
+        password: HashedPassword.create(cachedUser.password),
+        companyName: cachedUser.companyName,
+        role: UserRole.ADVERTISER,
+      });
+    }
 
     await this._userRepo.save(user);
 
     // Delete user from cached DB, after registration.
     await this._cachedUserRepo.del(email);
-    const sample = await this._cachedUserRepo.get<CachedUser>(email);
-    console.log(sample);
 
     return {
       success: true,
       message: 'Account created successfully',
       data: {
-        email: user.getEmail(),
+        email: email.getValue(),
       },
     };
   }
