@@ -29,6 +29,7 @@ export class Advertiser extends BaseUser {
       password,
       role,
       status,
+      false,
       createdAt,
       avatarUrl,
     );

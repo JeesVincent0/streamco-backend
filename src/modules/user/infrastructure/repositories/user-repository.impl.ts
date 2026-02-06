@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../application/ports';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -9,8 +8,8 @@ import { BaseUserMapper } from '../mappers/base-user.mapper';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { UserRole } from '../../domain/enums';
 import { AdvertiserMapper, UserMappers } from '../mappers';
+import e from 'express';
 
-@Injectable()
 export class MongoRepository extends UserRepository {
   constructor(
     @InjectModel('User')
@@ -32,12 +31,30 @@ export class MongoRepository extends UserRepository {
   }
 
   async save(user: User | Advertiser): Promise<void> {
+    let persistence: Record<string, unknown>;
+
     if (user.getRole() === UserRole.USER) {
-      const persistence = UserMappers.toPersistence(user as User);
-      await this._userModel.create(persistence);
+      persistence = UserMappers.toPersistence(user as User);
     } else if (user.getRole() === UserRole.ADVERTISER) {
-      const persistence = AdvertiserMapper.toPersistence(user as Advertiser);
-      await this._userModel.create(persistence);
+      persistence = AdvertiserMapper.toPersistence(user as Advertiser);
+    } else {
+      throw new Error('Unsupported user role');
+    }
+
+    const email = String(persistence.email);
+  
+      await this._userModel.updateOne(
+        {
+          email,
+          deletedAt: null,
+        },
+        {
+          $set: persistence,
+        },
+        {
+          upsert: true,
+        },
+      );
     }
   }
 }

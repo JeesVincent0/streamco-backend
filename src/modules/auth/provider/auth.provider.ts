@@ -35,15 +35,6 @@ export const authProviders = [
     inject: [AuthCachedUserRepository, UserRepository],
   },
 
-  // Use case factory for - Admin registration
-  // {
-  //   provide: AdvertiserRegisterUseCase,
-  //   useFactory: (logger: FileLogger) => {
-  //     return new AdvertiserRegisterUseCase(logger);
-  //   },
-  //   inject: [FileLogger],
-  // },
-
   // Use case factory for - Normal User registration
   {
     provide: RegisterUserUseCase,

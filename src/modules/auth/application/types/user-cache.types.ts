@@ -12,7 +12,7 @@ export type CachedUser =
       dob: Date;
     }
   | {
-      role: UserRole.ADMIN;
+      role: UserRole.ADVERTISER;
       firstName: string;
       lastName: string;
       email: string;

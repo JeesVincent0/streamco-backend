@@ -19,6 +19,7 @@ export abstract class BaseUser {
     protected password: HashedPassword,
     protected role: UserRole,
     protected status: UserStatus,
+    protected isVerified: boolean,
     protected readonly createdAt: Date,
 
     protected avatarUrl?: string,
@@ -27,6 +28,10 @@ export abstract class BaseUser {
   ) {}
 
   /* ==================== Getters ==================== */
+
+  getIsVerified(): boolean {
+    return this.isVerified;
+  }
 
   getId(): string {
     return this.id;
@@ -93,6 +98,12 @@ export abstract class BaseUser {
   }
 
   /* ==================== Mutations ==================== */
+
+  verify(): void {
+    this.ensureNotDeleted();
+    this.isVerified = true;
+    this.touch();
+  }
 
   changeFirstName(name: string): void {
     this.ensureNotDeleted();

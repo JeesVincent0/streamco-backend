@@ -28,11 +28,14 @@ export class BaseUserDocument extends Document {
   @Prop({ required: true })
   password: string;
 
-  @Prop({ required: true, enum: Object.values(UserRole) })
+  @Prop({ required: true, enum: Object.values(UserRole), type: String })
   role: UserRole;
 
   @Prop({ required: true, enum: Object.values(UserStatus) })
   status: string;
+
+  @Prop({ required: true, type: Boolean })
+  isVerified: boolean;
 
   @Prop({ required: false })
   avatarUrl?: string;

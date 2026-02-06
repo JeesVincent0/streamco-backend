@@ -42,6 +42,7 @@ export class User extends BaseUser {
     dateOfBirth: Date,
     contentType: UserContentType,
     role: UserRole,
+    isVerified: boolean,
     status: UserStatus,
     createdAt: Date,
 
@@ -59,6 +60,7 @@ export class User extends BaseUser {
       password,
       role,
       status,
+      isVerified,
       createdAt,
       avatarUrl,
     );
@@ -222,6 +224,7 @@ export class User extends BaseUser {
       props.dob,
       UserContentType.SAFE_MODE,
       UserRole.USER,
+      false,
       UserStatus.ACTIVE,
       new Date(),
     );
@@ -239,6 +242,7 @@ export class User extends BaseUser {
       props.dateOfBirth,
       props.contentType,
       props.role,
+      props.isVerified,
       props.status,
       props.createdAt,
       props.avatarUrl,

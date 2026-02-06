@@ -24,6 +24,9 @@ export class UserRegisterDto {
   @MinLength(8)
   password: string;
 
+  @IsString()
+  confirmPassword: string;
+
   @IsDateString()
   dob: string;
 

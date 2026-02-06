@@ -12,7 +12,7 @@ import { AdvertiserRegisterDto, UserRegisterDto } from '../dto';
 import { otpVerificationDto } from '../dto';
 import { UserRole } from '@/modules/user/domain/enums';
 import { FileLogger } from '@/shared/logger/file-logger';
-import { RegisterInput } from '../../application/inputs';
+import { AdvertiserRegisterInput } from '../../application/inputs';
 
 @Controller('auth')
 export class AuthController {
@@ -32,7 +32,7 @@ export class AuthController {
       email: dto.email,
       password: dto.password,
       gender: dto.gender,
-      dob: dto.dob,
+      dob: new Date(dto.dob),
       role: UserRole.USER,
     });
   }
@@ -42,7 +42,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   otpVerification(@Body() dto: otpVerificationDto) {
     return this._otpVerificationUseCase.execute({
-      email: dto.email,
+      id: dto.id,
       otp: dto.otp,
     });
   }
@@ -52,7 +52,7 @@ export class AuthController {
   @HttpCode(HttpStatus.CREATED)
   registerAdvertiser(@Body() dto: AdvertiserRegisterDto) {
     return this._registerUseCase.execute({
-      ...(dto as RegisterInput),
+      ...(dto as AdvertiserRegisterInput),
       role: UserRole.ADVERTISER,
     });
   }

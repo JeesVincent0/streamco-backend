@@ -1,4 +1,4 @@
 export interface OtpInput {
-  email: string;
+  id: string;
   otp: number;
 }
