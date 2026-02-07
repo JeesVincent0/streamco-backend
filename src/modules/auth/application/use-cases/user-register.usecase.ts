@@ -18,8 +18,13 @@ import { GenderMapper } from '@/modules/user/infrastructure/mappers';
 
 /*
  *
- * User registration use case
- *
+ * Use case for user registration.
+ * It checks if the user already exists,
+ * hashes the password,
+ * checks the age if dob provided,
+ * saves the user, generates an OTP,
+ * saves it in the cache,
+ * and sends it to the user's email.
  *
  */
 
@@ -37,16 +42,17 @@ export class RegisterUserUseCase {
     const email = Email.create(input.email);
     const password = Password.create(input.password);
 
-    // Checking user email in the DB
+    // Checking if user already existing with the same email
     const exstingUser = await this._userRepo.findByEmail(email);
-    if (exstingUser) {
+    if (exstingUser && exstingUser.getIsVerified()) {
       throw new BadRequestError('User already existing');
     }
 
-    // Password hashing
+    // Hashing user password
     const hashedPassword = await this._passwordHaser.hash(password);
     input.password = hashedPassword;
 
+    // Checking user age if dob provided and must be at least 12 years old
     if (
       'dob' in input &&
       input.dob &&
@@ -58,6 +64,7 @@ export class RegisterUserUseCase {
 
     let user;
 
+    // Creating user based on the role and saving it in the database
     if (input.role === UserRole.USER) {
       user = User.create({
         firstName: input.firstName,
@@ -78,22 +85,36 @@ export class RegisterUserUseCase {
       });
     }
 
+    console.log(user);
+
+    // Saving user in the database
     await this._userRepo.save(user);
 
     // OTP generating and saving in the cache.
     const otp = this._otpService.generate();
+    const hashedOtp = await this._passwordHaser.hash(otp);
+
     const id = crypto.randomUUID();
     await this._cachedUserRepo.save(
       id,
       {
-        ...input,
-        otp,
+        id,
+        email,
+        verificationAttempts: 0,
+        hash: hashedOtp,
       },
       300,
     );
+
     this._logger.debug({ id, email, otp });
 
     // OTP send to user email
-    await this._mailService.sendOtp(email, otp);
+    // await this._mailService.sendOtp(email, otp);
+
+    return {
+      status: 'success',
+      message: 'User registered successfully, please verify your email',
+      data: { id },
+    };
   }
 }

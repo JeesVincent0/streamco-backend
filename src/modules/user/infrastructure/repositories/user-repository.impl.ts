@@ -8,7 +8,7 @@ import { BaseUserMapper } from '../mappers/base-user.mapper';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { UserRole } from '../../domain/enums';
 import { AdvertiserMapper, UserMappers } from '../mappers';
-import e from 'express';
+import { BadRequestError } from '@/shared/errors';
 
 export class MongoRepository extends UserRepository {
   constructor(
@@ -38,11 +38,18 @@ export class MongoRepository extends UserRepository {
     } else if (user.getRole() === UserRole.ADVERTISER) {
       persistence = AdvertiserMapper.toPersistence(user as Advertiser);
     } else {
-      throw new Error('Unsupported user role');
+      throw new BadRequestError('Unsupported user role');
     }
 
     const email = String(persistence.email);
-  
+    const existingUser = await this._userModel.findOne({
+      email,
+      deletedAt: null,
+    });
+
+    if (!existingUser) {
+      await this._userModel.create(persistence);
+    } else {
       await this._userModel.updateOne(
         {
           email,

@@ -30,10 +30,10 @@ import { MongoRepository } from './infrastructure/repositories/user-repository.i
   controllers: [UserController],
   providers: [
     {
-      provide: UserRepository, // ✅ provider exists
-      useClass: MongoRepository, // ✅ implementation
+      provide: UserRepository,
+      useClass: MongoRepository,
     },
   ],
-  exports: [UserRepository], // ✅ export only what you provide
+  exports: [UserRepository],
 })
 export class UserModule {}

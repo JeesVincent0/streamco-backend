@@ -39,7 +39,7 @@ export class AuthController {
 
   // OTP verification
   @Post('otp-verification')
-  @HttpCode(HttpStatus.CREATED)
+  @HttpCode(HttpStatus.OK)
   otpVerification(@Body() dto: otpVerificationDto) {
     return this._otpVerificationUseCase.execute({
       id: dto.id,
@@ -55,5 +55,12 @@ export class AuthController {
       ...(dto as AdvertiserRegisterInput),
       role: UserRole.ADVERTISER,
     });
+  }
+
+  // Logou
+  @Post('/logout')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  logoutUser() {
+    return 'logout';
   }
 }
