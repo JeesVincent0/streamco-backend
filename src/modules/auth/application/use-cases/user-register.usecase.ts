@@ -16,6 +16,7 @@ import { User } from '@/modules/user/domain/entity/user.entity';
 import { UserRole } from '@/modules/user/domain/enums';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers';
 import { IdGenerator } from '../ports';
+import { OtpPolicy } from '../../domain/service/otp-policy';
 
 /*
  *
@@ -91,23 +92,18 @@ export class RegisterUserUseCase {
     // Saving user in the database
     await this._userRepo.save(user);
 
-    // OTP generating and saving in the cache.
+    // OTP generating and OTP hashing
     const otp = this._otpService.generate();
     const hashedOtp = await this._passwordHaser.hash(otp);
 
+    // Credentials save in the cache DB
     const id = this._randomIdGenerator.generate();
-    await this._cachedUserRepo.save(
+    const otpState = OtpPolicy.createInitialState(
       id,
-      {
-        id,
-        email: email.getValue(),
-        verificationAttempts: 3,
-        OtpGenerateCount: 4,
-        resendTime: new Date(Date.now() + 1 * 60 * 1000),
-        hashedOtp,
-      },
-      300,
+      email.getValue(),
+      hashedOtp,
     );
+    await this._cachedUserRepo.save(id, otpState, 300);
 
     this._logger.debug({
       message: 'User data saved in the cache',

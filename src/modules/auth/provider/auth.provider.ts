@@ -15,7 +15,6 @@ import { FileLogger } from '@/shared/logger/file-logger';
 import { OtpVerificationUseCase } from '../application/use-cases/otp-verification.usecase';
 import { IdGenerator } from '../application/ports';
 import { CryptoIdGenerator } from '../infrastructure/otp/id-service';
-// import { AdvertiserRegisterUseCase } from '../application/use-cases';
 
 export const authProviders = [
   /**
