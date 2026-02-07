@@ -26,4 +26,15 @@ export class OtpPolicy {
       resendAvalableAt: new Date(Date.now() + this._RESEND_COUNTDOWN_MS),
     };
   }
+
+  static consumeAttempt(state: OtpSate): OtpSate {
+    return {
+      ...state,
+      verificationCount: state.verificationCount - 1,
+    };
+  }
+
+  static isExhausted(state: OtpSate): boolean {
+    return state.verificationCount <= 0;
+  }
 }
