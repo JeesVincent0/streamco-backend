@@ -9,8 +9,8 @@ export interface OtpSate {
 
 export class OtpPolicy {
   private static readonly _MAX_VERIFICATION_COUNT = 6;
-  private static readonly _MAX_OTP_GENERATE_COUNT = 5;
-  private static readonly _RESEND_COUNTDOWN_MS = 60_000;
+  private static readonly _MAX_OTP_GENERATE_COUNT = 3;
+  private static readonly _RESEND_COUNTDOWN_MS = 30_000;
 
   static createInitialState(
     id: string,
@@ -32,6 +32,19 @@ export class OtpPolicy {
       ...state,
       verificationCount: state.verificationCount - 1,
     };
+  }
+
+  static createStateAFterResendOtp(state: OtpSate, hashedOtp: string): OtpSate {
+    return {
+      ...state,
+      otpGenerateCount: state.otpGenerateCount - 1,
+      hashedOtp,
+      resendAvalableAt: new Date(Date.now() + this._RESEND_COUNTDOWN_MS),
+    };
+  }
+
+  static canResendOtp(state: OtpSate): boolean {
+    return state.otpGenerateCount <= 0;
   }
 
   static isExhausted(state: OtpSate): boolean {

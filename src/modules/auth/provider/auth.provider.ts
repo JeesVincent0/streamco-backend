@@ -15,7 +15,7 @@ import { FileLogger } from '@/shared/logger/file-logger';
 import { OtpVerificationUseCase } from '../application/use-cases/otp-verification.usecase';
 import { IdGenerator } from '../application/ports';
 import { CryptoIdGenerator } from '../infrastructure/otp/id-service';
-import { GetOtpTimerUseCase } from '../application/use-cases';
+import { GetOtpTimerUseCase, ResendOtpUseCase } from '../application/use-cases';
 
 export const authProviders = [
   /**
@@ -23,6 +23,23 @@ export const authProviders = [
    */
 
   // Use Case factory for - OTP verification
+  {
+    provide: ResendOtpUseCase,
+    useFactory: (
+      cachedRepository: AuthCachedUserRepository,
+      otpService: OtpService,
+      otpHasher: PasswordHasher,
+      mailService: MailService,
+    ) => {
+      return new ResendOtpUseCase(
+        cachedRepository,
+        otpService,
+        otpHasher,
+        mailService,
+      );
+    },
+    inject: [AuthCachedUserRepository, OtpService, PasswordHasher, MailService],
+  },
   {
     provide: GetOtpTimerUseCase,
     useFactory: (cachedRepository: AuthCachedUserRepository) => {

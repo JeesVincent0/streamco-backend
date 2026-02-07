@@ -21,7 +21,12 @@ export class OtpVerificationUseCase {
     // Verifying OTP from cache DB.
     const cachedUser = await this._cachedUserRepo.get<OtpSate>(id);
     if (!cachedUser) {
-      throw new BadRequestError('OTP expired or invalid');
+      throw new BadRequestError<{ cachedUser: boolean }>(
+        'OTP expired or invalid',
+        {
+          cachedUser: false,
+        },
+      );
     }
 
     const isOtpValid = await this._otpHasher.compare(
@@ -33,17 +38,25 @@ export class OtpVerificationUseCase {
       const updateOtpState = OtpPolicy.consumeAttempt(cachedUser);
       if (OtpPolicy.isExhausted(updateOtpState)) {
         await this._cachedUserRepo.del(input.id);
-        throw new BadRequestError('OTP expired or invalid');
+        throw new BadRequestError(
+          'Too many attempts, try again after sometimes',
+          {
+            cachedUser: false,
+            manyAttemts: true,
+          },
+        );
       }
 
       await this._cachedUserRepo.save(input.id, updateOtpState, 300);
-      throw new BadRequestError('OTP expired or invalid');
+      throw new BadRequestError('OTP expired or invalid', {
+        cachedUser: true,
+      });
     }
 
     const email = Email.create(cachedUser.email);
 
     // Delete user from cached DB, after registration.
-    // await this._cachedUserRepo.del(id);
+    await this._cachedUserRepo.del(id);
 
     const user = await this._userRepo.findByEmail(email);
     if (!user) {

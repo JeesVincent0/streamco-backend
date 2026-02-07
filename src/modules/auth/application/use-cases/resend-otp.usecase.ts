@@ -1,0 +1,55 @@
+import { BadRequestError } from '@/shared/errors';
+import { OtpTimer } from '../../domain/service/get-otp-timer';
+import { OtpPolicy, OtpSate } from '../../domain/service/otp-policy';
+import {
+  AuthCachedUserRepository,
+  MailService,
+  OtpService,
+  PasswordHasher,
+} from '../ports';
+import { Email } from '@/modules/user/domain/value-objects';
+
+export class ResendOtpUseCase {
+  constructor(
+    private readonly _cachedRepository: AuthCachedUserRepository,
+    private readonly _otpService: OtpService,
+    private readonly _otpHasher: PasswordHasher,
+    private readonly _mailService: MailService,
+  ) {}
+
+  async execute(input: { id: string }) {
+    const cachedUser = await this._cachedRepository.get<OtpSate>(input.id);
+
+    if (!cachedUser) {
+      throw new BadRequestError('Please try again', {
+        cachedUser: false,
+      });
+    }
+
+    if (OtpPolicy.canResendOtp(cachedUser)) {
+      throw new BadRequestError('Too may attempts, try again after sometimes', {
+        cachedUser: false,
+      });
+    }
+    const otp = this._otpService.generate();
+    const hashedOtp = await this._otpHasher.hash(otp);
+    const otpState = OtpPolicy.createStateAFterResendOtp(cachedUser, hashedOtp);
+
+    await this._cachedRepository.save(input.id, otpState, 300);
+    console.log('cache ID: ', input.id);
+    console.log('OTp: ', otp);
+    console.log('Cached Data: ', otpState);
+
+    await this._mailService.sendOtp(Email.create(cachedUser.email), otp);
+
+    const remainingTime = OtpTimer.Get(otpState.resendAvalableAt);
+
+    return {
+      success: true,
+      message: 'New OTP is send to the email',
+      data: {
+        timer: remainingTime,
+      },
+    };
+  }
+}

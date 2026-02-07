@@ -13,6 +13,7 @@ import {
   GetOtpTimerUseCase,
   // AdvertiserRegisterUseCase,
   RegisterUserUseCase,
+  ResendOtpUseCase,
 } from '../../application/use-cases';
 import { OtpVerificationUseCase } from '../../application/use-cases';
 
@@ -21,10 +22,12 @@ import { AdvertiserRegisterDto, UserRegisterDto } from '../dto';
 import { otpVerificationDto } from '../dto';
 import { UserRole } from '@/modules/user/domain/enums';
 import { AdvertiserRegisterInput } from '../../application/inputs';
+import { IdDto } from '../dto/id.dto';
 
 @Controller('auth')
 export class AuthController {
   constructor(
+    private readonly _resendOtpUseCase: ResendOtpUseCase,
     private readonly _getOtpTimerUseCase: GetOtpTimerUseCase,
     private readonly _registerUseCase: RegisterUserUseCase,
     private readonly _otpVerificationUseCase: OtpVerificationUseCase,
@@ -53,6 +56,13 @@ export class AuthController {
       id: dto.id,
       otp: dto.otp,
     });
+  }
+
+  // Resend OTP
+  @Post('resend-otp')
+  @HttpCode(HttpStatus.OK)
+  resendOtp(@Body() dto: IdDto) {
+    return this._resendOtpUseCase.execute(dto);
   }
 
   // OTP timer
