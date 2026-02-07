@@ -1,6 +1,7 @@
 import { Global, Injectable } from '@nestjs/common';
 import { RedisService } from '../redis.service';
 import { AuthCachedUserRepository } from '@/modules/auth/application/ports';
+import { BadRequestError } from '@/shared/errors';
 
 @Global()
 @Injectable()
@@ -14,7 +15,12 @@ export class RedisAuthCachedUserRepository extends AuthCachedUserRepository {
   }
 
   async get<T>(key: string): Promise<T | null> {
-    return this.redisService.get<T>(this.buildKey(key));
+    try {
+      return this.redisService.get<T>(this.buildKey(key));
+    } catch (err) {
+      console.log(err);
+      throw new BadRequestError('Server error');
+    }
   }
 
   async save(key: string, value: any, ttlSeconds: number): Promise<void> {

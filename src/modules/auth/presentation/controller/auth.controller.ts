@@ -1,7 +1,16 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 
 // Use Cases
 import {
+  GetOtpTimerUseCase,
   // AdvertiserRegisterUseCase,
   RegisterUserUseCase,
 } from '../../application/use-cases';
@@ -11,15 +20,14 @@ import { OtpVerificationUseCase } from '../../application/use-cases';
 import { AdvertiserRegisterDto, UserRegisterDto } from '../dto';
 import { otpVerificationDto } from '../dto';
 import { UserRole } from '@/modules/user/domain/enums';
-import { FileLogger } from '@/shared/logger/file-logger';
 import { AdvertiserRegisterInput } from '../../application/inputs';
 
 @Controller('auth')
 export class AuthController {
   constructor(
+    private readonly _getOtpTimerUseCase: GetOtpTimerUseCase,
     private readonly _registerUseCase: RegisterUserUseCase,
     private readonly _otpVerificationUseCase: OtpVerificationUseCase,
-    private readonly _logger: FileLogger,
   ) {}
 
   // Normal User registration
@@ -45,6 +53,13 @@ export class AuthController {
       id: dto.id,
       otp: dto.otp,
     });
+  }
+
+  // OTP timer
+  @Get('otp-timer/:id')
+  @HttpCode(HttpStatus.OK)
+  getOtpTime(@Param('id') id: string) {
+    return this._getOtpTimerUseCase.execute(id);
   }
 
   // Admin registration

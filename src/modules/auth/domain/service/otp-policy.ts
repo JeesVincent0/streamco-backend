@@ -4,7 +4,7 @@ export interface OtpSate {
   hashedOtp: string;
   verificationCount: number;
   otpGenerateCount: number;
-  resendAvalableAt;
+  resendAvalableAt: Date;
 }
 
 export class OtpPolicy {
