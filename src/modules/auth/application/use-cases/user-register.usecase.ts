@@ -15,6 +15,7 @@ import { Advertiser } from '@/modules/user/domain/entity/advertiser.entity';
 import { User } from '@/modules/user/domain/entity/user.entity';
 import { UserRole } from '@/modules/user/domain/enums';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers';
+import { IdGenerator } from '../ports';
 
 /*
  *
@@ -35,6 +36,7 @@ export class RegisterUserUseCase {
     private readonly _otpService: OtpService,
     private readonly _mailService: MailService,
     private readonly _cachedUserRepo: AuthCachedUserRepository,
+    private readonly _randomIdGenerator: IdGenerator,
     private readonly _logger: FileLogger,
   ) {}
 
@@ -50,7 +52,6 @@ export class RegisterUserUseCase {
 
     // Hashing user password
     const hashedPassword = await this._passwordHaser.hash(password);
-    input.password = hashedPassword;
 
     // Checking user age if dob provided and must be at least 12 years old
     if (
@@ -94,19 +95,26 @@ export class RegisterUserUseCase {
     const otp = this._otpService.generate();
     const hashedOtp = await this._passwordHaser.hash(otp);
 
-    const id = crypto.randomUUID();
+    const id = this._randomIdGenerator.generate();
     await this._cachedUserRepo.save(
       id,
       {
         id,
-        email,
-        verificationAttempts: 0,
-        hash: hashedOtp,
+        email: email.getValue(),
+        verificationAttempts: 3,
+        OtpGenerateCount: 4,
+        resendTime: new Date(Date.now() + 1 * 60 * 1000),
+        hashedOtp,
       },
       300,
     );
 
-    this._logger.debug({ id, email, otp });
+    this._logger.debug({
+      message: 'User data saved in the cache',
+      data: await this._cachedUserRepo.get(id),
+    });
+
+    this._logger.debug({ id, email: email.getValue(), otp });
 
     // OTP send to user email
     // await this._mailService.sendOtp(email, otp);

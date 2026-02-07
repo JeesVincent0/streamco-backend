@@ -1,22 +1,8 @@
-import { UserRole } from '@/modules/user/domain/enums';
-
-export type CachedUser =
-  | {
-      role: UserRole.USER;
-      firstName: string;
-      lastName: string;
-      email: string;
-      password: string;
-      otp: number;
-      gender: string;
-      dob: Date;
-    }
-  | {
-      role: UserRole.ADVERTISER;
-      firstName: string;
-      lastName: string;
-      email: string;
-      password: string;
-      otp: number;
-      companyName: string;
-    };
+export type CachedUser = {
+  id: string;
+  email: string;
+  hashedOtp: string;
+  verificationAttempts: number;
+  OtpGenerateCount: number;
+  resendTime: Date;
+};

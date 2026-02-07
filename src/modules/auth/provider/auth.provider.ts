@@ -13,6 +13,8 @@ import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/rep
 import { UserRepository } from '@/modules/user/application/ports';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { OtpVerificationUseCase } from '../application/use-cases/otp-verification.usecase';
+import { IdGenerator } from '../application/ports';
+import { CryptoIdGenerator } from '../infrastructure/otp/id-service';
 // import { AdvertiserRegisterUseCase } from '../application/use-cases';
 
 export const authProviders = [
@@ -26,13 +28,15 @@ export const authProviders = [
     useFactory: (
       authCachedUserRepository: AuthCachedUserRepository,
       userRepository: UserRepository,
+      passwordHasher: PasswordHasher,
     ) => {
       return new OtpVerificationUseCase(
         authCachedUserRepository,
         userRepository,
+        passwordHasher,
       );
     },
-    inject: [AuthCachedUserRepository, UserRepository],
+    inject: [AuthCachedUserRepository, UserRepository, PasswordHasher],
   },
 
   // Use case factory for - Normal User registration
@@ -44,6 +48,7 @@ export const authProviders = [
       otpService: OtpService,
       mailService: MailService,
       authCachedUserRepository: AuthCachedUserRepository,
+      randomIdGenerator: IdGenerator,
       logger: FileLogger,
     ) => {
       return new RegisterUserUseCase(
@@ -52,6 +57,7 @@ export const authProviders = [
         otpService,
         mailService,
         authCachedUserRepository,
+        randomIdGenerator,
         logger,
       );
     },
@@ -61,6 +67,7 @@ export const authProviders = [
       OtpService,
       MailService,
       AuthCachedUserRepository,
+      IdGenerator,
       FileLogger,
     ],
   },
@@ -87,5 +94,9 @@ export const authProviders = [
   {
     provide: FileLogger,
     useClass: FileLogger,
+  },
+  {
+    provide: IdGenerator,
+    useClass: CryptoIdGenerator,
   },
 ];

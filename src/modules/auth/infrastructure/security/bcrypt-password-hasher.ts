@@ -14,7 +14,15 @@ export class BcryptPasswordHasher extends PasswordHasher {
     return bcrypt.hash(password, this._SALT_ROUNDS);
   }
 
-  async compare(password: Password, hash: string): Promise<boolean> {
-    return bcrypt.compare(password.getValue(), hash);
+  async compare(
+    password: Password | string | number,
+    hash: string,
+  ): Promise<boolean> {
+    if (typeof password === 'number') {
+      password = password.toString();
+    } else if (password instanceof Password) {
+      password = password.getValue();
+    }
+    return bcrypt.compare(password, hash);
   }
 }

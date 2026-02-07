@@ -1,5 +1,5 @@
 import { Email } from '@/modules/user/domain/value-objects';
-import { AuthCachedUserRepository } from '../ports';
+import { AuthCachedUserRepository, PasswordHasher } from '../ports';
 import { CachedUser } from '../types/user-cache.types';
 import { BadRequestError } from '@/shared/errors';
 import { UserRepository } from '@/modules/user/application/ports';
@@ -12,6 +12,7 @@ export class OtpVerificationUseCase {
   constructor(
     private readonly _cachedUserRepo: AuthCachedUserRepository,
     private readonly _userRepo: UserRepository,
+    private readonly _otpHasher: PasswordHasher,
   ) {}
 
   async execute(input: OtpInput) {
@@ -19,7 +20,16 @@ export class OtpVerificationUseCase {
 
     // Verifying OTP from cache DB.
     const cachedUser = await this._cachedUserRepo.get<CachedUser>(id);
-    if (!cachedUser || cachedUser.otp !== input.otp) {
+    if (!cachedUser) {
+      throw new BadRequestError('OTP expired or invalid');
+    }
+
+    if (
+      !(await this._otpHasher.compare(
+        input.otp.toString(),
+        cachedUser.hashedOtp,
+      ))
+    ) {
       throw new BadRequestError('OTP expired or invalid');
     }
 
