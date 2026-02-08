@@ -21,12 +21,9 @@ export class OtpVerificationUseCase {
     // Verifying OTP from cache DB.
     const cachedUser = await this._cachedUserRepo.get<OtpSate>(id);
     if (!cachedUser) {
-      throw new BadRequestError<{ cachedUser: boolean }>(
-        'OTP expired or invalid',
-        {
-          cachedUser: false,
-        },
-      );
+      throw new BadRequestError<{ cachedUser: boolean }>('Session expired', {
+        cachedUser: false,
+      });
     }
 
     const isOtpValid = await this._otpHasher.compare(

@@ -16,6 +16,9 @@ export class AdvertiserRegisterDto {
   password: string;
 
   @IsString()
+  confirmPassword: string;
+
+  @IsString()
   @IsNotEmpty()
   companyName: string;
 }

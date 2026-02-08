@@ -47,6 +47,8 @@ export class MongoRepository extends UserRepository {
       deletedAt: null,
     });
 
+    console.log(persistence);
+
     if (!existingUser) {
       await this._userModel.create(persistence);
     } else {

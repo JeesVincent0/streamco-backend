@@ -1,4 +1,5 @@
 import { UserRole, UserStatus } from '../enums';
+import { AdvertiserRestoreProps } from '../types/advertiser.restore';
 import { CreateAdvertiserProps } from '../types/create-advertiser.type';
 import { Email, HashedPassword } from '../value-objects';
 import { BaseUser } from './base-user.entity';
@@ -15,6 +16,7 @@ export class Advertiser extends BaseUser {
     password: HashedPassword,
     role: UserRole,
     status: UserStatus,
+    isVerified: boolean,
     companyName: string,
     createdAt: Date,
 
@@ -29,7 +31,7 @@ export class Advertiser extends BaseUser {
       password,
       role,
       status,
-      false,
+      isVerified,
       createdAt,
       avatarUrl,
     );
@@ -57,8 +59,25 @@ export class Advertiser extends BaseUser {
       props.password,
       props.role,
       UserStatus.ACTIVE,
+      false,
       props.companyName,
       new Date(),
+    );
+  }
+
+  static restore(props: AdvertiserRestoreProps) {
+    return new Advertiser(
+      props.id,
+      props.firstName,
+      props.lastName,
+      props.displayName,
+      Email.restore(props.email),
+      HashedPassword.restore(props.password),
+      props.role,
+      props.status,
+      props.isVerified,
+      props.companyName,
+      props.createdAt,
     );
   }
 }

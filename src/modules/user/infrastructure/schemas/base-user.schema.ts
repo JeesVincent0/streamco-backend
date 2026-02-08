@@ -34,7 +34,7 @@ export class BaseUserDocument extends Document {
   @Prop({ required: true, enum: Object.values(UserStatus) })
   status: string;
 
-  @Prop({ required: true, type: Boolean })
+  @Prop({ required: true, type: Boolean, default: false })
   isVerified: boolean;
 
   @Prop({ required: false })
@@ -57,4 +57,9 @@ export type UserDiscriminatorUserDocument =
     bio?: string;
     location?: string;
     socialLinks?: SocialLink[];
+  };
+
+export type AdvertiserDiscriminatorUserDocument =
+  HydratedDocument<BaseUserDocument> & {
+    companyName: string;
   };

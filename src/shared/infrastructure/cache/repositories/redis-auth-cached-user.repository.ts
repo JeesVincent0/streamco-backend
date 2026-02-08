@@ -2,11 +2,15 @@ import { Global, Injectable } from '@nestjs/common';
 import { RedisService } from '../redis.service';
 import { AuthCachedUserRepository } from '@/modules/auth/application/ports';
 import { BadRequestError } from '@/shared/errors';
+import { FileLogger } from '@/shared/logger/file-logger';
 
 @Global()
 @Injectable()
 export class RedisAuthCachedUserRepository extends AuthCachedUserRepository {
-  constructor(private readonly redisService: RedisService) {
+  constructor(
+    private readonly redisService: RedisService,
+    private readonly _logger: FileLogger,
+  ) {
     super();
   }
 
@@ -18,16 +22,24 @@ export class RedisAuthCachedUserRepository extends AuthCachedUserRepository {
     try {
       return this.redisService.get<T>(this.buildKey(key));
     } catch (err) {
-      console.log(err);
+      this._logger.error(err);
       throw new BadRequestError('Server error');
     }
   }
 
   async save(key: string, value: any, ttlSeconds: number): Promise<void> {
-    await this.redisService.set(this.buildKey(key), value, ttlSeconds);
+    try {
+      await this.redisService.set(this.buildKey(key), value, ttlSeconds);
+    } catch (error) {
+      this._logger.error(error);
+    }
   }
 
   async del(key: string): Promise<void> {
-    await this.redisService.del(this.buildKey(key));
+    try {
+      await this.redisService.del(this.buildKey(key));
+    } catch (error) {
+      this._logger.error(error);
+    }
   }
 }

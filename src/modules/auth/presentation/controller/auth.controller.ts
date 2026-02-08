@@ -11,7 +11,6 @@ import {
 // Use Cases
 import {
   GetOtpTimerUseCase,
-  // AdvertiserRegisterUseCase,
   RegisterUserUseCase,
   ResendOtpUseCase,
 } from '../../application/use-cases';

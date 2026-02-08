@@ -87,8 +87,6 @@ export class RegisterUserUseCase {
       });
     }
 
-    console.log(user);
-
     // Saving user in the database
     await this._userRepo.save(user);
 
@@ -113,7 +111,7 @@ export class RegisterUserUseCase {
     this._logger.debug({ id, email: email.getValue(), otp });
 
     // OTP send to user email
-    // await this._mailService.sendOtp(email, otp);
+    await this._mailService.sendOtp(email, otp);
 
     return {
       status: 'success',

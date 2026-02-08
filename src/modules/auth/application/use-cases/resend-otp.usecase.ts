@@ -36,9 +36,8 @@ export class ResendOtpUseCase {
     const otpState = OtpPolicy.createStateAFterResendOtp(cachedUser, hashedOtp);
 
     await this._cachedRepository.save(input.id, otpState, 300);
-    console.log('cache ID: ', input.id);
-    console.log('OTp: ', otp);
-    console.log('Cached Data: ', otpState);
+
+    console.log({ id: input.id, email: otpState.email, otp });
 
     await this._mailService.sendOtp(Email.create(cachedUser.email), otp);
 
