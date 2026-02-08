@@ -16,6 +16,7 @@ import { OtpVerificationUseCase } from '../application/use-cases/otp-verificatio
 import { IdGenerator } from '../application/ports';
 import { CryptoIdGenerator } from '../infrastructure/otp/id-service';
 import { GetOtpTimerUseCase, ResendOtpUseCase } from '../application/use-cases';
+import { SigninUseCase } from '../application/use-cases/user-signin.usecase';
 
 export const authProviders = [
   /**
@@ -23,6 +24,12 @@ export const authProviders = [
    */
 
   // Use Case factory for - OTP verification
+  {
+    provide: SigninUseCase,
+    useFactory: () => {
+      return new SigninUseCase();
+    },
+  },
   {
     provide: ResendOtpUseCase,
     useFactory: (

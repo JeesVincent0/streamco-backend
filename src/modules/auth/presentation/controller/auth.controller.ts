@@ -22,10 +22,13 @@ import { otpVerificationDto } from '../dto';
 import { UserRole } from '@/modules/user/domain/enums';
 import { AdvertiserRegisterInput } from '../../application/inputs';
 import { IdDto } from '../dto/id.dto';
+import { SigninDto } from '../dto/signin.dto';
+import { SigninUseCase } from '../../application/use-cases/user-signin.usecase';
 
 @Controller('auth')
 export class AuthController {
   constructor(
+    private readonly _signinUseCase: SigninUseCase,
     private readonly _resendOtpUseCase: ResendOtpUseCase,
     private readonly _getOtpTimerUseCase: GetOtpTimerUseCase,
     private readonly _registerUseCase: RegisterUserUseCase,
@@ -81,7 +84,12 @@ export class AuthController {
     });
   }
 
-  // Logou
+  @Post('signin')
+  @HttpCode(HttpStatus.OK)
+  signin(@Body() dto: SigninDto) {
+    this._signinUseCase.execute(dto);
+  }
+  // Logout
   @Post('/logout')
   @HttpCode(HttpStatus.NO_CONTENT)
   logoutUser() {
