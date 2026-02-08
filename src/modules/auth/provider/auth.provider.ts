@@ -26,9 +26,13 @@ export const authProviders = [
   // Use Case factory for - OTP verification
   {
     provide: SigninUseCase,
-    useFactory: () => {
-      return new SigninUseCase();
+    useFactory: (
+      userRepository: UserRepository,
+      passwordHasher: PasswordHasher,
+    ) => {
+      return new SigninUseCase(userRepository, passwordHasher);
     },
+    inject: [UserRepository, PasswordHasher],
   },
   {
     provide: ResendOtpUseCase,
