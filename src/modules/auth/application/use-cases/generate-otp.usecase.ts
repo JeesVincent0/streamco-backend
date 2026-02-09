@@ -1,7 +1,6 @@
 import { UserRepository } from '@/modules/user/application/ports';
 import {
   AuthCachedUserRepository,
-  IdGenerator,
   MailService,
   OtpService,
   PasswordHasher,
@@ -9,6 +8,18 @@ import {
 import { Email } from '@/modules/user/domain/value-objects';
 import { OtpPolicy } from '../../domain/service/otp-policy';
 import { OtpPurpose } from '../../domain/enums';
+
+/*
+ *
+ * Use case for generating OTP.
+ * It checks if the user exists with the provided email,
+ * generates an OTP,
+ * hashes the OTP,
+ * creates an OTP state with the policy,
+ * saves the OTP state in the cache with user ID as key and 5 minutes expiration time,
+ * and sends the OTP to the user's email.
+ *
+ */
 
 export class GenerateOtpUseCase {
   constructor(
@@ -23,16 +34,19 @@ export class GenerateOtpUseCase {
     console.log('Executing GenerateOtpUseCase with input:', input);
     const email = Email.create(input.email);
 
+    // Checking if user existing with the email and if not existing throw error
     const userExiting = await this._userRepository.findByEmail(email);
-
     if (!userExiting) {
       throw new Error('Wrong email ID');
     }
 
+    // OTP generating and OTP hashing
     const otp = this._otpRepository.generate();
     const hashedOtp = await this._passwordHasher.hash(otp.toString());
+
     const id = userExiting.getId();
 
+    // Creating OTP state with policy
     const otpStat = OtpPolicy.createInitialState(
       userExiting.getId(),
       email.getValue(),
@@ -40,11 +54,10 @@ export class GenerateOtpUseCase {
       input.purpose,
     );
 
+    // Saving OTP state in cache with user ID as key and 5 minutes expiration time
     await this._cacheRepository.save(id, otpStat, 300);
 
+    // mail service to send OTP to user email
     await this._mailService.sendOtp(email, otp);
-
-    console.log(`OTP for ${email.getValue()}: ${otp}`);
-    console.log(`ID for ${email.getValue()}: ${id}`);
   }
 }
