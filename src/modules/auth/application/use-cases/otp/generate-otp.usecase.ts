@@ -4,10 +4,10 @@ import {
   MailService,
   OtpService,
   PasswordHasher,
-} from '../ports';
+} from '../../ports';
 import { Email } from '@/modules/user/domain/value-objects';
-import { OtpPolicy } from '../../domain/service/otp-policy';
-import { GenerateOtpInput } from '../inputs';
+import { OtpPolicy } from '../../../domain/service/otp-policy';
+import { GenerateOtpInput } from '../../inputs';
 import { BadRequestError } from '@/shared/errors';
 
 /*

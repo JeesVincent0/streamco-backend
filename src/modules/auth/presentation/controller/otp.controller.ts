@@ -1,17 +1,31 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { GenerateOtpUseCase } from '../../application/use-cases/generate-otp.usecase';
-import { GenerateOtpDto } from '../dto';
+import { GenerateOtpUseCase } from '../../application/use-cases/otp/generate-otp.usecase';
+import { GenerateOtpDto, otpVerificationDto } from '../dto';
+import { VerifyOtpUseCase } from '../../application/use-cases/otp/verify-otp.usecase';
 
 @Controller('auth/otp')
 export class OtpController {
-  constructor(private readonly _generateOtpUseCase: GenerateOtpUseCase) {}
+  constructor(
+    private readonly _generateOtpUseCase: GenerateOtpUseCase,
+    private readonly _verifyOtpUseCase: VerifyOtpUseCase,
+  ) {}
 
   @Post('generate')
   @HttpCode(HttpStatus.OK)
-  generateOtp(@Body() body: GenerateOtpDto) {
+  generate(@Body() body: GenerateOtpDto) {
     return this._generateOtpUseCase.execute({
       email: body.email,
       purpose: body.purpose,
+    });
+  }
+
+  @Post('verify')
+  @HttpCode(HttpStatus.OK)
+  verify(@Body() dto: otpVerificationDto) {
+    return this._verifyOtpUseCase.execute({
+      id: dto.id,
+      otp: dto.otp,
+      purpose: dto.purpose,
     });
   }
 }

@@ -1,4 +1,4 @@
-import { RegisterUserUseCase } from '../application/use-cases/user-register.usecase';
+import { RegisterUserUseCase } from '../application/use-cases/registration/user-register.usecase';
 
 import { PasswordHasher } from '../application/ports/password-hasher';
 import { MailService } from '../application/ports/mail-sevice';
@@ -17,7 +17,8 @@ import { IdGenerator } from '../application/ports';
 import { CryptoIdGenerator } from '../infrastructure/otp/id-service';
 import { GetOtpTimerUseCase, ResendOtpUseCase } from '../application/use-cases';
 import { SigninUseCase } from '../application/use-cases/user-signin.usecase';
-import { GenerateOtpUseCase } from '../application/use-cases/generate-otp.usecase';
+import { GenerateOtpUseCase } from '../application/use-cases/otp/generate-otp.usecase';
+import { VerifyOtpUseCase } from '../application/use-cases/otp/verify-otp.usecase';
 
 export const authProviders = [
   /**
@@ -25,6 +26,17 @@ export const authProviders = [
    */
 
   // Use Case factory for - OTP verification
+  {
+    provide: VerifyOtpUseCase,
+    useFactory: (
+      authCachedUserRepository: AuthCachedUserRepository,
+      otpHasher: PasswordHasher,
+    ) => {
+      return new VerifyOtpUseCase(authCachedUserRepository, otpHasher);
+    },
+    inject: [AuthCachedUserRepository, PasswordHasher],
+  },
+
   {
     provide: GenerateOtpUseCase,
     useFactory: (

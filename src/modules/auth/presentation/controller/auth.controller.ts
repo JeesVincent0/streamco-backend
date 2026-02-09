@@ -21,7 +21,7 @@ import { otpVerificationDto } from '../dto';
 import { IdDto } from '../dto/id.dto';
 import { SigninDto } from '../dto/signin.dto';
 import { SigninUseCase } from '../../application/use-cases/user-signin.usecase';
-import { GenerateOtpUseCase } from '../../application/use-cases/generate-otp.usecase';
+import { GenerateOtpUseCase } from '../../application/use-cases/otp/generate-otp.usecase';
 
 @Controller('auth')
 export class AuthController {

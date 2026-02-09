@@ -1,6 +1,6 @@
-import { RegisterInput } from '../inputs';
+import { RegisterInput } from '../../inputs';
 import { BadRequestError } from '@/shared/errors';
-import { PasswordHasher } from '../ports/password-hasher';
+import { PasswordHasher } from '../../ports/password-hasher';
 import {
   Email,
   HashedPassword,
@@ -11,9 +11,9 @@ import { Advertiser } from '@/modules/user/domain/entity/advertiser.entity';
 import { User } from '@/modules/user/domain/entity/user.entity';
 import { UserRole } from '@/modules/user/domain/enums';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers';
-import { OtpPurpose } from '../../domain/enums';
-import { GenerateOtpUseCase } from './generate-otp.usecase';
-import { AgeRules } from '../../domain/rules/age.rules';
+import { OtpPurpose } from '../../../domain/enums';
+import { GenerateOtpUseCase } from '../otp/generate-otp.usecase';
+import { AgeRules } from '../../../domain/rules/age.rules';
 
 /*
  *
