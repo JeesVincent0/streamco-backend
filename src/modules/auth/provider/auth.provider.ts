@@ -19,6 +19,7 @@ import { GetOtpTimerUseCase, ResendOtpUseCase } from '../application/use-cases';
 import { SigninUseCase } from '../application/use-cases/user-signin.usecase';
 import { GenerateOtpUseCase } from '../application/use-cases/otp/generate-otp.usecase';
 import { VerifyOtpUseCase } from '../application/use-cases/otp/verify-otp.usecase';
+import { ConfirmRegistrationUseCase } from '../application/use-cases/registration/confirm-registration.usecase';
 
 export const authProviders = [
   /**
@@ -26,6 +27,16 @@ export const authProviders = [
    */
 
   // Use Case factory for - OTP verification
+  {
+    provide: ConfirmRegistrationUseCase,
+    useFactory: (
+      userRepository: UserRepository,
+      verifyOtpUseCase: VerifyOtpUseCase,
+    ) => {
+      return new ConfirmRegistrationUseCase(userRepository, verifyOtpUseCase);
+    },
+    inject: [UserRepository, VerifyOtpUseCase],
+  },
   {
     provide: VerifyOtpUseCase,
     useFactory: (
