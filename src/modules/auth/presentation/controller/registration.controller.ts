@@ -3,6 +3,7 @@ import { AdvertiserRegisterDto, UserRegisterDto } from '../dto';
 import { UserRole } from '@/modules/user/domain/enums';
 import { RegisterUserUseCase } from '../../application/use-cases';
 import { AdvertiserRegisterInput } from '../../application/inputs';
+import { ConfirmRegistrationUseCase } from '../../application/use-cases/registration/confirm-registration.usecase';
 
 // Controller for handling registration
 // of both normal users and advertisers.
@@ -13,7 +14,10 @@ import { AdvertiserRegisterInput } from '../../application/inputs';
 
 @Controller('auth/register')
 export class RegistrationController {
-  constructor(private readonly _registerUseCase: RegisterUserUseCase) {}
+  constructor(
+    private readonly _registerUseCase: RegisterUserUseCase,
+    private readonly _confirmRegistrationUseCase: ConfirmRegistrationUseCase,
+  ) {}
 
   // Normal User registration
   @Post('user')
@@ -33,6 +37,16 @@ export class RegistrationController {
     return this._registerUseCase.execute({
       ...(dto as AdvertiserRegisterInput),
       role: UserRole.ADVERTISER,
+    });
+  }
+
+  // Confrim registration by OTP verification
+  @Post('confirm')
+  @HttpCode(HttpStatus.OK)
+  confirm(@Body() dto: { id: string; otp: number }) {
+    return this._confirmRegistrationUseCase.execute({
+      id: dto.id,
+      otp: dto.otp,
     });
   }
 }

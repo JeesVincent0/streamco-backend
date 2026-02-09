@@ -10,6 +10,7 @@ export class OtpController {
     private readonly _verifyOtpUseCase: VerifyOtpUseCase,
   ) {}
 
+  // OTP generation
   @Post('generate')
   @HttpCode(HttpStatus.OK)
   generate(@Body() body: GenerateOtpDto) {
@@ -19,6 +20,7 @@ export class OtpController {
     });
   }
 
+  // OTP verification
   @Post('verify')
   @HttpCode(HttpStatus.OK)
   verify(@Body() dto: otpVerificationDto) {
