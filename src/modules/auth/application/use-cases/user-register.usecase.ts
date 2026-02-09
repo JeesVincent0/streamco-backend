@@ -13,6 +13,7 @@ import { UserRole } from '@/modules/user/domain/enums';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers';
 import { OtpPurpose } from '../../domain/enums';
 import { GenerateOtpUseCase } from './generate-otp.usecase';
+import { AgeRules } from '../../domain/rules/age.rules';
 
 /*
  *
@@ -46,14 +47,12 @@ export class RegisterUserUseCase {
     // Hashing user password
     const hashedPassword = await this._passwordHaser.hash(password);
 
-    // Checking user age if dob provided and must be at least 12 years old
-    if (
-      'dob' in input &&
-      input.dob &&
-      new Date(input.dob) >
-        new Date(new Date().setFullYear(new Date().getFullYear() - 12))
-    ) {
-      throw new BadRequestError('Age must be at least 12 years old');
+    // Checking normal user age if dob provided and must be at least 12 years old
+    if (input.role === UserRole.USER) {
+      const isVlidAge = AgeRules.isValidAge(new Date(input.dob));
+      if (isVlidAge) {
+        throw new BadRequestError('Age must be at least 12 years old');
+      }
     }
 
     let user: User | Advertiser;
