@@ -1,8 +1,4 @@
-import {
-  Email,
-  HashedPassword,
-  Password,
-} from '@/modules/user/domain/value-objects';
+import { Email } from '@/modules/user/domain/value-objects';
 import { SigninInput } from '../inputs';
 import { UserRepository } from '@/modules/user/application/ports';
 import { BadRequestError } from '@/shared/errors';
@@ -24,13 +20,19 @@ export class SigninUseCase {
       throw new BadRequestError('Wrong email ID');
     }
 
+    if (!existingUser.getIsVerified()) {
+      throw new BadRequestError('User not verified, please verify', {
+        isVerified: false,
+      });
+    }
+
     const isPasswordMatch = await this._passwordHasher.compare(
       input.password,
       existingUser.getPassword().getValue(),
     );
 
     if (!isPasswordMatch) {
-      console.log('this isisis')
+      console.log('this isisis');
       throw new BadRequestError('Wrong password');
     }
 

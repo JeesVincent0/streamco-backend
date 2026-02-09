@@ -17,6 +17,7 @@ import { IdGenerator } from '../application/ports';
 import { CryptoIdGenerator } from '../infrastructure/otp/id-service';
 import { GetOtpTimerUseCase, ResendOtpUseCase } from '../application/use-cases';
 import { SigninUseCase } from '../application/use-cases/user-signin.usecase';
+import { GenerateOtpUseCase } from '../application/use-cases/generate-otp.usecase';
 
 export const authProviders = [
   /**
@@ -24,6 +25,35 @@ export const authProviders = [
    */
 
   // Use Case factory for - OTP verification
+  {
+    provide: GenerateOtpUseCase,
+    useFactory: (
+      otpRepository: OtpService,
+      userRepository: UserRepository,
+      passwordHasher: PasswordHasher,
+      idGenerator: IdGenerator,
+      cacheRepository: AuthCachedUserRepository,
+      mailService: MailService,
+    ) => {
+      return new GenerateOtpUseCase(
+        otpRepository,
+        userRepository,
+        passwordHasher,
+        idGenerator,
+        cacheRepository,
+        mailService,
+      );
+    },
+    inject: [
+      OtpService,
+      UserRepository,
+      PasswordHasher,
+      IdGenerator,
+      AuthCachedUserRepository,
+      MailService,
+    ],
+  },
+
   {
     provide: SigninUseCase,
     useFactory: (
