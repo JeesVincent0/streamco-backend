@@ -6,10 +6,11 @@ import { UserModule } from '@/modules/user/user.module';
 
 import { authProviders } from './provider/auth.provider';
 import { RegistrationController } from './presentation/controller/registration.controller';
+import { OtpController } from './presentation/controller/otp.controller';
 
 @Module({
   imports: [UserModule, RedisModule],
-  controllers: [AuthController, RegistrationController],
+  controllers: [AuthController, RegistrationController, OtpController],
   providers: [...authProviders],
 })
 export class AuthModule {}

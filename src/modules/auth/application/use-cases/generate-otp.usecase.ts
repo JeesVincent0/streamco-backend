@@ -8,6 +8,7 @@ import {
 import { Email } from '@/modules/user/domain/value-objects';
 import { OtpPolicy } from '../../domain/service/otp-policy';
 import { GenerateOtpInput } from '../inputs';
+import { BadRequestError } from '@/shared/errors';
 
 /*
  *
@@ -37,7 +38,7 @@ export class GenerateOtpUseCase {
     // Checking if user existing with the email and if not existing throw error
     const userExiting = await this._userRepository.findByEmail(email);
     if (!userExiting) {
-      throw new Error('Wrong email ID');
+      throw new BadRequestError('Wrong email ID');
     }
 
     // OTP generating and OTP hashing

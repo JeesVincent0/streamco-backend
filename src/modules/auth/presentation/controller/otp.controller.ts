@@ -1,12 +1,13 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { GenerateOtpUseCase } from '../../application/use-cases/generate-otp.usecase';
 import { GenerateOtpDto } from '../dto';
 
-@Controller('otp')
+@Controller('auth/otp')
 export class OtpController {
   constructor(private readonly _generateOtpUseCase: GenerateOtpUseCase) {}
 
   @Post('generate')
+  @HttpCode(HttpStatus.OK)
   generateOtp(@Body() body: GenerateOtpDto) {
     return this._generateOtpUseCase.execute({
       email: body.email,
