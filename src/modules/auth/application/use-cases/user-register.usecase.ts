@@ -50,7 +50,7 @@ export class RegisterUserUseCase {
     // Checking normal user age if dob provided and must be at least 12 years old
     if (input.role === UserRole.USER) {
       const isVlidAge = AgeRules.isValidAge(new Date(input.dob));
-      if (isVlidAge) {
+      if (!isVlidAge) {
         throw new BadRequestError('Age must be at least 12 years old');
       }
     }
