@@ -1,7 +1,10 @@
+import { OtpPurpose } from '../enums';
+
 export interface OtpSate {
   id: string;
   email: string;
   hashedOtp: string;
+  purpose: OtpPurpose;
   verificationCount: number;
   otpGenerateCount: number;
   resendAvalableAt: Date;
@@ -16,11 +19,13 @@ export class OtpPolicy {
     id: string,
     email: string,
     hashedOtp: string,
+    purpose: OtpPurpose,
   ): OtpSate {
     return {
       id,
       email,
       hashedOtp,
+      purpose,
       verificationCount: this._MAX_VERIFICATION_COUNT,
       otpGenerateCount: this._MAX_OTP_GENERATE_COUNT,
       resendAvalableAt: new Date(Date.now() + this._RESEND_COUNTDOWN_MS),

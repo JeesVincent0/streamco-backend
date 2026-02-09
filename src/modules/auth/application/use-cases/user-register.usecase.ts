@@ -17,6 +17,8 @@ import { UserRole } from '@/modules/user/domain/enums';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers';
 import { IdGenerator } from '../ports';
 import { OtpPolicy } from '../../domain/service/otp-policy';
+import { OtpPurpose } from '../../domain/enums';
+import { GenerateOtpUseCase } from './generate-otp.usecase';
 
 /*
  *
@@ -32,6 +34,7 @@ import { OtpPolicy } from '../../domain/service/otp-policy';
 
 export class RegisterUserUseCase {
   constructor(
+    private readonly _generateOtpUseCase: GenerateOtpUseCase,
     private readonly _userRepo: UserRepository,
     private readonly _passwordHaser: PasswordHasher,
     private readonly _otpService: OtpService,
@@ -64,7 +67,7 @@ export class RegisterUserUseCase {
       throw new BadRequestError('Age must be at least 12 years old');
     }
 
-    let user;
+    let user: User | Advertiser;
 
     // Creating user based on the role and saving it in the database
     if (input.role === UserRole.USER) {
@@ -90,33 +93,16 @@ export class RegisterUserUseCase {
     // Saving user in the database
     await this._userRepo.save(user);
 
-    // OTP generating and OTP hashing
-    const otp = this._otpService.generate();
-    const hashedOtp = await this._passwordHaser.hash(otp);
-
-    // Credentials save in the cache DB
-    const id = this._randomIdGenerator.generate();
-    const otpState = OtpPolicy.createInitialState(
-      id,
-      email.getValue(),
-      hashedOtp,
-    );
-    await this._cachedUserRepo.save(id, otpState, 300);
-
-    this._logger.debug({
-      message: 'User data saved in the cache',
-      data: await this._cachedUserRepo.get(id),
+    // Generate OTP for the registered user
+    await this._generateOtpUseCase.execute({
+      email: input.email,
+      purpose: OtpPurpose.REGISTRATION,
     });
-
-    this._logger.debug({ id, email: email.getValue(), otp });
-
-    // OTP send to user email
-    await this._mailService.sendOtp(email, otp);
 
     return {
       status: 'success',
       message: 'User registered successfully, please verify your email',
-      data: { id },
+      data: { id: user.getId() },
     };
   }
 }

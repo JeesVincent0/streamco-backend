@@ -8,18 +8,18 @@ import {
 } from '../ports';
 import { Email } from '@/modules/user/domain/value-objects';
 import { OtpPolicy } from '../../domain/service/otp-policy';
+import { OtpPurpose } from '../../domain/enums';
 
 export class GenerateOtpUseCase {
   constructor(
     private readonly _otpRepository: OtpService,
     private readonly _userRepository: UserRepository,
     private readonly _passwordHasher: PasswordHasher,
-    private readonly _idGenerator: IdGenerator,
     private readonly _cacheRepository: AuthCachedUserRepository,
     private readonly _mailService: MailService,
   ) {}
 
-  async execute(input: { email: string }) {
+  async execute(input: { email: string; purpose: OtpPurpose }) {
     console.log('Executing GenerateOtpUseCase with input:', input);
     const email = Email.create(input.email);
 
@@ -31,27 +31,20 @@ export class GenerateOtpUseCase {
 
     const otp = this._otpRepository.generate();
     const hashedOtp = await this._passwordHasher.hash(otp.toString());
-    const id = this._idGenerator.generate();
+    const id = userExiting.getId();
 
     const otpStat = OtpPolicy.createInitialState(
-      id,
+      userExiting.getId(),
       email.getValue(),
       hashedOtp,
+      input.purpose,
     );
 
     await this._cacheRepository.save(id, otpStat, 300);
 
-    // await this._mailService.sendOtp(email, otp);
+    await this._mailService.sendOtp(email, otp);
 
     console.log(`OTP for ${email.getValue()}: ${otp}`);
     console.log(`ID for ${email.getValue()}: ${id}`);
-
-    return {
-      status: 'success',
-      message: 'OTP sent to email',
-      data: {
-        id,
-      },
-    };
   }
 }
