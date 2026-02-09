@@ -62,7 +62,7 @@ export class GenerateOtpUseCase {
     console.log('ID: ', id);
 
     // mail service to send OTP to user email
-    await this._mailService.sendOtp(email, otp);
+    // await this._mailService.sendOtp(email, otp);
 
     return {
       status: 'success',

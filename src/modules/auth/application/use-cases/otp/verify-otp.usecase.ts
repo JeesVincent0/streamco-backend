@@ -20,7 +20,9 @@ export class VerifyOtpUseCase {
     // Checking user from cache DB, if not found that means session expired.
     const cachedUser = await this._cacheRepository.get<OtpSate>(input.id);
     if (!cachedUser) {
-      throw new BadRequestError('Session expired');
+      throw new BadRequestError('Session expired', {
+        cachedUser: false,
+      });
     }
 
     // Checking OTP qual or not

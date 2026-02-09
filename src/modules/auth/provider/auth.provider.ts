@@ -27,6 +27,8 @@ export const authProviders = [
    */
 
   // Use Case factory for - OTP verification
+
+  // Confirm registration use case factory which is responsible for confirming user registration by verifying the OTP
   {
     provide: ConfirmRegistrationUseCase,
     useFactory: (
@@ -37,6 +39,8 @@ export const authProviders = [
     },
     inject: [UserRepository, VerifyOtpUseCase],
   },
+
+  // OTP verification use case factory which is responsible for verifying the OTP provided by the user during registration, signin, and other OTP related operations
   {
     provide: VerifyOtpUseCase,
     useFactory: (
@@ -48,6 +52,7 @@ export const authProviders = [
     inject: [AuthCachedUserRepository, PasswordHasher],
   },
 
+  // OTP generation use case factory which is responsible for generating OTP, hashing it, saving it in the cache, and sending it to the user's email during registration and other OTP related operations
   {
     provide: GenerateOtpUseCase,
     useFactory: (
@@ -74,6 +79,7 @@ export const authProviders = [
     ],
   },
 
+  // Signin use case factory which is responsible for authenticating the user by verifying the email and password
   {
     provide: SigninUseCase,
     useFactory: (
@@ -84,6 +90,8 @@ export const authProviders = [
     },
     inject: [UserRepository, PasswordHasher],
   },
+
+  // Resend OTP use case factory which is responsible for resending the OTP to the user's email by generating a new OTP, hashing it, updating it in the cache, and sending it to the user's email
   {
     provide: ResendOtpUseCase,
     useFactory: (
