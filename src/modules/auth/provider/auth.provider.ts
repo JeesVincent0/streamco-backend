@@ -31,7 +31,6 @@ export const authProviders = [
       otpRepository: OtpService,
       userRepository: UserRepository,
       passwordHasher: PasswordHasher,
-      idGenerator: IdGenerator,
       cacheRepository: AuthCachedUserRepository,
       mailService: MailService,
     ) => {
@@ -39,7 +38,6 @@ export const authProviders = [
         otpRepository,
         userRepository,
         passwordHasher,
-        idGenerator,
         cacheRepository,
         mailService,
       );
@@ -48,7 +46,6 @@ export const authProviders = [
       OtpService,
       UserRepository,
       PasswordHasher,
-      IdGenerator,
       AuthCachedUserRepository,
       MailService,
     ],
@@ -108,33 +105,17 @@ export const authProviders = [
   {
     provide: RegisterUserUseCase,
     useFactory: (
+      generateOtpUseCase: GenerateOtpUseCase,
       userRepository: UserRepository,
       passwordHasher: PasswordHasher,
-      otpService: OtpService,
-      mailService: MailService,
-      authCachedUserRepository: AuthCachedUserRepository,
-      randomIdGenerator: IdGenerator,
-      logger: FileLogger,
     ) => {
       return new RegisterUserUseCase(
+        generateOtpUseCase,
         userRepository,
         passwordHasher,
-        otpService,
-        mailService,
-        authCachedUserRepository,
-        randomIdGenerator,
-        logger,
       );
     },
-    inject: [
-      UserRepository,
-      PasswordHasher,
-      OtpService,
-      MailService,
-      AuthCachedUserRepository,
-      IdGenerator,
-      FileLogger,
-    ],
+    inject: [GenerateOtpUseCase, UserRepository, PasswordHasher],
   },
 
   /**

@@ -2,6 +2,7 @@ import { Email } from '@/modules/user/domain/value-objects';
 import { MailService } from '../../application/ports';
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
+import { BadRequestError } from '@/shared/errors';
 
 export class NodemailerService extends MailService {
   private readonly transporter: Transporter;
@@ -18,14 +19,18 @@ export class NodemailerService extends MailService {
   }
 
   async sendOtp(email: Email, otp: number): Promise<void> {
-    await this.transporter.sendMail({
-      from: {
-        name: 'Auth Service',
-        address: 'jeesvincent0@gmail.com',
-      },
-      to: email.getValue(),
-      subject: 'Your OTP Code',
-      text: `Your OTP is ${otp}`,
-    });
+    try {
+      await this.transporter.sendMail({
+        from: {
+          name: 'Auth Service',
+          address: 'jeesvincent0@gmail.com',
+        },
+        to: email.getValue(),
+        subject: 'Your OTP Code',
+        text: `Your OTP is ${otp}`,
+      });
+    } catch (error) {
+      throw new BadRequestError('Failed to send OTP email');
+    }
   }
 }

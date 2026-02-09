@@ -1,22 +1,16 @@
 import { RegisterInput } from '../inputs';
-import { OtpService } from '../ports/otp-service';
 import { BadRequestError } from '@/shared/errors';
-import { MailService } from '../ports/mail-sevice';
-import { FileLogger } from '@/shared/logger/file-logger';
 import { PasswordHasher } from '../ports/password-hasher';
 import {
   Email,
   HashedPassword,
   Password,
 } from '@/modules/user/domain/value-objects';
-import { AuthCachedUserRepository } from '../ports/user-cache-repository';
 import { UserRepository } from '@/modules/user/application/ports/user-repository';
 import { Advertiser } from '@/modules/user/domain/entity/advertiser.entity';
 import { User } from '@/modules/user/domain/entity/user.entity';
 import { UserRole } from '@/modules/user/domain/enums';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers';
-import { IdGenerator } from '../ports';
-import { OtpPolicy } from '../../domain/service/otp-policy';
 import { OtpPurpose } from '../../domain/enums';
 import { GenerateOtpUseCase } from './generate-otp.usecase';
 
@@ -37,11 +31,6 @@ export class RegisterUserUseCase {
     private readonly _generateOtpUseCase: GenerateOtpUseCase,
     private readonly _userRepo: UserRepository,
     private readonly _passwordHaser: PasswordHasher,
-    private readonly _otpService: OtpService,
-    private readonly _mailService: MailService,
-    private readonly _cachedUserRepo: AuthCachedUserRepository,
-    private readonly _randomIdGenerator: IdGenerator,
-    private readonly _logger: FileLogger,
   ) {}
 
   async execute(input: RegisterInput) {
@@ -94,7 +83,7 @@ export class RegisterUserUseCase {
     await this._userRepo.save(user);
 
     // Generate OTP for the registered user
-    await this._generateOtpUseCase.execute({
+    const otpResult = await this._generateOtpUseCase.execute({
       email: input.email,
       purpose: OtpPurpose.REGISTRATION,
     });
@@ -102,7 +91,7 @@ export class RegisterUserUseCase {
     return {
       status: 'success',
       message: 'User registered successfully, please verify your email',
-      data: { id: user.getId() },
+      data: { id: otpResult.data.id, purpose: otpResult.data.purpose },
     };
   }
 }

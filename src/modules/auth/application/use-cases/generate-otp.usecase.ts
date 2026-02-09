@@ -7,7 +7,7 @@ import {
 } from '../ports';
 import { Email } from '@/modules/user/domain/value-objects';
 import { OtpPolicy } from '../../domain/service/otp-policy';
-import { OtpPurpose } from '../../domain/enums';
+import { GenerateOtpInput } from '../inputs';
 
 /*
  *
@@ -30,7 +30,7 @@ export class GenerateOtpUseCase {
     private readonly _mailService: MailService,
   ) {}
 
-  async execute(input: { email: string; purpose: OtpPurpose }) {
+  async execute(input: GenerateOtpInput) {
     console.log('Executing GenerateOtpUseCase with input:', input);
     const email = Email.create(input.email);
 
@@ -57,7 +57,16 @@ export class GenerateOtpUseCase {
     // Saving OTP state in cache with user ID as key and 5 minutes expiration time
     await this._cacheRepository.save(id, otpStat, 300);
 
+    console.log('OTP: ', otp);
+    console.log('ID: ', id);
+
     // mail service to send OTP to user email
     await this._mailService.sendOtp(email, otp);
+
+    return {
+      status: 'success',
+      message: 'OTP generated and sent to email successfully',
+      data: { id, purpose: input.purpose },
+    };
   }
 }
