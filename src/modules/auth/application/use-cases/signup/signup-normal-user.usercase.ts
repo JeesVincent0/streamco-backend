@@ -1,8 +1,9 @@
+import { CreateNormalUserPort } from '@/modules/user/application';
 import { SignupNormalUserInput } from '../../inputs';
 
 export class SignupNormalUserUseCase {
-  constructor() {}
+  constructor(private readonly _createNormalUser: CreateNormalUserPort) {}
   execute(input: SignupNormalUserInput) {
-    console.log(input);
+    this._createNormalUser.execute(input);
   }
 }

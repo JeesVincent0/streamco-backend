@@ -1,10 +1,10 @@
 import { CreateAdvertiserUserInput } from '../../inputs';
 
-import { CreateAdvertiserUser } from '../../ports';
+import { CreateAdvertiserUserPort } from '../../ports';
 
-export class CreateAdvertiserUserUseCase implements CreateAdvertiserUser {
+export class CreateAdvertiserUserUseCase implements CreateAdvertiserUserPort {
   constructor() {}
   execute(input: CreateAdvertiserUserInput) {
-    console.log(input);
+    console.log('This data is from advertiser user: ', input);
   }
 }

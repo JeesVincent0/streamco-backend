@@ -10,7 +10,11 @@ import {
 
 import { MongoRepository } from './infrastructure/repositories/user-repository.impl';
 import { userProviders } from './providers/user.providers';
-import { UserRepository } from './application';
+import {
+  CREATE_ADVERTISER_USER_PORT,
+  CREATE_NORMAL_USER_PORT,
+  UserRepository,
+} from './application';
 
 @Module({
   imports: [
@@ -36,6 +40,10 @@ import { UserRepository } from './application';
       useClass: MongoRepository,
     },
   ],
-  exports: [UserRepository],
+  exports: [
+    UserRepository,
+    CREATE_NORMAL_USER_PORT,
+    CREATE_ADVERTISER_USER_PORT,
+  ],
 })
 export class UserModule {}

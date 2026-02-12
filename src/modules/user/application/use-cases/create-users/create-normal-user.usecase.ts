@@ -1,10 +1,10 @@
 import { CreateNormalUserInput } from '../../inputs';
 // import { CreateUserOutPut } from '../../output';
-import { CreateNormalUser } from '../../ports';
+import { CreateNormalUserPort } from '../../ports';
 
-export class CreateNormalUserUseCase implements CreateNormalUser {
+export class CreateNormalUserUseCase implements CreateNormalUserPort {
   constructor() {}
   execute(input: CreateNormalUserInput) {
-    console.log(input);
+    console.log('This data is from normal user: ', input);
   }
 }

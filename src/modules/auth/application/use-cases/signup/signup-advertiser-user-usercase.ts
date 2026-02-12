@@ -1,8 +1,11 @@
+import { CreateAdvertiserUserPort } from '@/modules/user/application';
 import { SignupAdvertiserInput } from '../../inputs';
 
 export class SignupAdvertiserUseCase {
-  constructor() {}
+  constructor(
+    private readonly _createAdvertiserUser: CreateAdvertiserUserPort,
+  ) {}
   execute(input: SignupAdvertiserInput) {
-    console.log(input);
+    this._createAdvertiserUser.execute(input);
   }
 }

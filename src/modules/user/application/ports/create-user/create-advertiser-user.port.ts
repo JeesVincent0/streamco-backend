@@ -1,5 +1,5 @@
 import { CreateAdvertiserUserInput } from '../../inputs';
 
-export interface CreateAdvertiserUser {
+export interface CreateAdvertiserUserPort {
   execute(input: CreateAdvertiserUserInput);
 }
