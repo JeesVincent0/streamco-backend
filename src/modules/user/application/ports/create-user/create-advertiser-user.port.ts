@@ -1,6 +1,8 @@
 import { Email } from '@/modules/user/domain/value-objects';
-import { CreateNormalUserInput } from '../../inputs/create-user/create-normal-user.input';
+import { CreateAdvertiserUserInput } from '../../inputs';
 
-export interface CreateNormalUser {
-  execute(input: CreateNormalUserInput): Promise<{ id: string; email: Email }>;
+export interface CreateAdvertiserUser {
+  execute(
+    input: CreateAdvertiserUserInput,
+  ): Promise<{ id: string; email: Email }>;
 }
