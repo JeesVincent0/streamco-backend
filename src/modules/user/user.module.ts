@@ -8,8 +8,9 @@ import {
   AdvertiserSchema,
 } from './infrastructure/schemas';
 
-import { UserRepository } from './application/ports/user-repository';
 import { MongoRepository } from './infrastructure/repositories/user-repository.impl';
+import { userProviders } from './providers/user.providers';
+import { UserRepository } from './application';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { MongoRepository } from './infrastructure/repositories/user-repository.i
   ],
   controllers: [UserController],
   providers: [
+    ...userProviders,
     {
       provide: UserRepository,
       useClass: MongoRepository,

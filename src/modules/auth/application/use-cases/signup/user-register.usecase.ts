@@ -6,12 +6,12 @@ import {
   HashedPassword,
   Password,
 } from '@/modules/user/domain/value-objects';
-import { UserRepository } from '@/modules/user/application/ports/user-repository';
+import { UserRepository } from '@/modules/user/application/ports';
 import { Advertiser } from '@/modules/user/domain/entity/advertiser.entity';
 import { User } from '@/modules/user/domain/entity/user.entity';
 import { UserRole } from '@/modules/user/domain/enums';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers';
-import { OtpPurpose } from '../../../domain/enums';
+// import { OtpPurpose } from '../../../domain/enums';
 import { GenerateOtpUseCase } from '../otp/generate-otp.usecase';
 import { AgeRules } from '../../../domain/rules/age.rules';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
@@ -40,10 +40,10 @@ export class RegisterUserUseCase {
     const password = Password.create(input.password);
 
     // Checking if user already existing with the same email
-    const exstingUser = await this._userRepo.findByEmail(email);
-    if (exstingUser && exstingUser.getIsVerified()) {
-      throw new BadRequestError(ERROR_MESSAGES.USER_ALREADY_EXIST);
-    }
+    // const exstingUser = await this._userRepo.findByEmail(email);
+    // if (exstingUser && exstingUser.getIsVerified()) {
+    //   throw new BadRequestError(ERROR_MESSAGES.USER_ALREADY_EXIST);
+    // }
 
     // Hashing user password
     const hashedPassword = await this._passwordHaser.hash(password);
@@ -83,15 +83,15 @@ export class RegisterUserUseCase {
     await this._userRepo.save(user);
 
     // Generate OTP for the registered user
-    const otpResult = await this._generateOtpUseCase.execute({
-      email: input.email,
-      purpose: OtpPurpose.REGISTRATION,
-    });
+    // const otpResult = await this._generateOtpUseCase.execute({
+    //   email: input.email,
+    //   purpose: OtpPurpose.REGISTRATION,
+    // });
 
     return {
       status: 'success',
       message: 'User registered successfully, please verify your email',
-      data: { id: otpResult.data.id, purpose: otpResult.data.purpose },
+      // data: { id: otpResult.data.id, purpose: otpResult.data.purpose },
     };
   }
 }
