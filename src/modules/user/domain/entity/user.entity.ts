@@ -75,27 +75,27 @@ export class User extends BaseUser {
 
   /* ==================== Getters ==================== */
 
-  getDateOfBirth(): Date | undefined {
+  get DateOfBirth(): Date | undefined {
     return this.dateOfBirth;
   }
 
-  getGender(): UserGender | undefined {
+  get Gender(): UserGender | undefined {
     return this.gender;
   }
 
-  getBio(): string | undefined {
+  get Bio(): string | undefined {
     return this.bio;
   }
 
-  getLocation(): string | undefined {
+  get Location(): string | undefined {
     return this.location;
   }
 
-  getContentType(): UserContentType {
+  get ContentType(): UserContentType {
     return this.contentType;
   }
 
-  getSocialLinks(): SocialLink[] {
+  get SocialLinks(): SocialLink[] {
     return [...this.socialLinks];
   }
 

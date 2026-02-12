@@ -1,6 +1,6 @@
 import { RegisterInput } from '../../inputs';
 import { BadRequestError } from '@/shared/errors';
-import { PasswordHasher } from '../../ports/password-hasher';
+import { PasswordHasher } from '../../ports/security/password-hasher.port';
 import {
   Email,
   HashedPassword,

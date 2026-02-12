@@ -29,55 +29,55 @@ export abstract class BaseUser {
 
   /* ==================== Getters ==================== */
 
-  getIsVerified(): boolean {
+  get IsVerified(): boolean {
     return this.isVerified;
   }
 
-  getId(): string {
+  get Id(): string {
     return this.id;
   }
 
-  getFirstName(): string {
+  get FirstName(): string {
     return this.firstName;
   }
 
-  getLastName(): string {
+  get LastName(): string {
     return this.lastName;
   }
 
-  getDisplayName(): string {
+  get DisplayName(): string {
     return this.displayName;
   }
 
-  getEmail(): Email {
+  get Email(): Email {
     return this.email;
   }
 
-  getPassword(): HashedPassword {
+  get Password(): HashedPassword {
     return this.password;
   }
 
-  getRole(): UserRole {
+  get Role(): UserRole {
     return this.role;
   }
 
-  getStatus(): UserStatus {
+  get Status(): UserStatus {
     return this.status;
   }
 
-  getAvatarUrl(): string | undefined {
+  get AvatarUrl(): string | undefined {
     return this.avatarUrl;
   }
 
-  getCreatedAt(): Date {
+  get CreatedAt(): Date {
     return this.createdAt;
   }
 
-  getUpdatedAt(): Date | undefined {
+  get UpdatedAt(): Date | undefined {
     return this.updatedAt;
   }
 
-  getDeletedAt(): Date | undefined {
+  get DeletedAt(): Date | undefined {
     return this.deletedAt;
   }
 
