@@ -5,7 +5,7 @@ import { RedisModule } from '@/shared/infrastructure/cache/redis.module';
 import { UserModule } from '@/modules/user/user.module';
 
 import { authProviders } from './provider/auth.provider';
-import { RegistrationController } from './presentation/controller/registration.controller';
+import { RegistrationController } from './presentation/controller/signup.controller';
 import { OtpController } from './presentation/controller/otp.controller';
 
 @Module({

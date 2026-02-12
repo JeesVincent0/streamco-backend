@@ -1,7 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { GenerateOtpUseCase } from '../../application/use-cases/otp/generate-otp.usecase';
 import { GenerateOtpDto, otpVerificationDto } from '../dto';
-import { VerifyOtpUseCase } from '../../application/use-cases/otp/verify-otp.usecase';
+import { VerifyOtpUseCase } from '../../application/use-cases';
+import { GenerateOtpUseCase } from '../../application/use-cases';
 
 @Controller('auth/otp')
 export class OtpController {

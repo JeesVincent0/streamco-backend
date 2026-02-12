@@ -15,7 +15,7 @@ import { Email } from '@/modules/user/domain/value-objects';
  *
  */
 
-export class ConfirmRegistrationUseCase {
+export class ConfirmSignupUserUseCase {
   constructor(
     private readonly _userRepo: UserRepository,
     private readonly _verifyOtpUseCase: VerifyOtpUseCase,

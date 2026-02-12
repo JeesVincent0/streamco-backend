@@ -1,4 +1,4 @@
-import { RegisterUserUseCase } from '../application/use-cases/registration/user-register.usecase';
+import { RegisterUserUseCase } from '../application/use-cases/signup/user-register.usecase';
 
 import { PasswordHasher } from '../application/ports/password-hasher';
 import { MailService } from '../application/ports/mail.service.port';
@@ -19,7 +19,7 @@ import { GetOtpTimerUseCase, ResendOtpUseCase } from '../application/use-cases';
 import { SigninUseCase } from '../application/use-cases/user-signin.usecase';
 import { GenerateOtpUseCase } from '../application/use-cases/otp/generate-otp.usecase';
 import { VerifyOtpUseCase } from '../application/use-cases/otp/verify-otp.usecase';
-import { ConfirmRegistrationUseCase } from '../application/use-cases/registration/confirm-registration.usecase';
+import { ConfirmRegistrationUseCase } from '../application/use-cases/signup/confirm-signup-user.usecase';
 import { MAIL_SERVICE } from '../application/ports/tokens.port';
 
 export const authProviders = [
