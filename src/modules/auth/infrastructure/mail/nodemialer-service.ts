@@ -4,11 +4,10 @@ import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 import { BadRequestError } from '@/shared/errors';
 
-export class NodemailerService extends MailService {
+export class NodemailerService implements MailService {
   private readonly transporter: Transporter;
 
   constructor() {
-    super();
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {

@@ -1,8 +1,8 @@
 import { RegisterUserUseCase } from '../application/use-cases/registration/user-register.usecase';
 
 import { PasswordHasher } from '../application/ports/password-hasher';
-import { MailService } from '../application/ports/mail-sevice';
-import { OtpService } from '../application/ports/otp-service';
+import { MailService } from '../application/ports/mail.service.port';
+import { OtpService } from '../application/ports/otp.service.port';
 import { AuthCachedUserRepository } from '../application/ports/user-cache-repository';
 
 import { BcryptPasswordHasher } from '../infrastructure/security/bcrypt-password-hasher';
@@ -20,6 +20,7 @@ import { SigninUseCase } from '../application/use-cases/user-signin.usecase';
 import { GenerateOtpUseCase } from '../application/use-cases/otp/generate-otp.usecase';
 import { VerifyOtpUseCase } from '../application/use-cases/otp/verify-otp.usecase';
 import { ConfirmRegistrationUseCase } from '../application/use-cases/registration/confirm-registration.usecase';
+import { MAIL_SERVICE } from '../application/ports/tokens.port';
 
 export const authProviders = [
   /**
@@ -75,7 +76,7 @@ export const authProviders = [
       UserRepository,
       PasswordHasher,
       AuthCachedUserRepository,
-      MailService,
+      MAIL_SERVICE,
     ],
   },
 
@@ -107,7 +108,12 @@ export const authProviders = [
         mailService,
       );
     },
-    inject: [AuthCachedUserRepository, OtpService, PasswordHasher, MailService],
+    inject: [
+      AuthCachedUserRepository,
+      OtpService,
+      PasswordHasher,
+      MAIL_SERVICE,
+    ],
   },
   {
     provide: GetOtpTimerUseCase,
@@ -157,7 +163,7 @@ export const authProviders = [
     useClass: BcryptPasswordHasher,
   },
   {
-    provide: MailService,
+    provide: MAIL_SERVICE,
     useClass: NodemailerService,
   },
   {

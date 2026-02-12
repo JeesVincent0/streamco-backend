@@ -1,7 +1,7 @@
 import { UserRepository } from '@/modules/user/application/ports';
 import {
   AuthCachedUserRepository,
-  MailService,
+  type MailService,
   OtpService,
   PasswordHasher,
 } from '../../ports';
@@ -9,6 +9,8 @@ import { Email } from '@/modules/user/domain/value-objects';
 import { OtpPolicy } from '../../../domain/service/otp-policy';
 import { GenerateOtpInput } from '../../inputs';
 import { BadRequestError } from '@/shared/errors';
+// import { Inject } from '@nestjs/common';
+// import { MAIL_SERVICE } from '../../ports/tokens.port';
 
 /*
  *
@@ -48,7 +50,7 @@ export class GenerateOtpUseCase {
     const id = userExiting.getId();
 
     // Creating OTP state with policy
-    const otpStat = OtpPolicy.createInitialState(
+    const otpState = OtpPolicy.createInitialState(
       userExiting.getId(),
       email.getValue(),
       hashedOtp,
@@ -56,13 +58,13 @@ export class GenerateOtpUseCase {
     );
 
     // Saving OTP state in cache with user ID as key and 5 minutes expiration time
-    await this._cacheRepository.save(id, otpStat, 300);
+    await this._cacheRepository.save(id, otpState, 30);
 
     console.log('OTP: ', otp);
     console.log('ID: ', id);
 
     // mail service to send OTP to user email
-    // await this._mailService.sendOtp(email, otp);
+    await this._mailService.sendOtp(email, otp);
 
     return {
       status: 'success',

@@ -1,5 +1,5 @@
-export * from './mail-sevice';
-export * from './otp-service';
+export * from './mail.service.port';
+export * from './otp.service.port';
 export * from './password-hasher';
 export * from './token-generator';
 export * from './user-cache-repository';

@@ -14,6 +14,7 @@ import { GenderMapper } from '@/modules/user/infrastructure/mappers';
 import { OtpPurpose } from '../../../domain/enums';
 import { GenerateOtpUseCase } from '../otp/generate-otp.usecase';
 import { AgeRules } from '../../../domain/rules/age.rules';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 /*
  *
@@ -41,7 +42,7 @@ export class RegisterUserUseCase {
     // Checking if user already existing with the same email
     const exstingUser = await this._userRepo.findByEmail(email);
     if (exstingUser && exstingUser.getIsVerified()) {
-      throw new BadRequestError('User already existing');
+      throw new BadRequestError(ERROR_MESSAGES.USER_ALREADY_EXIST);
     }
 
     // Hashing user password
@@ -51,7 +52,7 @@ export class RegisterUserUseCase {
     if (input.role === UserRole.USER) {
       const isVlidAge = AgeRules.isValidAge(new Date(input.dob));
       if (!isVlidAge) {
-        throw new BadRequestError('Age must be at least 12 years old');
+        throw new BadRequestError(ERROR_MESSAGES.AGE_MUST_BE_12);
       }
     }
 
