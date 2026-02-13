@@ -1,0 +1,1 @@
+export const GENERATE_OTP_USE_CASE = Symbol('GENERATE_OTP_USE_CASE');
