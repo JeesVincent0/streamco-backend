@@ -1,10 +1,13 @@
 import { PASSWORD_HASHER_PORT } from '@/modules/auth/application';
 import {
-  CREATE_ADVERTISER_USER_PORT,
-  CREATE_NORMAL_USER_PORT,
-  CreateAdvertiserUserUseCase,
-  CreateNormalUserUseCase,
+  // Ports
   USER_REPOSITORY_PORT,
+  CREATE_NORMAL_USER_PORT,
+  CREATE_ADVERTISER_USER_PORT,
+
+  // use cases
+  CreateNormalUserUseCase,
+  CreateAdvertiserUserUseCase,
 } from '../application';
 import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
 

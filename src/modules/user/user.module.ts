@@ -15,11 +15,9 @@ import {
   CREATE_NORMAL_USER_PORT,
   UserRepositoryPort,
 } from './application';
-import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
-    AuthModule,
     MongooseModule.forFeatureAsync([
       {
         name: 'User',

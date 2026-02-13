@@ -1,8 +1,8 @@
+import { PasswordHasherPort } from '@/modules/user/application/ports/security/password-hasher-port';
 import { Password } from '@/modules/user/domain/value-objects';
 import * as bcrypt from 'bcrypt';
-import { PasswordHasherPort } from '../../application/ports';
 
-export class BcryptPasswordHasherImpl extends PasswordHasherPort {
+export class BcryptPasswordHasherImpl implements PasswordHasherPort {
   private readonly _SALT_ROUNDS = 10;
 
   async hash(password: Password | string | number): Promise<string> {

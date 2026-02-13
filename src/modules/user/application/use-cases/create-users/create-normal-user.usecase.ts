@@ -1,4 +1,3 @@
-import { PasswordHasherPort } from '@/modules/auth/application/ports';
 import { CreateNormalUserInput } from '../../inputs';
 // import { CreateUserOutPut } from '../../output';
 import { CreateNormalUserPort, UserRepositoryPort } from '../../ports';
@@ -7,6 +6,7 @@ import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { BadRequestError } from '@/shared/errors';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
+import { PasswordHasherPort } from '../../ports/security/password-hasher-port';
 
 export class CreateNormalUserUseCase implements CreateNormalUserPort {
   constructor(
