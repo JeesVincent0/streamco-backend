@@ -1,7 +1,7 @@
 import { PasswordHasherPort } from '@/modules/auth/application/ports';
 import { CreateNormalUserInput } from '../../inputs';
 // import { CreateUserOutPut } from '../../output';
-import { CreateNormalUserPort, UserRepository } from '../../ports';
+import { CreateNormalUserPort, UserRepositoryPort } from '../../ports';
 import { Email, HashedPassword, Password, User } from '@/modules/user/domain';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { BadRequestError } from '@/shared/errors';
@@ -10,7 +10,7 @@ import { OtpPurpose } from '@/modules/auth/domain/enums';
 
 export class CreateNormalUserUseCase implements CreateNormalUserPort {
   constructor(
-    private _userRepo: UserRepository,
+    private _userRepo: UserRepositoryPort,
     private readonly _passwordHasher: PasswordHasherPort,
   ) {}
   async execute(input: CreateNormalUserInput) {

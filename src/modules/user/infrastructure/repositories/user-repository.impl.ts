@@ -1,4 +1,4 @@
-import { UserRepository } from '../../application/ports';
+import { UserRepositoryPort } from '../../application/ports';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BaseUserDocument } from '../schemas/base-user.schema';
@@ -10,7 +10,7 @@ import { UserRole } from '../../domain/enums';
 import { AdvertiserMapper, UserMappers } from '../mappers';
 import { BadRequestError } from '@/shared/errors';
 
-export class MongoRepository extends UserRepository {
+export class MongoRepository extends UserRepositoryPort {
   constructor(
     @InjectModel('User')
     private readonly _userModel: Model<BaseUserDocument>,
@@ -33,9 +33,9 @@ export class MongoRepository extends UserRepository {
   async save(user: User | Advertiser): Promise<void> {
     let persistence: Record<string, unknown>;
 
-    if (user.getRole() === UserRole.USER) {
+    if (user.Role === UserRole.USER) {
       persistence = UserMappers.toPersistence(user as User);
-    } else if (user.getRole() === UserRole.ADVERTISER) {
+    } else if (user.Role === UserRole.ADVERTISER) {
       persistence = AdvertiserMapper.toPersistence(user as Advertiser);
     } else {
       throw new BadRequestError('Unsupported user role');

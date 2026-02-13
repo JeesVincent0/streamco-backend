@@ -1,9 +1,12 @@
+import { PASSWORD_HASHER_PORT } from '@/modules/auth/application';
 import {
   CREATE_ADVERTISER_USER_PORT,
   CREATE_NORMAL_USER_PORT,
   CreateAdvertiserUserUseCase,
   CreateNormalUserUseCase,
+  USER_REPOSITORY_PORT,
 } from '../application';
+import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
 
 export const userProviders = [
   {
@@ -15,9 +18,13 @@ export const userProviders = [
   },
   {
     provide: CREATE_NORMAL_USER_PORT,
-    useFactory: () => {
-      return new CreateNormalUserUseCase();
+    useFactory: (userRepo, passwordHasher) => {
+      return new CreateNormalUserUseCase(userRepo, passwordHasher);
     },
-    inject: [],
+    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT],
+  },
+  {
+    provide: USER_REPOSITORY_PORT,
+    useClass: MongoRepository,
   },
 ];

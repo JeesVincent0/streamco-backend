@@ -13,11 +13,13 @@ import { userProviders } from './providers/user.providers';
 import {
   CREATE_ADVERTISER_USER_PORT,
   CREATE_NORMAL_USER_PORT,
-  UserRepository,
+  UserRepositoryPort,
 } from './application';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     MongooseModule.forFeatureAsync([
       {
         name: 'User',
@@ -36,12 +38,12 @@ import {
   providers: [
     ...userProviders,
     {
-      provide: UserRepository,
+      provide: UserRepositoryPort,
       useClass: MongoRepository,
     },
   ],
   exports: [
-    UserRepository,
+    UserRepositoryPort,
     CREATE_NORMAL_USER_PORT,
     CREATE_ADVERTISER_USER_PORT,
   ],

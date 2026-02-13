@@ -6,6 +6,8 @@ import {
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
 } from '../application/use-cases';
+import { BcryptPasswordHasherImpl } from '../infrastructure';
+import { PASSWORD_HASHER_PORT } from '../application';
 
 export const signupProvider = [
   {
@@ -22,5 +24,10 @@ export const signupProvider = [
       return new SignupAdvertiserUseCase(createAdvertiserUser);
     },
     inject: [CREATE_ADVERTISER_USER_PORT],
+  },
+
+  {
+    provide: PASSWORD_HASHER_PORT,
+    useClass: BcryptPasswordHasherImpl,
   },
 ];
