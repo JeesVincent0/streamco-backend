@@ -1,4 +1,3 @@
-import { PASSWORD_HASHER_PORT } from '@/modules/auth/application';
 import {
   // Ports
   USER_REPOSITORY_PORT,
@@ -21,10 +20,10 @@ export const userProviders = [
   },
   {
     provide: CREATE_NORMAL_USER_PORT,
-    useFactory: (userRepo, passwordHasher) => {
-      return new CreateNormalUserUseCase(userRepo, passwordHasher);
+    useFactory: (userRepo) => {
+      return new CreateNormalUserUseCase(userRepo);
     },
-    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT],
+    inject: [USER_REPOSITORY_PORT],
   },
   {
     provide: USER_REPOSITORY_PORT,

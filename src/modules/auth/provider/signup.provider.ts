@@ -12,10 +12,10 @@ import { PASSWORD_HASHER_PORT } from '../application';
 export const signupProvider = [
   {
     provide: SignupNormalUserUseCase,
-    useFactory: (createNormalUser) => {
-      return new SignupNormalUserUseCase(createNormalUser);
+    useFactory: (createNormalUser, passwordHasher) => {
+      return new SignupNormalUserUseCase(createNormalUser, passwordHasher);
     },
-    inject: [CREATE_NORMAL_USER_PORT],
+    inject: [CREATE_NORMAL_USER_PORT, PASSWORD_HASHER_PORT],
   },
 
   {
