@@ -1,18 +1,14 @@
 import { CreateNormalUserInput } from '../../inputs';
 // import { CreateUserOutPut } from '../../output';
 import { CreateNormalUserPort, UserRepositoryPort } from '../../ports';
-import { Email, HashedPassword, Password, User } from '@/modules/user/domain';
+import { Email, HashedPassword, User } from '@/modules/user/domain';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { BadRequestError } from '@/shared/errors';
 import { GenderMapper } from '@/modules/user/infrastructure/mappers';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
-import { PasswordHasherPort } from '../../ports/security/password-hasher-port';
 
 export class CreateNormalUserUseCase implements CreateNormalUserPort {
-  constructor(
-    private _userRepo: UserRepositoryPort,
-    private readonly _passwordHasher: PasswordHasherPort,
-  ) {}
+  constructor(private _userRepo: UserRepositoryPort) {}
   async execute(input: CreateNormalUserInput) {
     const email = Email.create(input.email);
 
@@ -22,15 +18,11 @@ export class CreateNormalUserUseCase implements CreateNormalUserPort {
       throw new BadRequestError(ERROR_MESSAGES.USER_ALREADY_EXIST);
     }
 
-    // Password hashing
-    const password = Password.create(input.password);
-    const hashedPassword = await this._passwordHasher.hash(password);
-
     const newUser = User.create({
       firstName: input.firstName,
       lastName: input.lastName,
       email,
-      password: HashedPassword.create(hashedPassword),
+      password: HashedPassword.create(input.password),
       gender: GenderMapper.mapGender(input.gender),
       dob: input.dob,
     });
