@@ -1,12 +1,12 @@
 import { RegisterInput } from '../../inputs';
 import { BadRequestError } from '@/shared/errors';
-import { PasswordHasher } from '../../ports/security/password-hasher.port';
+import { PasswordHasherPort } from '../../ports/security/password-hasher.port';
 import {
   Email,
   HashedPassword,
   Password,
 } from '@/modules/user/domain/value-objects';
-import { UserRepository } from '@/modules/user/application/ports';
+import { UserRepositoryPort } from '@/modules/user/application/ports';
 import { Advertiser } from '@/modules/user/domain/entity/advertiser.entity';
 import { User } from '@/modules/user/domain/entity/user.entity';
 import { UserRole } from '@/modules/user/domain/enums';
@@ -31,8 +31,8 @@ import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 export class RegisterUserUseCase {
   constructor(
     private readonly _generateOtpUseCase: GenerateOtpUseCase,
-    private readonly _userRepo: UserRepository,
-    private readonly _passwordHaser: PasswordHasher,
+    private readonly _userRepo: UserRepositoryPort,
+    private readonly _passwordHaser: PasswordHasherPort,
   ) {}
 
   async execute(input: RegisterInput) {

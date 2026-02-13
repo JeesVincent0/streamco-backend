@@ -41,7 +41,7 @@ export class CreateNormalUserUseCase implements CreateNormalUserPort {
       status: 'success',
       message: 'User registered successfully, please verify email',
       data: {
-        id: newUser.Id,
+        id: newUser.id,
         purpose: OtpPurpose.REGISTRATION,
       },
     };

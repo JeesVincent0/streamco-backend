@@ -5,7 +5,7 @@ import {
   AuthCachedUserRepository,
   MailService,
   OtpService,
-  PasswordHasher,
+  PasswordHasherPort,
 } from '../ports';
 import { Email } from '@/modules/user/domain/value-objects';
 
@@ -13,7 +13,7 @@ export class ResendOtpUseCase {
   constructor(
     private readonly _cachedRepository: AuthCachedUserRepository,
     private readonly _otpService: OtpService,
-    private readonly _otpHasher: PasswordHasher,
+    private readonly _otpHasher: PasswordHasherPort,
     private readonly _mailService: MailService,
   ) {}
 

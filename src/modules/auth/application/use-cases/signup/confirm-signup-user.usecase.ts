@@ -1,4 +1,4 @@
-import { UserRepository } from '@/modules/user/application/ports';
+import { UserRepositoryPort } from '@/modules/user/application/ports';
 import { ConfirmRegistrationInput } from '../../inputs';
 import { VerifyOtpUseCase } from '../otp/verify-otp.usecase';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
@@ -17,7 +17,7 @@ import { Email } from '@/modules/user/domain/value-objects';
 
 export class ConfirmSignupUserUseCase {
   constructor(
-    private readonly _userRepo: UserRepository,
+    private readonly _userRepo: UserRepositoryPort,
     private readonly _verifyOtpUseCase: VerifyOtpUseCase,
   ) {}
   async execute(input: ConfirmRegistrationInput) {

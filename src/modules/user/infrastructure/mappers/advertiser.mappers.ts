@@ -24,17 +24,17 @@ export class AdvertiserMapper {
   }
   static toPersistence(user: Advertiser): Partial<AdvertiserMongoDocument> {
     return {
-      id: user.getId(),
-      firstName: user.getFirstName(),
-      lastName: user.getLastName(),
-      displayName: user.getDisplayName(),
-      email: user.getEmail().getValue(),
-      password: user.getPassword().getValue(),
-      role: user.getRole(),
-      status: user.getStatus(),
-      isVerified: user.getIsVerified(),
-      companyName: user.getCompanyName(),
-      createdAt: user.getCreatedAt(),
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      displayName: user.displayName,
+      email: user.email.getValue(),
+      password: user.password.getValue(),
+      role: user.role,
+      status: user.status,
+      isVerified: user.isVerified,
+      companyName: user.companyName,
+      createdAt: user.createdAt,
     };
   }
 }

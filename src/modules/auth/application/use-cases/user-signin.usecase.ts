@@ -1,14 +1,14 @@
 import { Email } from '@/modules/user/domain/value-objects';
 import { SigninInput } from '../inputs';
-import { UserRepository } from '@/modules/user/application/ports';
+import { UserRepositoryPort } from '@/modules/user/application';
 import { BadRequestError } from '@/shared/errors';
-import { PasswordHasher } from '../ports';
+import { PasswordHasherPort } from '../ports';
 import { ResponseData } from '../../domain/service/signin-reposnse';
 
 export class SigninUseCase {
   constructor(
-    private _userRepository: UserRepository,
-    private readonly _passwordHasher: PasswordHasher,
+    private _userRepository: UserRepositoryPort,
+    private readonly _passwordHasher: PasswordHasherPort,
   ) {}
 
   async execute(input: SigninInput) {
@@ -20,7 +20,7 @@ export class SigninUseCase {
       throw new BadRequestError('Wrong email ID');
     }
 
-    if (!existingUser.getIsVerified()) {
+    if (!existingUser.isVerified) {
       throw new BadRequestError('User not verified, please verify', {
         isVerified: false,
       });
@@ -28,7 +28,7 @@ export class SigninUseCase {
 
     const isPasswordMatch = await this._passwordHasher.compare(
       input.password,
-      existingUser.getPassword().getValue(),
+      existingUser.password.getValue(),
     );
 
     if (!isPasswordMatch) {
@@ -37,10 +37,10 @@ export class SigninUseCase {
     }
 
     const responseData = ResponseData.getDate(
-      existingUser.getId(),
-      existingUser.getDisplayName(),
-      existingUser.getEmail(),
-      existingUser.getRole(),
+      existingUser.id,
+      existingUser.displayName,
+      existingUser.email,
+      existingUser.role,
     );
 
     return {

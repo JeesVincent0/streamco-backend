@@ -1,9 +1,9 @@
-import { UserRepository } from '@/modules/user/application/ports';
+import { UserRepositoryPort } from '@/modules/user/application/ports';
 import {
   AuthCachedUserRepository,
   type MailService,
   OtpService,
-  PasswordHasher,
+  PasswordHasherPort,
 } from '../../ports';
 import { Email } from '@/modules/user/domain/value-objects';
 import { OtpPolicy } from '../../../domain/service/otp-policy';
@@ -27,8 +27,8 @@ import { BadRequestError } from '@/shared/errors';
 export class GenerateOtpUseCase {
   constructor(
     private readonly _otpRepository: OtpService,
-    private readonly _userRepository: UserRepository,
-    private readonly _passwordHasher: PasswordHasher,
+    private readonly _userRepository: UserRepositoryPort,
+    private readonly _passwordHasher: PasswordHasherPort,
     private readonly _cacheRepository: AuthCachedUserRepository,
     private readonly _mailService: MailService,
   ) {}
@@ -47,11 +47,11 @@ export class GenerateOtpUseCase {
     const otp = this._otpRepository.generate();
     const hashedOtp = await this._passwordHasher.hash(otp.toString());
 
-    const id = userExiting.getId();
+    const id = userExiting.id;
 
     // Creating OTP state with policy
     const otpState = OtpPolicy.createInitialState(
-      userExiting.getId(),
+      userExiting.id,
       email.getValue(),
       hashedOtp,
       input.purpose,

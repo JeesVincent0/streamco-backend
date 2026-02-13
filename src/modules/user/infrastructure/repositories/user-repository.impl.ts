@@ -33,9 +33,9 @@ export class MongoRepository extends UserRepositoryPort {
   async save(user: User | Advertiser): Promise<void> {
     let persistence: Record<string, unknown>;
 
-    if (user.Role === UserRole.USER) {
+    if (user.role === UserRole.USER) {
       persistence = UserMappers.toPersistence(user as User);
-    } else if (user.Role === UserRole.ADVERTISER) {
+    } else if (user.role === UserRole.ADVERTISER) {
       persistence = AdvertiserMapper.toPersistence(user as Advertiser);
     } else {
       throw new BadRequestError('Unsupported user role');
