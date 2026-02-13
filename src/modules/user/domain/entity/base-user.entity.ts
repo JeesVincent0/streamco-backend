@@ -11,74 +11,74 @@ import { BadRequestError } from '@/shared/errors';
  */
 export abstract class BaseUser {
   protected constructor(
-    protected readonly id: string,
-    protected firstName: string,
-    protected lastName: string,
-    protected displayName: string,
-    protected email: Email,
-    protected password: HashedPassword,
-    protected role: UserRole,
-    protected status: UserStatus,
-    protected isVerified: boolean,
-    protected readonly createdAt: Date,
+    protected readonly _id: string,
+    protected _firstName: string,
+    protected _lastName: string,
+    protected _displayName: string,
+    protected _email: Email,
+    protected _password: HashedPassword,
+    protected _role: UserRole,
+    protected _status: UserStatus,
+    protected _isVerified: boolean,
+    protected readonly _createdAt: Date,
 
-    protected avatarUrl?: string,
-    protected updatedAt?: Date,
-    protected deletedAt?: Date,
+    protected _avatarUrl?: string,
+    protected _updatedAt?: Date,
+    protected _deletedAt?: Date,
   ) {}
 
   /* ==================== Getters ==================== */
 
-  get IsVerified(): boolean {
-    return this.isVerified;
+  get isVerified(): boolean {
+    return this._isVerified;
   }
 
-  get Id(): string {
-    return this.id;
+  get id(): string {
+    return this._id;
   }
 
-  get FirstName(): string {
-    return this.firstName;
+  get firstName(): string {
+    return this._firstName;
   }
 
-  get LastName(): string {
-    return this.lastName;
+  get lastName(): string {
+    return this._lastName;
   }
 
-  get DisplayName(): string {
-    return this.displayName;
+  get displayName(): string {
+    return this._displayName;
   }
 
-  get Email(): Email {
-    return this.email;
+  get email(): Email {
+    return this._email;
   }
 
-  get Password(): HashedPassword {
-    return this.password;
+  get password(): HashedPassword {
+    return this._password;
   }
 
-  get Role(): UserRole {
-    return this.role;
+  get role(): UserRole {
+    return this._role;
   }
 
-  get Status(): UserStatus {
-    return this.status;
+  get status(): UserStatus {
+    return this._status;
   }
 
-  get AvatarUrl(): string | undefined {
-    return this.avatarUrl;
+  get avatarUrl(): string | undefined {
+    return this._avatarUrl;
   }
 
-  get CreatedAt(): Date {
-    return this.createdAt;
+  get createdAt(): Date {
+    return this._createdAt;
   }
 
-  get UpdatedAt(): Date | undefined {
-    return this.updatedAt;
+  get updatedAt(): Date | undefined {
+    return this._updatedAt;
   }
 
-  get DeletedAt(): Date | undefined {
-    return this.deletedAt;
+  get deletedAt(): Date | undefined {
+    return this._deletedAt;
   }
 
   /* ==================== Protected helpers ==================== */
@@ -88,11 +88,11 @@ export abstract class BaseUser {
    * Called internally after state changes.
    */
   protected touch(): void {
-    this.updatedAt = new Date();
+    this._updatedAt = new Date();
   }
 
   protected ensureNotDeleted(): void {
-    if (this.deletedAt) {
+    if (this._deletedAt) {
       throw new BadRequestError('User is deleted and cannot be modified');
     }
   }
@@ -101,60 +101,60 @@ export abstract class BaseUser {
 
   verify(): void {
     this.ensureNotDeleted();
-    this.isVerified = true;
+    this._isVerified = true;
     this.touch();
   }
 
   changeFirstName(name: string): void {
     this.ensureNotDeleted();
-    this.firstName = name;
+    this._firstName = name;
     this.touch();
   }
 
   changeLastName(name: string): void {
     this.ensureNotDeleted();
-    this.lastName = name;
+    this._lastName = name;
     this.touch();
   }
 
   changeDisplayName(name: string): void {
     this.ensureNotDeleted();
-    this.displayName = name;
+    this._displayName = name;
     this.touch();
   }
 
   changeEmail(email: Email): void {
     this.ensureNotDeleted();
 
-    if (this.email.equals(email)) return;
+    if (this._email.equals(email)) return;
 
-    this.email = email;
+    this._email = email;
     this.touch();
   }
 
   changePassword(password: HashedPassword): void {
     this.ensureNotDeleted();
-    this.password = password;
+    this._password = password;
     this.touch();
   }
 
   changeAvatarUrl(url: string): void {
     this.ensureNotDeleted();
-    this.avatarUrl = url;
+    this._avatarUrl = url;
     this.touch();
   }
 
   suspend(): void {
     this.ensureNotDeleted();
-    this.status = UserStatus.SUSPENDED;
+    this._status = UserStatus.SUSPENDED;
     this.touch();
   }
 
   delete(): void {
-    if (this.deletedAt) return;
+    if (this._deletedAt) return;
 
-    this.status = UserStatus.DELETED;
-    this.deletedAt = new Date();
+    this._status = UserStatus.DELETED;
+    this._deletedAt = new Date();
     this.touch();
   }
 }

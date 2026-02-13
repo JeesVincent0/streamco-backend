@@ -24,12 +24,12 @@ import crypto from 'crypto';
  * Encapsulates profile-related behavior.
  */
 export class User extends BaseUser {
-  private dateOfBirth: Date;
-  private gender: UserGender;
-  private bio?: string;
-  private location?: string;
-  private socialLinks: SocialLink[] = [];
-  private contentType: UserContentType;
+  private _dateOfBirth: Date;
+  private _gender: UserGender;
+  private _bio?: string;
+  private _location?: string;
+  private _socialLinks: SocialLink[] = [];
+  private _contentType: UserContentType;
 
   private constructor(
     id: string,
@@ -65,38 +65,38 @@ export class User extends BaseUser {
       avatarUrl,
     );
 
-    this.gender = gender;
-    this.dateOfBirth = dateOfBirth;
-    this.bio = bio;
-    this.location = location;
-    this.socialLinks = socialLinks;
-    this.contentType = contentType;
+    this._gender = gender;
+    this._dateOfBirth = dateOfBirth;
+    this._bio = bio;
+    this._location = location;
+    this._socialLinks = socialLinks;
+    this._contentType = contentType;
   }
 
   /* ==================== Getters ==================== */
 
-  get DateOfBirth(): Date | undefined {
-    return this.dateOfBirth;
+  get dateOfBirth(): Date | undefined {
+    return this._dateOfBirth;
   }
 
-  get Gender(): UserGender | undefined {
-    return this.gender;
+  get gender(): UserGender | undefined {
+    return this._gender;
   }
 
-  get Bio(): string | undefined {
-    return this.bio;
+  get bio(): string | undefined {
+    return this._bio;
   }
 
-  get Location(): string | undefined {
-    return this.location;
+  get location(): string | undefined {
+    return this._location;
   }
 
-  get ContentType(): UserContentType {
-    return this.contentType;
+  get contentType(): UserContentType {
+    return this._contentType;
   }
 
-  get SocialLinks(): SocialLink[] {
-    return [...this.socialLinks];
+  get socialLinks(): SocialLink[] {
+    return [...this._socialLinks];
   }
 
   /* ==================== Domain rules ==================== */
@@ -129,13 +129,13 @@ export class User extends BaseUser {
       throw new BadRequestError('User must be at least 12 years old');
     }
 
-    this.dateOfBirth = new Date(dateOfBirth);
+    this._dateOfBirth = new Date(dateOfBirth);
     this.touch();
   }
 
   changeGender(gender: UserGender): void {
     this.ensureNotDeleted();
-    this.gender = gender;
+    this._gender = gender;
     this.touch();
   }
 
@@ -146,7 +146,7 @@ export class User extends BaseUser {
       throw new BadRequestError('Bio must not exceed 500 characters');
     }
 
-    this.bio = bio;
+    this._bio = bio;
     this.touch();
   }
 
@@ -157,13 +157,13 @@ export class User extends BaseUser {
       throw new BadRequestError('Location must not exceed 100 characters');
     }
 
-    this.location = location;
+    this._location = location;
     this.touch();
   }
 
   changeContentType(contentType: UserContentType): void {
     this.ensureNotDeleted();
-    this.contentType = contentType;
+    this._contentType = contentType;
     this.touch();
   }
 
@@ -200,7 +200,7 @@ export class User extends BaseUser {
 
     const initialLength = this.socialLinks.length;
 
-    this.socialLinks = this.socialLinks.filter((l) => l.getType() !== type);
+    this._socialLinks = this.socialLinks.filter((l) => l.getType() !== type);
 
     if (this.socialLinks.length === initialLength) {
       throw new BadRequestError(`Social link ${type} not found`);

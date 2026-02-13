@@ -39,7 +39,7 @@ export class Advertiser extends BaseUser {
     this._companyName = companyName;
   }
 
-  getCompanyName(): string {
+  get companyName(): string {
     return this._companyName;
   }
 
