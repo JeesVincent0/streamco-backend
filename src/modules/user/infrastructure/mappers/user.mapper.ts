@@ -35,22 +35,22 @@ export class UserMappers {
 
   static toPersistence(user: User): Partial<UserMongoDocument> {
     return {
-      id: user.Id,
-      firstName: user.FirstName,
-      lastName: user.LastName,
-      displayName: user.DisplayName,
-      email: user.getEmail().getValue(),
-      password: user.getPassword().getValue(),
-      role: user.getRole(),
-      status: user.getStatus(),
-      dateOfBirth: user.getDateOfBirth(),
-      isVerified: user.getIsVerified(),
-      avatarUrl: user.getAvatarUrl(),
-      createdAt: user.getCreatedAt(),
-      bio: user.getBio(),
-      location: user.getLocation(),
-      gender: user.Gender,
-      contentType: user.ContentType,
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      displayName: user.displayName,
+      email: user.email.getValue(),
+      password: user.password.getValue(),
+      role: user.role,
+      status: user.status,
+      dateOfBirth: user.dateOfBirth,
+      isVerified: user.isVerified,
+      avatarUrl: user.avatarUrl,
+      createdAt: user.createdAt,
+      bio: user.bio,
+      location: user.location,
+      gender: user.gender,
+      contentType: user.contentType,
     };
   }
 }
