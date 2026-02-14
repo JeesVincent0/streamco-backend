@@ -10,7 +10,7 @@ import { UserRepositoryPort } from '@/modules/user/application/ports';
 import { Advertiser } from '@/modules/user/domain/entity/advertiser.entity';
 import { User } from '@/modules/user/domain/entity/user.entity';
 import { UserRole } from '@/modules/user/domain/enums';
-import { GenderMapper } from '@/modules/user/infrastructure/mappers';
+import { Gender } from '@/modules/user/domain/value-objects/gender.vo';
 // import { OtpPurpose } from '../../../domain/enums';
 import { GenerateOtpUseCase } from '../otp/generate-otp.usecase';
 import { AgeRules } from '../../../domain/rules/age.rules';
@@ -65,7 +65,7 @@ export class RegisterUserUseCase {
         lastName: input.lastName,
         email,
         password: HashedPassword.create(hashedPassword),
-        gender: GenderMapper.mapGender(input.gender),
+        gender: Gender.create(input.gender),
         dob: input.dob,
       });
     } else {

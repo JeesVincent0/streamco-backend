@@ -1,10 +1,10 @@
 import { Email } from '@/modules/user/domain/value-objects';
-import { MailService } from '../../application/ports';
+import { MailServicePort } from '../../application/ports';
 import * as nodemailer from 'nodemailer';
 import type { Transporter } from 'nodemailer';
 import { BadRequestError } from '@/shared/errors';
 
-export class NodemailerService implements MailService {
+export class NodemailerService implements MailServicePort {
   private readonly transporter: Transporter;
 
   constructor() {

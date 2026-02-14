@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 // import { AuthController } from './presentation/controller/auth.controller';
 
 import { RedisModule } from '@/shared/infrastructure/cache/redis.module';
@@ -10,7 +10,7 @@ import { signupProvider } from './provider/signup.provider';
 // import { OtpController } from './presentation/controller/otp.controller';
 
 @Module({
-  imports: [forwardRef(() => UserModule), RedisModule],
+  imports: [UserModule, RedisModule],
   controllers: [RegistrationController],
   providers: [...signupProvider],
   exports: [],

@@ -1,8 +1,8 @@
 import { UserRepositoryPort } from '@/modules/user/application/ports';
 import {
-  AuthCachedUserRepository,
-  type MailService,
-  OtpService,
+  AuthCachedUserRepositoryPort,
+  type MailServicePort,
+  OtpServicePort,
   PasswordHasherPort,
 } from '../../ports';
 import { Email } from '@/modules/user/domain/value-objects';
@@ -26,11 +26,11 @@ import { BadRequestError } from '@/shared/errors';
 
 export class GenerateOtpUseCase {
   constructor(
-    private readonly _otpRepository: OtpService,
+    private readonly _otpRepository: OtpServicePort,
     private readonly _userRepository: UserRepositoryPort,
     private readonly _passwordHasher: PasswordHasherPort,
-    private readonly _cacheRepository: AuthCachedUserRepository,
-    private readonly _mailService: MailService,
+    private readonly _cacheRepository: AuthCachedUserRepositoryPort,
+    private readonly _mailService: MailServicePort,
   ) {}
 
   async execute(input: GenerateOtpInput) {

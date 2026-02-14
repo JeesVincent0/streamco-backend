@@ -1,5 +1,5 @@
 import { Email } from '@/modules/user/domain/value-objects';
 
-export interface MailService {
+export interface MailServicePort {
   sendOtp(email: Email, otp: number): Promise<void>;
 }

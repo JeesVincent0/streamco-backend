@@ -1,5 +1,5 @@
 import { Email } from '@/modules/user/domain/value-objects';
-import { AuthCachedUserRepository, PasswordHasherPort } from '../ports';
+import { AuthCachedUserRepositoryPort, PasswordHasherPort } from '../ports';
 import { BadRequestError } from '@/shared/errors';
 import { UserRepositoryPort } from '@/modules/user/application/ports';
 import { OtpInput } from '../inputs';
@@ -10,7 +10,7 @@ import { OtpPolicy, OtpSate } from '../../domain/service/otp-policy';
 */
 export class OtpVerificationUseCase {
   constructor(
-    private readonly _cachedUserRepo: AuthCachedUserRepository,
+    private readonly _cachedUserRepo: AuthCachedUserRepositoryPort,
     private readonly _userRepo: UserRepositoryPort,
     private readonly _otpHasher: PasswordHasherPort,
   ) {}

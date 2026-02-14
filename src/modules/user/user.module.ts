@@ -8,12 +8,11 @@ import {
   AdvertiserSchema,
 } from './infrastructure/schemas';
 
-import { MongoRepository } from './infrastructure/repositories/user-repository.impl';
 import { userProviders } from './providers/user.providers';
 import {
   CREATE_ADVERTISER_USER_PORT,
   CREATE_NORMAL_USER_PORT,
-  UserRepositoryPort,
+  USER_REPOSITORY_PORT,
 } from './application';
 
 @Module({
@@ -33,15 +32,9 @@ import {
     ]),
   ],
   controllers: [UserController],
-  providers: [
-    ...userProviders,
-    {
-      provide: UserRepositoryPort,
-      useClass: MongoRepository,
-    },
-  ],
+  providers: [...userProviders],
   exports: [
-    UserRepositoryPort,
+    USER_REPOSITORY_PORT,
     CREATE_NORMAL_USER_PORT,
     CREATE_ADVERTISER_USER_PORT,
   ],

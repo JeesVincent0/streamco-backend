@@ -10,14 +10,12 @@ import { UserRole } from '../../domain/enums';
 import { AdvertiserMapper, UserMappers } from '../mappers';
 import { BadRequestError } from '@/shared/errors';
 
-export class MongoRepository extends UserRepositoryPort {
+export class MongoRepository implements UserRepositoryPort {
   constructor(
     @InjectModel('User')
     private readonly _userModel: Model<BaseUserDocument>,
     private readonly _logger: FileLogger,
-  ) {
-    super();
-  }
+  ) {}
 
   async findByEmail(email: Email): Promise<BaseUser | null> {
     const userDoc = await this._userModel.findOne({

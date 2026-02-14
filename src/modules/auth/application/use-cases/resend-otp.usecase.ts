@@ -2,19 +2,19 @@ import { BadRequestError } from '@/shared/errors';
 import { OtpTimer } from '../../domain/service/get-otp-timer';
 import { OtpPolicy, OtpSate } from '../../domain/service/otp-policy';
 import {
-  AuthCachedUserRepository,
-  MailService,
-  OtpService,
+  AuthCachedUserRepositoryPort,
+  MailServicePort,
+  OtpServicePort,
   PasswordHasherPort,
 } from '../ports';
 import { Email } from '@/modules/user/domain/value-objects';
 
 export class ResendOtpUseCase {
   constructor(
-    private readonly _cachedRepository: AuthCachedUserRepository,
-    private readonly _otpService: OtpService,
+    private readonly _cachedRepository: AuthCachedUserRepositoryPort,
+    private readonly _otpService: OtpServicePort,
     private readonly _otpHasher: PasswordHasherPort,
-    private readonly _mailService: MailService,
+    private readonly _mailService: MailServicePort,
   ) {}
 
   async execute(input: { id: string }) {

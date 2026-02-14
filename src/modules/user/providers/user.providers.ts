@@ -7,6 +7,7 @@ import {
   // use cases
   CreateNormalUserUseCase,
   CreateAdvertiserUserUseCase,
+  UserRepositoryPort,
 } from '../application';
 import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
 
@@ -20,7 +21,7 @@ export const userProviders = [
   },
   {
     provide: CREATE_NORMAL_USER_PORT,
-    useFactory: (userRepo) => {
+    useFactory: (userRepo: UserRepositoryPort) => {
       return new CreateNormalUserUseCase(userRepo);
     },
     inject: [USER_REPOSITORY_PORT],

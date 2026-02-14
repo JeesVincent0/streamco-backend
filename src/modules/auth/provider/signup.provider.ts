@@ -1,6 +1,8 @@
 import {
   CREATE_ADVERTISER_USER_PORT,
   CREATE_NORMAL_USER_PORT,
+  CreateAdvertiserUserPort,
+  CreateNormalUserPort,
   USER_REPOSITORY_PORT,
   UserRepositoryPort,
 } from '@/modules/user/application';
@@ -9,16 +11,30 @@ import {
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
 } from '../application/use-cases';
-import { BcryptPasswordHasherImpl } from '../infrastructure';
-import { OTP_SERVICE, OtpService, PASSWORD_HASHER_PORT } from '../application';
+import {
+  BcryptPasswordHasherImpl,
+  NodemailerService,
+  OtpGenerator,
+} from '../infrastructure';
+import {
+  AUTH_CACHED_USER_REPOSITORY_PORT,
+  AuthCachedUserRepositoryPort,
+  MAIL_SERVICE,
+  MailServicePort,
+  OTP_SERVICE,
+  OtpServicePort,
+  PASSWORD_HASHER_PORT,
+  PasswordHasherPort,
+} from '../application';
 import { GENERATE_OTP_USE_CASE } from '../application/use-cases/tokens.usecase';
+import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/repositories/redis-auth-cached-user.repository';
 
 export const signupProvider = [
   {
     provide: SignupNormalUserUseCase,
     useFactory: (
-      createNormalUser,
-      passwordHasher,
+      createNormalUser: CreateNormalUserPort,
+      passwordHasher: PasswordHasherPort,
       generateOtpUseCase: GenerateOtpUseCase,
     ) => {
       return new SignupNormalUserUseCase(
@@ -36,15 +52,33 @@ export const signupProvider = [
 
   {
     provide: GENERATE_OTP_USE_CASE,
-    useFactory: (otpService, userRepo, passwordHasher) => {
-      return new GenerateOtpUseCase(otpService, userRepo, passwordHasher);
+    useFactory: (
+      otpService: OtpServicePort,
+      userRepo: UserRepositoryPort,
+      passwordHasher: PasswordHasherPort,
+      cacheRepo: AuthCachedUserRepositoryPort,
+      mailService: MailServicePort,
+    ) => {
+      return new GenerateOtpUseCase(
+        otpService,
+        userRepo,
+        passwordHasher,
+        cacheRepo,
+        mailService,
+      );
     },
-    inject: [OTP_SERVICE, USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT],
+    inject: [
+      OTP_SERVICE,
+      USER_REPOSITORY_PORT,
+      PASSWORD_HASHER_PORT,
+      AUTH_CACHED_USER_REPOSITORY_PORT,
+      MAIL_SERVICE,
+    ],
   },
 
   {
     provide: SignupAdvertiserUseCase,
-    useFactory: (createAdvertiserUser) => {
+    useFactory: (createAdvertiserUser: CreateAdvertiserUserPort) => {
       return new SignupAdvertiserUseCase(createAdvertiserUser);
     },
     inject: [CREATE_ADVERTISER_USER_PORT],
@@ -57,11 +91,16 @@ export const signupProvider = [
 
   {
     provide: OTP_SERVICE,
-    useClass: OtpService,
+    useClass: OtpGenerator,
   },
 
   {
-    provide: USER_REPOSITORY_PORT,
-    useClass: UserRepositoryPort,
+    provide: AUTH_CACHED_USER_REPOSITORY_PORT,
+    useClass: RedisAuthCachedUserRepository,
+  },
+
+  {
+    provide: MAIL_SERVICE,
+    useClass: NodemailerService,
   },
 ];

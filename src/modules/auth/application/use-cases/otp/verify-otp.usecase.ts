@@ -1,5 +1,5 @@
 import { BadRequestError } from '@/shared/errors';
-import { AuthCachedUserRepository, PasswordHasherPort } from '../../ports';
+import { AuthCachedUserRepositoryPort, PasswordHasherPort } from '../../ports';
 import { OtpPolicy, OtpSate } from '@/modules/auth/domain/service/otp-policy';
 import { VerifyOtpInput } from '../../inputs';
 
@@ -12,7 +12,7 @@ import { VerifyOtpInput } from '../../inputs';
 
 export class VerifyOtpUseCase {
   constructor(
-    private readonly _cacheRepository: AuthCachedUserRepository,
+    private readonly _cacheRepository: AuthCachedUserRepositoryPort,
     private readonly _otpHasher: PasswordHasherPort,
   ) {}
 
