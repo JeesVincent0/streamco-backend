@@ -34,7 +34,6 @@ export class GenerateOtpUseCase {
   ) {}
 
   async execute(input: GenerateOtpInput) {
-    console.log('Executing GenerateOtpUseCase with input:', input);
     const email = Email.create(input.email);
 
     // Checking if user existing with the email and if not existing throw error

@@ -32,7 +32,6 @@ export class SigninUseCase {
     );
 
     if (!isPasswordMatch) {
-      console.log('this isisis');
       throw new BadRequestError('Wrong password');
     }
 

@@ -18,7 +18,6 @@ export class BcryptPasswordHasherImpl implements PasswordHasherPort {
     password: Password | string | number,
     hash: string,
   ): Promise<boolean> {
-    console.log('This is from compare: ', typeof password);
     if (typeof password === 'number') {
       password = password.toString();
     } else if (password instanceof Password) {
