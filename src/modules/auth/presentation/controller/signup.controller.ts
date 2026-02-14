@@ -1,6 +1,6 @@
 import { SignupAdvertiserUserDto, SignupNormalUserDto } from '../dto';
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-// import { ConfirmSignupUserUseCase } from '../../application/use-cases/signup/confirm-signup-user.usecase';
+import { ConfirmSignupUserUseCase } from '../../application/use-cases/signup/confirm-signup-user.usecase';
 import {
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
@@ -18,7 +18,7 @@ export class RegistrationController {
   constructor(
     private readonly _signupNormalUserUseCase: SignupNormalUserUseCase,
     private readonly _signupAdvertiserUserUseCase: SignupAdvertiserUseCase,
-    // private readonly _confirmSignupUserUseCase: ConfirmSignupUserUseCase,
+    private readonly _confirmSignupUserUseCase: ConfirmSignupUserUseCase,
   ) {}
 
   // Normal User registration
@@ -41,12 +41,12 @@ export class RegistrationController {
   }
 
   // Confrim registration by OTP verification
-  // @Post('confirm')
-  // @HttpCode(HttpStatus.OK)
-  // confirm(@Body() dto: { id: string; otp: number }) {
-  //   return this._confirmSignupUserUseCase.execute({
-  //     id: dto.id,
-  //     otp: dto.otp,
-  //   });
-  // }
+  @Post('confirm')
+  @HttpCode(HttpStatus.OK)
+  confirm(@Body() dto: { id: string; otp: number }) {
+    return this._confirmSignupUserUseCase.execute({
+      id: dto.id,
+      otp: dto.otp,
+    });
+  }
 }

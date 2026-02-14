@@ -57,7 +57,7 @@ export class Advertiser extends BaseUser {
       displayName,
       props.email,
       props.password,
-      props.role,
+      UserRole.ADVERTISER,
       UserStatus.ACTIVE,
       false,
       props.companyName,

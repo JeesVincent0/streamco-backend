@@ -7,9 +7,11 @@ import {
   UserRepositoryPort,
 } from '@/modules/user/application';
 import {
+  ConfirmSignupUserUseCase,
   GenerateOtpUseCase,
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
+  VerifyOtpUseCase,
 } from '../application/use-cases';
 import {
   BcryptPasswordHasherImpl,
@@ -26,7 +28,10 @@ import {
   PASSWORD_HASHER_PORT,
   PasswordHasherPort,
 } from '../application';
-import { GENERATE_OTP_USE_CASE } from '../application/use-cases/tokens.usecase';
+import {
+  GENERATE_OTP_USE_CASE,
+  VERIFY_OTP_USE_CASE,
+} from '../application/use-cases/tokens.usecase';
 import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/repositories/redis-auth-cached-user.repository';
 
 export const signupProvider = [
@@ -77,11 +82,45 @@ export const signupProvider = [
   },
 
   {
-    provide: SignupAdvertiserUseCase,
-    useFactory: (createAdvertiserUser: CreateAdvertiserUserPort) => {
-      return new SignupAdvertiserUseCase(createAdvertiserUser);
+    provide: ConfirmSignupUserUseCase,
+    useFactory: (
+      userRepo: UserRepositoryPort,
+      verifyOtpUseCase: VerifyOtpUseCase,
+    ) => {
+      return new ConfirmSignupUserUseCase(userRepo, verifyOtpUseCase);
     },
-    inject: [CREATE_ADVERTISER_USER_PORT],
+    inject: [USER_REPOSITORY_PORT, VERIFY_OTP_USE_CASE],
+  },
+
+  {
+    provide: VERIFY_OTP_USE_CASE,
+    useFactory: (
+      cacheRepo: AuthCachedUserRepositoryPort,
+      otpHasher: PasswordHasherPort,
+    ) => {
+      return new VerifyOtpUseCase(cacheRepo, otpHasher);
+    },
+    inject: [AUTH_CACHED_USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT],
+  },
+
+  {
+    provide: SignupAdvertiserUseCase,
+    useFactory: (
+      createAdvertiserUser: CreateAdvertiserUserPort,
+      passwordHasher: PasswordHasherPort,
+      generateOtp: GenerateOtpUseCase,
+    ) => {
+      return new SignupAdvertiserUseCase(
+        createAdvertiserUser,
+        passwordHasher,
+        generateOtp,
+      );
+    },
+    inject: [
+      CREATE_ADVERTISER_USER_PORT,
+      PASSWORD_HASHER_PORT,
+      GENERATE_OTP_USE_CASE,
+    ],
   },
 
   {

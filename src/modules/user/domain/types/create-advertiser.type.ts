@@ -1,5 +1,4 @@
 import { Email, HashedPassword } from '@/modules/user/domain/value-objects';
-import { UserRole } from '../enums';
 
 export interface CreateAdvertiserProps {
   firstName: string;
@@ -7,5 +6,4 @@ export interface CreateAdvertiserProps {
   email: Email;
   password: HashedPassword;
   companyName: string;
-  role: UserRole;
 }

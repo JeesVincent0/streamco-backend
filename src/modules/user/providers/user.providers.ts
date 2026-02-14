@@ -14,10 +14,10 @@ import { MongoRepository } from '../infrastructure/repositories/user-repository.
 export const userProviders = [
   {
     provide: CREATE_ADVERTISER_USER_PORT,
-    useFactory: () => {
-      return new CreateAdvertiserUserUseCase();
+    useFactory: (userRepo: UserRepositoryPort) => {
+      return new CreateAdvertiserUserUseCase(userRepo);
     },
-    inject: [],
+    inject: [USER_REPOSITORY_PORT],
   },
   {
     provide: CREATE_NORMAL_USER_PORT,

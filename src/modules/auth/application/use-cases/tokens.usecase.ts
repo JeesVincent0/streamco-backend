@@ -1,1 +1,2 @@
 export const GENERATE_OTP_USE_CASE = Symbol('GENERATE_OTP_USE_CASE');
+export const VERIFY_OTP_USE_CASE = Symbol('VERIFY_OTP_USE_CASE');
