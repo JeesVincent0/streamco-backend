@@ -5,6 +5,7 @@ import { Email, HashedPassword, User } from '@/modules/user/domain';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { BadRequestError } from '@/shared/errors';
 import { Gender } from '@/modules/user/domain/value-objects/gender.vo';
+import { AgeRules } from '@/modules/auth/domain/rules/age.rules';
 
 export class CreateNormalUserUseCase implements CreateNormalUserPort {
   constructor(private _userRepo: UserRepositoryPort) {}
@@ -13,9 +14,12 @@ export class CreateNormalUserUseCase implements CreateNormalUserPort {
 
     // Checking email, already taken or not
     const user = await this._userRepo.findByEmail(email);
-    if (user) {
+    if (user && user.isVerified) {
       throw new BadRequestError(ERROR_MESSAGES.USER_ALREADY_EXIST);
     }
+
+    // Checking normal user age valid or not
+    AgeRules.isValidAge(input.dob);
 
     const newUser = User.create({
       firstName: input.firstName,

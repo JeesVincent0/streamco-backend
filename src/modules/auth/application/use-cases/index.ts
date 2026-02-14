@@ -1,4 +1,3 @@
-export * from './signup/user-register.usecase';
 export * from './otp-verification.usecase';
 export * from './resend-otp.usecase';
 
