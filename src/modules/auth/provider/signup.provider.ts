@@ -9,6 +9,7 @@ import {
 import {
   ConfirmSignupUserUseCase,
   GenerateOtpUseCase,
+  ResendOtpUseCase,
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
   VerifyOtpUseCase,
@@ -28,10 +29,6 @@ import {
   PASSWORD_HASHER_PORT,
   PasswordHasherPort,
 } from '../application';
-import {
-  GENERATE_OTP_USE_CASE,
-  VERIFY_OTP_USE_CASE,
-} from '../application/use-cases/tokens.usecase';
 import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/repositories/redis-auth-cached-user.repository';
 
 export const signupProvider = [
@@ -48,15 +45,34 @@ export const signupProvider = [
         generateOtpUseCase,
       );
     },
+    inject: [CREATE_NORMAL_USER_PORT, PASSWORD_HASHER_PORT, GenerateOtpUseCase],
+  },
+
+  {
+    provide: ResendOtpUseCase,
+    useFactory: (
+      cachedRepo: AuthCachedUserRepositoryPort,
+      otpService: OtpServicePort,
+      otpHasher: PasswordHasherPort,
+      mailService: MailServicePort,
+    ) => {
+      return new ResendOtpUseCase(
+        cachedRepo,
+        otpService,
+        otpHasher,
+        mailService,
+      );
+    },
     inject: [
-      CREATE_NORMAL_USER_PORT,
+      AUTH_CACHED_USER_REPOSITORY_PORT,
+      OTP_SERVICE,
       PASSWORD_HASHER_PORT,
-      GENERATE_OTP_USE_CASE,
+      MAIL_SERVICE,
     ],
   },
 
   {
-    provide: GENERATE_OTP_USE_CASE,
+    provide: GenerateOtpUseCase,
     useFactory: (
       otpService: OtpServicePort,
       userRepo: UserRepositoryPort,
@@ -89,11 +105,11 @@ export const signupProvider = [
     ) => {
       return new ConfirmSignupUserUseCase(userRepo, verifyOtpUseCase);
     },
-    inject: [USER_REPOSITORY_PORT, VERIFY_OTP_USE_CASE],
+    inject: [USER_REPOSITORY_PORT, VerifyOtpUseCase],
   },
 
   {
-    provide: VERIFY_OTP_USE_CASE,
+    provide: VerifyOtpUseCase,
     useFactory: (
       cacheRepo: AuthCachedUserRepositoryPort,
       otpHasher: PasswordHasherPort,
@@ -119,7 +135,7 @@ export const signupProvider = [
     inject: [
       CREATE_ADVERTISER_USER_PORT,
       PASSWORD_HASHER_PORT,
-      GENERATE_OTP_USE_CASE,
+      GenerateOtpUseCase,
     ],
   },
 

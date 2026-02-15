@@ -7,11 +7,11 @@ import { UserModule } from '@/modules/user/user.module';
 // import { authProviders } from './provider/auth.provider';
 import { RegistrationController } from './presentation/controller/signup.controller';
 import { signupProvider } from './provider/signup.provider';
-// import { OtpController } from './presentation/controller/otp.controller';
+import { OtpController } from './presentation/controller/otp.controller';
 
 @Module({
   imports: [UserModule, RedisModule],
-  controllers: [RegistrationController],
+  controllers: [RegistrationController, OtpController],
   providers: [...signupProvider],
   exports: [],
 })

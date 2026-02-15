@@ -1,4 +1,6 @@
+import { BadRequestError } from '@/shared/errors';
 import { OtpPurpose } from '../enums';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 export interface OtpSate {
   id: string;
@@ -48,8 +50,10 @@ export class OtpPolicy {
     };
   }
 
-  static canResendOtp(state: OtpSate): boolean {
-    return state.otpGenerateCount <= 0;
+  static canResendOtp(state: OtpSate): void {
+    if (state.otpGenerateCount <= 0) {
+      throw new BadRequestError(ERROR_MESSAGES.TOO_MANY_ATTEM);
+    }
   }
 
   static isExhausted(state: OtpSate): boolean {

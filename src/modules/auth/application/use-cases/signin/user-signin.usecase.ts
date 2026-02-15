@@ -1,9 +1,9 @@
 import { Email } from '@/modules/user/domain/value-objects';
-import { SigninInput } from '../inputs';
+import { SigninInput } from '../../inputs';
 import { UserRepositoryPort } from '@/modules/user/application';
 import { BadRequestError } from '@/shared/errors';
-import { PasswordHasherPort } from '../ports';
-import { ResponseData } from '../../domain/service/signin-reposnse';
+import { PasswordHasherPort } from '../../ports';
+import { ResponseData } from '../../../domain/service/signin-reposnse';
 
 export class SigninUseCase {
   constructor(
