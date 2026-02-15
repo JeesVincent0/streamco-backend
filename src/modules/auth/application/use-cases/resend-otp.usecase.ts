@@ -41,7 +41,7 @@ export class ResendOtpUseCase {
 
     await this._mailService.sendOtp(Email.create(cachedUser.email), otp);
 
-    const remainingTime = OtpTimer.Get(otpState.resendAvalableAt);
+    const remainingTime = OtpTimer.Get(otpState.otpExpiresAt);
 
     return {
       success: true,

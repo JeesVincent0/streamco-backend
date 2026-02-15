@@ -18,7 +18,7 @@ export class GetOtpTimerUseCase {
       );
     }
 
-    const remainingTime = OtpTimer.Get(cachedUser.resendAvalableAt);
+    const remainingTime = OtpTimer.Get(cachedUser.otpExpiresAt);
     return {
       status: 'success',
       data: {
