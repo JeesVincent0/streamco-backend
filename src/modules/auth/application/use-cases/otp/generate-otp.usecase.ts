@@ -57,11 +57,7 @@ export class GenerateOtpUseCase {
     );
 
     // Saving OTP state in cache with user ID as key and 5 minutes expiration time
-    await this._cacheRepository.save(
-      id,
-      otpState,
-      OtpPolicy._OTP_EXPIRE_COUNT_MS,
-    );
+    await this._cacheRepository.save(id, otpState, 300);
 
     console.log('OTP: ', otp);
     console.log('ID: ', id);
@@ -72,7 +68,7 @@ export class GenerateOtpUseCase {
     return {
       status: 'success',
       message: 'OTP generated and sent to email successfully',
-      data: { id, purpose: input.purpose, otpExpiresAt: otpState.otpExpiresAt },
+      data: { id, purpose: input.purpose, otpResendAt: otpState.otpResendAt },
     };
   }
 }

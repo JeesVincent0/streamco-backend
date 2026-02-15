@@ -7,13 +7,13 @@ export interface OtpSate {
   purpose: OtpPurpose;
   verificationCount: number;
   otpGenerateCount: number;
-  otpExpiresAt: Date;
+  otpResendAt: Date;
 }
 
 export class OtpPolicy {
   private static readonly _MAX_VERIFICATION_COUNT = 6;
   private static readonly _MAX_OTP_GENERATE_COUNT = 3;
-  static readonly _OTP_EXPIRE_COUNT_MS = 30_000;
+  private static readonly _RESEND_AFTER = 30_000;
 
   static createInitialState(
     id: string,
@@ -28,7 +28,7 @@ export class OtpPolicy {
       purpose,
       verificationCount: this._MAX_VERIFICATION_COUNT,
       otpGenerateCount: this._MAX_OTP_GENERATE_COUNT,
-      otpExpiresAt: new Date(Date.now() + this._OTP_EXPIRE_COUNT_MS),
+      otpResendAt: new Date(Date.now() + this._RESEND_AFTER),
     };
   }
 
@@ -44,7 +44,7 @@ export class OtpPolicy {
       ...state,
       otpGenerateCount: state.otpGenerateCount - 1,
       hashedOtp,
-      otpExpiresAt: new Date(Date.now() + this._OTP_EXPIRE_COUNT_MS),
+      otpResendAt: new Date(Date.now() + this._RESEND_AFTER),
     };
   }
 
