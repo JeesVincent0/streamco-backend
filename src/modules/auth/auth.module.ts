@@ -8,10 +8,11 @@ import { UserModule } from '@/modules/user/user.module';
 import { RegistrationController } from './presentation/controller/signup.controller';
 import { signupProvider } from './provider/signup.provider';
 import { OtpController } from './presentation/controller/otp.controller';
+import { ResetPasswordController } from './presentation/controller/reset.password.controller';
 
 @Module({
   imports: [UserModule, RedisModule],
-  controllers: [RegistrationController, OtpController],
+  controllers: [RegistrationController, OtpController, ResetPasswordController],
   providers: [...signupProvider],
   exports: [],
 })

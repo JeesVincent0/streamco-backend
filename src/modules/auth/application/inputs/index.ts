@@ -6,3 +6,4 @@ export * from './verify-otp.input';
 export * from './confirm-registration.input';
 
 export * from './signup';
+export * from './reset-password';

@@ -2,6 +2,7 @@ import { BadRequestError } from '@/shared/errors';
 import { AuthCachedUserRepositoryPort, PasswordHasherPort } from '../../ports';
 import { OtpPolicy, OtpSate } from '@/modules/auth/domain/service/otp-policy';
 import { VerifyOtpInput } from '../../inputs';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 /*
  * Use case for OTP verification.
@@ -23,6 +24,11 @@ export class VerifyOtpUseCase {
       throw new BadRequestError('Session expired', {
         cachedUser: false,
       });
+    }
+
+    // Verifing the purpose
+    if (cachedUser.purpose !== input.purpose) {
+      throw new BadRequestError(ERROR_MESSAGES.INVALID_OTP_PURPOSE);
     }
 
     // Checking OTP qual or not

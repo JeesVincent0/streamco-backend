@@ -5,3 +5,4 @@ export * from './id.dto';
 export * from './generate-otp.dto';
 
 export * from './signup';
+export * from './reset-password';

@@ -13,6 +13,7 @@ import {
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
   VerifyOtpUseCase,
+  VerifyResetPasswordOtpUseCase,
 } from '../application/use-cases';
 import {
   BcryptPasswordHasherImpl,
@@ -32,6 +33,14 @@ import {
 import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/repositories/redis-auth-cached-user.repository';
 
 export const signupProvider = [
+  {
+    provide: VerifyResetPasswordOtpUseCase,
+    useFactory: (verifyOtp: VerifyOtpUseCase) => {
+      return new VerifyResetPasswordOtpUseCase(verifyOtp);
+    },
+    inject: [VerifyOtpUseCase],
+  },
+
   {
     provide: SignupNormalUserUseCase,
     useFactory: (

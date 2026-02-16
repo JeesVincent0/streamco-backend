@@ -3,7 +3,6 @@ import { ConfirmRegistrationInput } from '../../inputs';
 import { VerifyOtpUseCase } from '../otp/verify-otp.usecase';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
 import { Email } from '@/modules/user/domain/value-objects';
-import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 /*
  *
@@ -28,11 +27,6 @@ export class ConfirmSignupUserUseCase {
       otp: input.otp,
       purpose: OtpPurpose.REGISTRATION,
     });
-
-    // Checking OTP purpose
-    if (result.purpose !== OtpPurpose.REGISTRATION) {
-      throw new Error(ERROR_MESSAGES.INVALID_OTP_PURPOSE);
-    }
 
     const email = Email.create(result.email);
 
