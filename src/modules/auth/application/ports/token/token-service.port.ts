@@ -1,6 +1,8 @@
+import { IAccessTokenPayload, IRefreshTokenPayload } from './type';
+
 export interface TokenServicePort {
-  generateAccessToken(payload: any): Promise<string>;
-  generateRefreshToken(payload: any): Promise<string>;
+  generateAccessToken(payload: IAccessTokenPayload): Promise<string>;
+  generateRefreshToken(payload: IRefreshTokenPayload): Promise<string>;
   verifyRefreshToken(token: string): Promise<any>;
   verifyAccessToken(token: string): Promise<any>;
 }
