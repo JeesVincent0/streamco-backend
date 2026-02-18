@@ -1,6 +1,6 @@
 import { UserRepositoryPort } from '@/modules/user/application/ports';
 import {
-  AuthCachedUserRepositoryPort,
+  BaseCachedUserRepositoryPort,
   type MailServicePort,
   OtpServicePort,
   PasswordHasherPort,
@@ -29,7 +29,7 @@ export class GenerateOtpUseCase {
     private readonly _otpRepository: OtpServicePort,
     private readonly _userRepository: UserRepositoryPort,
     private readonly _passwordHasher: PasswordHasherPort,
-    private readonly _cacheRepository: AuthCachedUserRepositoryPort,
+    private readonly _cacheRepository: BaseCachedUserRepositoryPort,
     private readonly _mailService: MailServicePort,
   ) {}
 

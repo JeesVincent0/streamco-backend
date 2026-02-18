@@ -1,12 +1,12 @@
 import { Global, Injectable } from '@nestjs/common';
 import { RedisService } from '../redis.service';
-import { AuthCachedUserRepositoryPort } from '@/modules/auth/application/ports';
+import { BaseCachedUserRepositoryPort } from '@/modules/auth/application/ports';
 import { BadRequestError } from '@/shared/errors';
 import { FileLogger } from '@/shared/logger/file-logger';
 
 @Global()
 @Injectable()
-export class RedisAuthCachedUserRepository implements AuthCachedUserRepositoryPort {
+export class RedisAuthCachedUserRepository implements BaseCachedUserRepositoryPort {
   constructor(
     private readonly redisService: RedisService,
     private readonly _logger: FileLogger,

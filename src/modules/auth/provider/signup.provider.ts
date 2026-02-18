@@ -22,7 +22,7 @@ import {
 } from '../infrastructure';
 import {
   AUTH_CACHED_USER_REPOSITORY_PORT,
-  AuthCachedUserRepositoryPort,
+  BaseCachedUserRepositoryPort,
   MAIL_SERVICE,
   MailServicePort,
   OTP_SERVICE,
@@ -60,7 +60,7 @@ export const signupProvider = [
   {
     provide: ResendOtpUseCase,
     useFactory: (
-      cachedRepo: AuthCachedUserRepositoryPort,
+      cachedRepo: BaseCachedUserRepositoryPort,
       otpService: OtpServicePort,
       otpHasher: PasswordHasherPort,
       mailService: MailServicePort,
@@ -86,7 +86,7 @@ export const signupProvider = [
       otpService: OtpServicePort,
       userRepo: UserRepositoryPort,
       passwordHasher: PasswordHasherPort,
-      cacheRepo: AuthCachedUserRepositoryPort,
+      cacheRepo: BaseCachedUserRepositoryPort,
       mailService: MailServicePort,
     ) => {
       return new GenerateOtpUseCase(
@@ -120,7 +120,7 @@ export const signupProvider = [
   {
     provide: VerifyOtpUseCase,
     useFactory: (
-      cacheRepo: AuthCachedUserRepositoryPort,
+      cacheRepo: BaseCachedUserRepositoryPort,
       otpHasher: PasswordHasherPort,
     ) => {
       return new VerifyOtpUseCase(cacheRepo, otpHasher);

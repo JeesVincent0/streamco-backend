@@ -1,7 +1,7 @@
 import { BadRequestError } from '@/shared/errors';
 import { OtpPolicy, OtpSate } from '../../../domain';
 import {
-  AuthCachedUserRepositoryPort,
+  BaseCachedUserRepositoryPort,
   MailServicePort,
   OtpServicePort,
   PasswordHasherPort,
@@ -10,7 +10,7 @@ import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 export class ResendOtpUseCase {
   constructor(
-    private readonly _cachedRepository: AuthCachedUserRepositoryPort,
+    private readonly _cachedRepository: BaseCachedUserRepositoryPort,
     private readonly _otpService: OtpServicePort,
     private readonly _otpHasher: PasswordHasherPort,
     private readonly _mailService: MailServicePort,
