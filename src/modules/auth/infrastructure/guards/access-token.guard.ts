@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { TOKEN_SERVICE, type TokenServicePort } from '../../application';
 import { Request } from 'express';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 @Injectable()
 export class AccessTokenGuard implements CanActivate {
@@ -15,14 +16,13 @@ export class AccessTokenGuard implements CanActivate {
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
-    console.log('This is request from the accessToken guard: ', request);
 
     const cookie = request.cookies as Record<string, unknown>;
     console.log('cookie from accessToken guard: ', cookie);
     const accessToken = cookie?.['accessToken'] as string;
 
     if (!accessToken || typeof accessToken !== 'string') {
-      throw new UnauthorizedException('Missing token');
+      throw new UnauthorizedException(ERROR_MESSAGES.MISSING_TOKEN);
     }
 
     try {
@@ -31,7 +31,7 @@ export class AccessTokenGuard implements CanActivate {
       request['accessToken'] = accessToken;
       return true;
     } catch {
-      throw new UnauthorizedException('Invalid access token');
+      throw new UnauthorizedException(ERROR_MESSAGES.INVALID_TOKEN);
     }
   }
 }

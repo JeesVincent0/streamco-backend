@@ -1,6 +1,6 @@
 export const ERROR_MESSAGES = {
   // Token error messages
-  INVALID_ACCESS_TOKEN: 'Invalid access token',
+  INVALID_TOKEN: 'Invalid token',
   MISSING_TOKEN: 'Missing Token',
 
   // OTP verification error messages

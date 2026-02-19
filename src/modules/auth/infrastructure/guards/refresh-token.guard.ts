@@ -30,7 +30,7 @@ export class RefreshTokenGuard implements CanActivate {
       request['accessToken'] = accessToken;
       return true;
     } catch {
-      throw new UnauthorizedException(ERROR_MESSAGES.INVALID_ACCESS_TOKEN);
+      throw new UnauthorizedException(ERROR_MESSAGES.INVALID_TOKEN);
     }
   }
 }
