@@ -9,11 +9,15 @@ import { RegistrationController } from './presentation/controller/signup.control
 import { signupProvider } from './provider/signup.provider';
 import { OtpController } from './presentation/controller/otp.controller';
 import { ResetPasswordController } from './presentation/controller/reset.password.controller';
+import { tokenProviders } from './provider/token.provider';
+import { JwtModule } from '@nestjs/jwt';
+import { TOKEN_SERVICE } from './application';
+import { AccessTokenGuard, RefreshTokenGuard } from './infrastructure/guards';
 
 @Module({
-  imports: [UserModule, RedisModule],
+  imports: [JwtModule.register({}), UserModule, RedisModule],
   controllers: [RegistrationController, OtpController, ResetPasswordController],
-  providers: [...signupProvider],
-  exports: [],
+  providers: [...signupProvider, ...tokenProviders],
+  exports: [TOKEN_SERVICE, AccessTokenGuard, RefreshTokenGuard],
 })
 export class AuthModule {}

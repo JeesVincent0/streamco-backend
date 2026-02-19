@@ -7,7 +7,6 @@ export interface IAccessTokenPayload {
   scope: string;
   role: UserRole;
   iat: number;
-  exp: number;
 }
 
 export interface IRefreshTokenPayload {
@@ -16,5 +15,4 @@ export interface IRefreshTokenPayload {
   aud: string;
   jti: string;
   iat: number;
-  exp: number;
 }
