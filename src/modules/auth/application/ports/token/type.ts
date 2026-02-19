@@ -19,5 +19,4 @@ export interface IRefreshTokenPayload {
 
 export interface IResetPasswordPayload {
   sub: string;
-  email: string;
 }

@@ -1,9 +1,13 @@
 import { OtpPurpose } from '@/modules/auth/domain';
 import { VerifyResetPasswordOtpInput } from '../../inputs/reset-password/verify-reset-password-otp.input';
 import { VerifyOtpUseCase } from '../otp';
+import { TokenServicePort } from '../../ports';
 
 export class VerifyResetPasswordOtpUseCase {
-  constructor(private readonly _verifyOtpUseCase: VerifyOtpUseCase) {}
+  constructor(
+    private readonly _verifyOtpUseCase: VerifyOtpUseCase,
+    private readonly _tokenService: TokenServicePort,
+  ) {}
 
   async execute(input: VerifyResetPasswordOtpInput) {
     await this._verifyOtpUseCase.execute({
@@ -12,12 +16,10 @@ export class VerifyResetPasswordOtpUseCase {
       purpose: OtpPurpose.RESET_PASSWORD,
     });
 
-    return {
-      status: 'success',
-      message: 'OTP verified successfully',
-      data: {
-        id: input.id,
-      },
-    };
+    const token = this._tokenService.generateResetPasswordToken({
+      sub: input.id,
+    });
+
+    return { token };
   }
 }

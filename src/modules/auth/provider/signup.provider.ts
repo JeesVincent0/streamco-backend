@@ -29,16 +29,21 @@ import {
   OtpServicePort,
   PASSWORD_HASHER_PORT,
   PasswordHasherPort,
+  TOKEN_SERVICE,
+  TokenServicePort,
 } from '../application';
 import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/repositories/redis-auth-cached-user.repository';
 
 export const signupProvider = [
   {
     provide: VerifyResetPasswordOtpUseCase,
-    useFactory: (verifyOtp: VerifyOtpUseCase) => {
-      return new VerifyResetPasswordOtpUseCase(verifyOtp);
+    useFactory: (
+      verifyOtp: VerifyOtpUseCase,
+      tokenService: TokenServicePort,
+    ) => {
+      return new VerifyResetPasswordOtpUseCase(verifyOtp, tokenService);
     },
-    inject: [VerifyOtpUseCase],
+    inject: [VerifyOtpUseCase, TOKEN_SERVICE],
   },
 
   {
