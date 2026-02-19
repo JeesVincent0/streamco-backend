@@ -5,10 +5,12 @@ import {
   HttpStatus,
   Post,
   Res,
+  UseGuards,
 } from '@nestjs/common';
-import { VerifyResetPasswordOtpDto } from '../dto';
+import { ResetPasswordDto, VerifyResetPasswordOtpDto } from '../dto';
 import { VerifyResetPasswordOtpUseCase } from '../../application';
 import { type Response } from 'express';
+import { ResetPasswordTokenGuard } from '../../infrastructure/guards/reset-password.guard';
 
 @Controller('auth')
 export class ResetPasswordController {
@@ -18,21 +20,26 @@ export class ResetPasswordController {
 
   @Post('verify-reset-password')
   @HttpCode(HttpStatus.OK)
-  verifyResetPasswordOtp(
+  async verifyResetPasswordOtp(
     @Body() dto: VerifyResetPasswordOtpDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const token = this._verifyResetPasswordOtpUseCase.execute(dto);
+    const { token } = await this._verifyResetPasswordOtpUseCase.execute(dto);
     res.cookie('resetPassword', token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 5,
-      secure: process.env.NODE_ENV === 'production' || false,
+      secure: false,
       sameSite: 'lax',
-      path: '/api/auth/',
+      path: '/',
     });
     return {
       status: 'success',
       message: 'OTP verified successfully',
     };
   }
+
+  @Post('reset-password')
+  @UseGuards(ResetPasswordTokenGuard)
+  @HttpCode(HttpStatus.OK)
+  resetPassword(@Body() dto: ResetPasswordDto) {}
 }
