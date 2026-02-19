@@ -16,3 +16,8 @@ export interface IRefreshTokenPayload {
   jti: string;
   iat: number;
 }
+
+export interface IResetPasswordPayload {
+  sub: string;
+  email: string;
+}

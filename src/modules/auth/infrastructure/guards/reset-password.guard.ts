@@ -1,0 +1,36 @@
+import {
+  CanActivate,
+  ExecutionContext,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { TOKEN_SERVICE, type TokenServicePort } from '../../application';
+import { Request } from 'express';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+
+@Injectable()
+export class ResetPasswordTokenGuard implements CanActivate {
+  constructor(
+    @Inject(TOKEN_SERVICE) private readonly _tokenService: TokenServicePort,
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest<Request>();
+    const cookie = request.cookies as Record<string, unknown>;
+    const token = cookie?.['resetPasswordToken'] as string;
+
+    if (!token || typeof token !== 'string') {
+      throw new UnauthorizedException(ERROR_MESSAGES.MISSING_TOKEN);
+    }
+
+    try {
+      const payload = await this._tokenService.verifyResetPassword(token);
+      request['user'] = payload;
+      request['resetPasswordToken'] = token;
+      return true;
+    } catch {
+      throw new UnauthorizedException(ERROR_MESSAGES.INVALID_TOKEN);
+    }
+  }
+}
