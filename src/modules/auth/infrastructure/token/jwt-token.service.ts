@@ -4,7 +4,9 @@ import {
   IAccessTokenPayload,
   IRefreshTokenPayload,
 } from '../../application/ports/token/type';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class JwtTokenService implements TokenServicePort {
   constructor(private readonly _jwtService: JwtService) {}
   generateAccessToken(payload: IAccessTokenPayload): Promise<string> {
