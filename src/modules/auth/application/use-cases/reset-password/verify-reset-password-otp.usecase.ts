@@ -16,7 +16,7 @@ export class VerifyResetPasswordOtpUseCase {
       purpose: OtpPurpose.RESET_PASSWORD,
     });
 
-    const token = this._tokenService.generateResetPasswordToken({
+    const token = await this._tokenService.generateResetPasswordToken({
       sub: input.id,
     });
 

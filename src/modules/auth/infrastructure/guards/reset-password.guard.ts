@@ -18,7 +18,7 @@ export class ResetPasswordTokenGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest<Request>();
     const cookie = request.cookies as Record<string, unknown>;
-    const token = cookie?.['resetPasswordToken'] as string;
+    const token = cookie?.['resetPassword'] as string;
 
     if (!token || typeof token !== 'string') {
       throw new UnauthorizedException(ERROR_MESSAGES.MISSING_TOKEN);
