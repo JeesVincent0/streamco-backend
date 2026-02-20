@@ -1,7 +1,6 @@
 import { Global, Injectable } from '@nestjs/common';
 import { RedisService } from '../redis.service';
 import { BaseCachedUserRepositoryPort } from '@/modules/auth/application/ports';
-import { BadRequestError } from '@/shared/errors';
 import { FileLogger } from '@/shared/logger/file-logger';
 
 @Global()
@@ -17,27 +16,14 @@ export class RedisAuthCachedUserRepository implements BaseCachedUserRepositoryPo
   }
 
   async get<T>(key: string): Promise<T | null> {
-    try {
-      return this.redisService.get<T>(this.buildKey(key));
-    } catch (err) {
-      this._logger.error(err);
-      throw new BadRequestError('Server error');
-    }
+    return this.redisService.get<T>(this.buildKey(key));
   }
 
   async save(key: string, value: any, ttlSeconds: number): Promise<void> {
-    try {
-      await this.redisService.set(this.buildKey(key), value, ttlSeconds);
-    } catch (error) {
-      this._logger.error(error);
-    }
+    await this.redisService.set(this.buildKey(key), value, ttlSeconds);
   }
 
   async del(key: string): Promise<void> {
-    try {
-      await this.redisService.del(this.buildKey(key));
-    } catch (error) {
-      this._logger.error(error);
-    }
+    await this.redisService.del(this.buildKey(key));
   }
 }
