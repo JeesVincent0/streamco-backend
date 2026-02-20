@@ -45,7 +45,7 @@ export const signupProvider = [
     ) => {
       return new SigninUseCase(userRepo, passwordHasher);
     },
-    inject: [USER_REPOSITORY_PORT],
+    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT],
   },
 
   {
