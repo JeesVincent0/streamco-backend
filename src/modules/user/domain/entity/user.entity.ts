@@ -15,7 +15,7 @@ import {
 import { CreateUserProps } from '../types';
 import { UserRestoreProps } from '../types';
 import { BadRequestError } from '@/shared/errors';
-import crypto from 'crypto';
+import { UniqueIdService } from '@/shared/domain';
 
 /**
  * User
@@ -211,7 +211,7 @@ export class User extends BaseUser {
 
   static create(props: CreateUserProps): User {
     const displayName = `${props.firstName} ${props.lastName}`;
-    const id = crypto.randomUUID();
+    const id = UniqueIdService.generate();
 
     return new User(
       id,

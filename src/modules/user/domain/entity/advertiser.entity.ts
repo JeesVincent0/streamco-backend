@@ -1,9 +1,9 @@
+import { UniqueIdService } from '@/shared/domain';
 import { UserRole, UserStatus } from '../enums';
 import { AdvertiserRestoreProps } from '../types/advertiser.restore';
 import { CreateAdvertiserProps } from '../types/create-advertiser.type';
 import { Email, HashedPassword } from '../value-objects';
 import { BaseUser } from './base-user.entity';
-import crypto from 'crypto';
 
 export class Advertiser extends BaseUser {
   private _companyName: string;
@@ -48,7 +48,7 @@ export class Advertiser extends BaseUser {
   }
 
   static create(props: CreateAdvertiserProps) {
-    const id = crypto.randomUUID();
+    const id = UniqueIdService.generate();
     const displayName = `${props.firstName} ${props.lastName}`;
     return new Advertiser(
       id,
