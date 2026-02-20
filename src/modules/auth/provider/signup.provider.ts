@@ -12,6 +12,7 @@ import {
   ResendOtpUseCase,
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
+  TokenBlackListUseCase,
   VerifyOtpUseCase,
   VerifyResetPasswordOtpUseCase,
 } from '../application/use-cases';
@@ -29,14 +30,27 @@ import {
   OtpServicePort,
   PASSWORD_HASHER_PORT,
   PasswordHasherPort,
+  TOKEN_BLACK_LIST_CACHE,
   TOKEN_SERVICE,
   TokenServicePort,
 } from '../application';
 import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/repositories/redis-auth-cached-user.repository';
 import { ResetPasswordUseCase } from '../application/use-cases/reset-password/reset-password.usecase';
 import { SigninUseCase } from '../application/use-cases/signin';
+import { RedisTokenBlackListRepository } from '../infrastructure/cache';
 
 export const signupProvider = [
+  {
+    provide: TokenBlackListUseCase,
+    useFactory: (
+      tokenBlacklistRepo: BaseCachedUserRepositoryPort,
+      tokenService: TokenServicePort,
+    ) => {
+      return new TokenBlackListUseCase(tokenBlacklistRepo, tokenService);
+    },
+    inject: [TOKEN_BLACK_LIST_CACHE, TOKEN_SERVICE],
+  },
+
   {
     provide: SigninUseCase,
     useFactory: (
@@ -53,10 +67,11 @@ export const signupProvider = [
     useFactory: (
       userRepo: UserRepositoryPort,
       passwordHasher: PasswordHasherPort,
+      tokenBlacklist: TokenBlackListUseCase,
     ) => {
-      return new ResetPasswordUseCase(userRepo, passwordHasher);
+      return new ResetPasswordUseCase(userRepo, passwordHasher, tokenBlacklist);
     },
-    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT],
+    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT, TokenBlackListUseCase],
   },
 
   {
@@ -195,5 +210,10 @@ export const signupProvider = [
   {
     provide: MAIL_SERVICE,
     useClass: NodemailerService,
+  },
+
+  {
+    provide: TOKEN_BLACK_LIST_CACHE,
+    useClass: RedisTokenBlackListRepository,
   },
 ];
