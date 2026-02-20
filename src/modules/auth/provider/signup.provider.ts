@@ -33,8 +33,32 @@ import {
   TokenServicePort,
 } from '../application';
 import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/repositories/redis-auth-cached-user.repository';
+import { ResetPasswordUseCase } from '../application/use-cases/reset-password/reset-password.usecase';
+import { SigninUseCase } from '../application/use-cases/signin';
 
 export const signupProvider = [
+  {
+    provide: SigninUseCase,
+    useFactory: (
+      userRepo: UserRepositoryPort,
+      passwordHasher: PasswordHasherPort,
+    ) => {
+      return new SigninUseCase(userRepo, passwordHasher);
+    },
+    inject: [USER_REPOSITORY_PORT],
+  },
+
+  {
+    provide: ResetPasswordUseCase,
+    useFactory: (
+      userRepo: UserRepositoryPort,
+      passwordHasher: PasswordHasherPort,
+    ) => {
+      return new ResetPasswordUseCase(userRepo, passwordHasher);
+    },
+    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT],
+  },
+
   {
     provide: VerifyResetPasswordOtpUseCase,
     useFactory: (
