@@ -17,6 +17,17 @@ export class MongoRepository implements UserRepositoryPort {
     private readonly _logger: FileLogger,
   ) {}
 
+  async findById(id: string): Promise<BaseUser | null> {
+    const userDoc = await this._userModel.findOne({
+      id,
+      deletedAt: null,
+    });
+
+    if (!userDoc) return null;
+
+    return BaseUserMapper.toDomain(userDoc);
+  }
+
   async findByEmail(email: Email): Promise<BaseUser | null> {
     const userDoc = await this._userModel.findOne({
       email: email.getValue(),
