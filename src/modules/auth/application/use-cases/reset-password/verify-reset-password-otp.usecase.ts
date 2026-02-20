@@ -2,6 +2,7 @@ import { OtpPurpose } from '@/modules/auth/domain';
 import { VerifyResetPasswordOtpInput } from '../../inputs/reset-password/verify-reset-password-otp.input';
 import { VerifyOtpUseCase } from '../otp';
 import { TokenServicePort } from '../../ports';
+import { UniqueIdService } from '@/shared/domain';
 
 export class VerifyResetPasswordOtpUseCase {
   constructor(
@@ -18,6 +19,7 @@ export class VerifyResetPasswordOtpUseCase {
 
     const token = await this._tokenService.generateResetPasswordToken({
       sub: input.id,
+      jti: UniqueIdService.generate(),
     });
 
     return { token };

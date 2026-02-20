@@ -4,6 +4,9 @@ import {
   IAccessTokenPayload,
   IRefreshTokenPayload,
   IResetPasswordPayload,
+  IVerifiedAccessTokenPayload,
+  IVerifiedRefreshTokenPayload,
+  IVerifiedResetPasswordTokenPayload,
 } from '../../application/ports/token/type';
 import { Injectable } from '@nestjs/common';
 
@@ -29,17 +32,19 @@ export class JwtTokenService implements TokenServicePort {
       expiresIn: '5min',
     });
   }
-  verifyAccessToken(token: string): Promise<IAccessTokenPayload> {
+  verifyAccessToken(token: string): Promise<IVerifiedAccessTokenPayload> {
     return this._jwtService.verifyAsync(token, {
       secret: process.env.ACCESS_TOKEN_SECRET_KEY,
     });
   }
-  verifyRefreshToken(token: string): Promise<IRefreshTokenPayload> {
+  verifyRefreshToken(token: string): Promise<IVerifiedRefreshTokenPayload> {
     return this._jwtService.verifyAsync(token, {
       secret: process.env.REFRESH_TOKEN_SECRET_KEY,
     });
   }
-  verifyResetPassword(token: string): Promise<IResetPasswordPayload> {
+  verifyResetPassword(
+    token: string,
+  ): Promise<IVerifiedResetPasswordTokenPayload> {
     return this._jwtService.verifyAsync(token, {
       secret: process.env.RESET_PSSWORD_TOKEN_SECRET_KEY,
     });

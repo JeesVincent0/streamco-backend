@@ -1,5 +1,8 @@
+import { IResetPasswordPayload } from '../../ports/token/type';
+
 export interface ResetPasswordInput {
-  id: string;
+  payload: IResetPasswordPayload;
+  jwtToken: string;
   password: string;
   confirmPassword: string;
 }

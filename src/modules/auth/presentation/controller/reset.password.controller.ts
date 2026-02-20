@@ -51,7 +51,8 @@ export class ResetPasswordController {
   ) {
     return this._resetPasswordUseCase.execute({
       ...dto,
-      id: req.user.sub,
+      payload: req.user,
+      jwtToken: req.jwtToken,
     });
   }
 }

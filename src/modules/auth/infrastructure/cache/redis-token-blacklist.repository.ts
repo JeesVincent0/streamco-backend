@@ -1,13 +1,17 @@
 import { RedisService } from '@/shared/infrastructure/cache/redis.service';
 import { BaseCachedUserRepositoryPort } from '../../application';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class RedisTokenBlackListRepository implements BaseCachedUserRepositoryPort {
   constructor(private readonly _redisService: RedisService) {}
   private buildKey(key: string): string {
     return `token:blackList:${key}`;
   }
   async get<T>(key: string): Promise<T | null> {
-    return this._redisService.get<T>(this.buildKey(key));
+    const tokenBlacklist = await this._redisService.get<T>(this.buildKey(key));
+    if (!tokenBlacklist) return null;
+    return tokenBlacklist;
   }
 
   async save(key: string, value: any, ttlSeconds: number): Promise<void> {

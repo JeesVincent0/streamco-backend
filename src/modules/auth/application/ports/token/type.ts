@@ -7,6 +7,7 @@ export interface IAccessTokenPayload {
   scope: string;
   role: UserRole;
   iat: number;
+  jti: string;
 }
 
 export interface IRefreshTokenPayload {
@@ -19,4 +20,19 @@ export interface IRefreshTokenPayload {
 
 export interface IResetPasswordPayload {
   sub: string;
+  jti: string;
 }
+
+export interface JwtMeta {
+  iat: number;
+  exp: number;
+}
+
+export interface IVerifiedAccessTokenPayload
+  extends IAccessTokenPayload, JwtMeta {}
+
+export interface IVerifiedRefreshTokenPayload
+  extends IRefreshTokenPayload, JwtMeta {}
+
+export interface IVerifiedResetPasswordTokenPayload
+  extends IResetPasswordPayload, JwtMeta {}

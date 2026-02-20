@@ -15,4 +15,6 @@ export const ERROR_MESSAGES = {
   USER_NOT_FOUND: 'User does not exist',
   INVALID_PASSWORD: 'Invalid password',
   PASSWORD_NOT_MATCHING: 'Password not matching',
+
+  SESSION_EXPIRED: 'Session expired',
 } as const;
