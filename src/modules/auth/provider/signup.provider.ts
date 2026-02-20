@@ -38,8 +38,17 @@ import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/rep
 import { ResetPasswordUseCase } from '../application/use-cases/reset-password/reset-password.usecase';
 import { SigninUseCase } from '../application/use-cases/signin';
 import { RedisTokenBlackListRepository } from '../infrastructure/cache';
+import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
 
 export const signupProvider = [
+  {
+    provide: AdminSigninUseCase,
+    useFactory: (userRepo: UserRepositoryPort) => {
+      return new AdminSigninUseCase(userRepo);
+    },
+    inject: [USER_REPOSITORY_PORT],
+  },
+
   {
     provide: TokenBlackListUseCase,
     useFactory: (

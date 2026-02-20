@@ -10,6 +10,7 @@ import {
   SignupNormalUserUseCase,
 } from '../../application/use-cases';
 import { SigninUseCase } from '../../application/use-cases/signin';
+import { AdminSigninUseCase } from '../../application/use-cases/signin/admin-signin-usecase';
 
 // Controller for handling registration
 // of both normal users and advertisers.
@@ -25,6 +26,7 @@ export class RegistrationController {
     private readonly _signupNormalUserUseCase: SignupNormalUserUseCase,
     private readonly _signupAdvertiserUserUseCase: SignupAdvertiserUseCase,
     private readonly _confirmSignupUserUseCase: ConfirmSignupUserUseCase,
+    private readonly _adminSigninUseCase: AdminSigninUseCase,
   ) {}
 
   // Normal User registration
@@ -59,7 +61,14 @@ export class RegistrationController {
   // Signin for both user and advertiser
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  signin(@Body() dto: SigninDto) {
+  async signin(@Body() dto: SigninDto) {
     return this._signinUseCase.execute(dto);
+  }
+
+  // admin signin
+  @Post('admin/signin')
+  @HttpCode(HttpStatus.OK)
+  async adminSignin(@Body() dto: SigninDto) {
+    return this._adminSigninUseCase.execute(dto);
   }
 }
