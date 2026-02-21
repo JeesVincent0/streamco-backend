@@ -75,7 +75,7 @@ export class RegistrationController {
 
   // admin signin
   @Post('admin/signin')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   async adminSignin(
     @Body() dto: SigninDto,
     @Res({ passthrough: true }) res: Response,
