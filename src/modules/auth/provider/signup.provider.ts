@@ -1,14 +1,17 @@
 import {
   CREATE_ADVERTISER_USER_PORT,
   CREATE_NORMAL_USER_PORT,
+  CREATE_USER_WITH_GOOGLE_AUTH_PORT,
   CreateAdvertiserUserPort,
   CreateNormalUserPort,
+  CreateUserWIthGoogleAuthPort,
   USER_REPOSITORY_PORT,
   UserRepositoryPort,
 } from '@/modules/user/application';
 import {
   ConfirmSignupUserUseCase,
   GenerateOtpUseCase,
+  GoogleAuthUseCase,
   ResendOtpUseCase,
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
@@ -41,6 +44,26 @@ import { RedisTokenBlackListRepository } from '../infrastructure/cache';
 import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
 
 export const signupProvider = [
+  {
+    provide: GoogleAuthUseCase,
+    useFactory: (
+      userRepo: UserRepositoryPort,
+      createUserWithGoogleAuth: CreateUserWIthGoogleAuthPort,
+      tokenService: TokenServicePort,
+    ) => {
+      return new GoogleAuthUseCase(
+        userRepo,
+        createUserWithGoogleAuth,
+        tokenService,
+      );
+    },
+    inject: [
+      USER_REPOSITORY_PORT,
+      CREATE_USER_WITH_GOOGLE_AUTH_PORT,
+      TOKEN_SERVICE,
+    ],
+  },
+
   {
     provide: AdminSigninUseCase,
     useFactory: (
