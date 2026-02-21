@@ -15,6 +15,9 @@ export const ERROR_MESSAGES = {
   USER_NOT_FOUND: 'User does not exist',
   INVALID_PASSWORD: 'Invalid password',
   PASSWORD_NOT_MATCHING: 'Password not matching',
+  USER_NOT_VERIFIED: 'User not verified',
 
   SESSION_EXPIRED: 'Session expired',
+  INCORRECT_CREDENTIALS: 'Incorrect creadentials',
+  ENV_FILE_NOT_ATTACHED: 'Env file not attached',
 } as const;

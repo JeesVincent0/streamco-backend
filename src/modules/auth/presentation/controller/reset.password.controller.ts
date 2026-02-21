@@ -29,13 +29,15 @@ export class ResetPasswordController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const { token } = await this._verifyResetPasswordOtpUseCase.execute(dto);
+
     res.cookie('resetPassword', token, {
       httpOnly: true,
       maxAge: 1000 * 60 * 5,
       secure: false,
       sameSite: 'lax',
-      path: '/',
+      path: '/api/auth',
     });
+
     return {
       status: 'success',
       message: 'OTP verified successfully',

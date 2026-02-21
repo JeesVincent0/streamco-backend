@@ -4,10 +4,11 @@ export interface IAccessTokenPayload {
   sub: string;
   iss: string;
   aud: string;
+  jti: string;
+  iat: number;
+
   scope: string;
   role: UserRole;
-  iat: number;
-  jti: string;
 }
 
 export interface IRefreshTokenPayload {
