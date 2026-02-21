@@ -43,10 +43,14 @@ import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin
 export const signupProvider = [
   {
     provide: AdminSigninUseCase,
-    useFactory: (userRepo: UserRepositoryPort) => {
-      return new AdminSigninUseCase(userRepo);
+    useFactory: (
+      userRepo: UserRepositoryPort,
+      passwordHasher: PasswordHasherPort,
+      tokenService: TokenServicePort,
+    ) => {
+      return new AdminSigninUseCase(userRepo, passwordHasher, tokenService);
     },
-    inject: [USER_REPOSITORY_PORT],
+    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT, TOKEN_SERVICE],
   },
 
   {

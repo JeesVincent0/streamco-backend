@@ -3,7 +3,14 @@ import {
   SignupAdvertiserUserDto,
   SignupNormalUserDto,
 } from '../dto';
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { ConfirmSignupUserUseCase } from '../../application/use-cases/signup/confirm-signup-user.usecase';
 import {
   SignupAdvertiserUseCase,
@@ -11,6 +18,7 @@ import {
 } from '../../application/use-cases';
 import { SigninUseCase } from '../../application/use-cases/signin';
 import { AdminSigninUseCase } from '../../application/use-cases/signin/admin-signin-usecase';
+import { type Response } from 'express';
 
 // Controller for handling registration
 // of both normal users and advertisers.
@@ -19,7 +27,7 @@ import { AdminSigninUseCase } from '../../application/use-cases/signin/admin-sig
 // which is already handling multiple responsibilities
 // like OTP generation, OTP verification, user signin etc.
 
-@Controller('auth/')
+@Controller('auth')
 export class RegistrationController {
   constructor(
     private readonly _signinUseCase: SigninUseCase,
@@ -67,8 +75,32 @@ export class RegistrationController {
 
   // admin signin
   @Post('admin/signin')
-  @HttpCode(HttpStatus.OK)
-  async adminSignin(@Body() dto: SigninDto) {
-    return this._adminSigninUseCase.execute(dto);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async adminSignin(
+    @Body() dto: SigninDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } =
+      await this._adminSigninUseCase.execute(dto);
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 5,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/api/admin',
+    });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/api/refresh-token',
+    });
+
+    return {
+      status: 'success',
+      message: 'Admin signin successfull',
+    };
   }
 }
