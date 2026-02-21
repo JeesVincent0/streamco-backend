@@ -8,10 +8,20 @@ import {
   CreateNormalUserUseCase,
   CreateAdvertiserUserUseCase,
   UserRepositoryPort,
+  CREATE_USER_WITH_GOOGLE_AUTH_PORT,
 } from '../application';
+import { CreateUserWithGoogleAuthUseCase } from '../application/use-cases/create-users/create-user-with-google-auth.usecase';
 import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
 
 export const userProviders = [
+  {
+    provide: CREATE_USER_WITH_GOOGLE_AUTH_PORT,
+    useFactory: (userRepo: UserRepositoryPort) => {
+      return new CreateUserWithGoogleAuthUseCase(userRepo);
+    },
+    inject: [USER_REPOSITORY_PORT],
+  },
+
   {
     provide: CREATE_ADVERTISER_USER_PORT,
     useFactory: (userRepo: UserRepositoryPort) => {

@@ -12,6 +12,7 @@ import { userProviders } from './providers/user.providers';
 import {
   CREATE_ADVERTISER_USER_PORT,
   CREATE_NORMAL_USER_PORT,
+  CREATE_USER_WITH_GOOGLE_AUTH_PORT,
   USER_REPOSITORY_PORT,
 } from './application';
 
@@ -37,6 +38,7 @@ import {
     USER_REPOSITORY_PORT,
     CREATE_NORMAL_USER_PORT,
     CREATE_ADVERTISER_USER_PORT,
+    CREATE_USER_WITH_GOOGLE_AUTH_PORT,
   ],
 })
 export class UserModule {}
