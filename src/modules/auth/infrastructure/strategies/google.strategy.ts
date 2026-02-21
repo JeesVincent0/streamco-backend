@@ -61,7 +61,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       googleId: profile.id,
       firstName: profile.name?.givenName,
       lastName: profile.name?.familyName,
-      name: profile.displayName,
+      displayName: profile.displayName,
       intent,
       role,
     };
