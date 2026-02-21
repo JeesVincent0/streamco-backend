@@ -13,7 +13,7 @@ import { VerifyResetPasswordOtpUseCase } from '../../application';
 import { type Response } from 'express';
 import { ResetPasswordTokenGuard } from '../../infrastructure/guards/reset-password.guard';
 import { ResetPasswordUseCase } from '../../application/use-cases/';
-import { type RequestWithUserInterface } from '../request-with-user.inteface';
+import { type RequestWithUserInterface } from '../interfaces';
 
 @Controller('auth')
 export class ResetPasswordController {

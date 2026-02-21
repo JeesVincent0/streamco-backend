@@ -86,16 +86,16 @@ export class RegistrationController {
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 5,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
       sameSite: 'lax',
-      path: '/api/admin',
+      path: '/',
     });
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
       sameSite: 'lax',
-      path: '/api/refresh-token',
+      path: '/',
     });
 
     return {

@@ -20,4 +20,6 @@ export const ERROR_MESSAGES = {
   SESSION_EXPIRED: 'Session expired',
   INCORRECT_CREDENTIALS: 'Incorrect creadentials',
   ENV_FILE_NOT_ATTACHED: 'Env file not attached',
+
+  SOMETHING_WENT_WRONG: 'Something went wrong, try again after some times',
 } as const;
