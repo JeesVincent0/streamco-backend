@@ -12,12 +12,29 @@ import { ResetPasswordController } from './presentation/controller/reset.passwor
 import { tokenProviders } from './provider/token.provider';
 import { JwtModule } from '@nestjs/jwt';
 import { TOKEN_SERVICE } from './application';
-import { AccessTokenGuard, RefreshTokenGuard } from './infrastructure/guards';
+import {
+  AccessTokenGuard,
+  GoogleAuthGuard,
+  RefreshTokenGuard,
+} from './infrastructure/guards';
+import { GoogleAuthController } from './presentation/controller/google.auth.controller';
+import { PassportModule } from '@nestjs/passport';
+import { GoogleStrategy } from './infrastructure';
 
 @Module({
-  imports: [JwtModule.register({}), UserModule, RedisModule],
-  controllers: [RegistrationController, OtpController, ResetPasswordController],
-  providers: [...signupProvider, ...tokenProviders],
+  imports: [JwtModule.register({}), PassportModule, UserModule, RedisModule],
+  controllers: [
+    RegistrationController,
+    OtpController,
+    ResetPasswordController,
+    GoogleAuthController,
+  ],
+  providers: [
+    ...signupProvider,
+    ...tokenProviders,
+    GoogleStrategy,
+    GoogleAuthGuard,
+  ],
   exports: [TOKEN_SERVICE, AccessTokenGuard, RefreshTokenGuard],
 })
 export class AuthModule {}
