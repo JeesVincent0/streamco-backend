@@ -2,6 +2,7 @@ import { Email, HashedPassword } from '@/modules/user/domain/value-objects';
 import { UserRole } from '@/modules/user/domain/enums';
 import { UserStatus } from '@/modules/user/domain/enums';
 import { BadRequestError } from '@/shared/errors';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 /**
  * BaseUser
@@ -156,5 +157,23 @@ export abstract class BaseUser {
     this._status = UserStatus.DELETED;
     this._deletedAt = new Date();
     this.touch();
+  }
+
+  assertCanSignin(): void {
+    if (!this.isVerified) {
+      throw new BadRequestError(ERROR_MESSAGES.USER_NOT_VERIFIED, {
+        isVerified: false,
+      });
+    }
+
+    if (this.role === UserRole.ADMIN) {
+      throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
+    }
+  }
+
+  assertIsAdmin(): void {
+    if (this.role !== UserRole.ADMIN) {
+      throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
+    }
   }
 }

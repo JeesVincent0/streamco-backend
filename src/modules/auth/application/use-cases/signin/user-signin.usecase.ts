@@ -4,6 +4,7 @@ import { UserRepositoryPort } from '@/modules/user/application';
 import { BadRequestError } from '@/shared/errors';
 import { PasswordHasherPort } from '../../ports';
 import { ResponseData } from '../../../domain/service/signin-reposnse';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 export class SigninUseCase {
   constructor(
@@ -17,14 +18,10 @@ export class SigninUseCase {
     const existingUser = await this._userRepository.findByEmail(email);
 
     if (!existingUser) {
-      throw new BadRequestError('Wrong email ID');
+      throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 
-    if (!existingUser.isVerified) {
-      throw new BadRequestError('User not verified, please verify', {
-        isVerified: false,
-      });
-    }
+    existingUser.assertCanSignin();
 
     const isPasswordMatch = await this._passwordHasher.compare(
       input.password,
@@ -32,7 +29,7 @@ export class SigninUseCase {
     );
 
     if (!isPasswordMatch) {
-      throw new BadRequestError('Wrong password');
+      throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 
     const responseData = ResponseData.getDate(
