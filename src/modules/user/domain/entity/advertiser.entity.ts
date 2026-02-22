@@ -6,20 +6,21 @@ import { Email, HashedPassword } from '../value-objects';
 import { BaseUser } from './base-user.entity';
 
 export class Advertiser extends BaseUser {
-  private _companyName: string;
+  private _companyName?: string;
   private constructor(
     id: string,
     firstName: string,
     lastName: string,
     displayName: string,
     email: Email,
-    password: HashedPassword,
     role: UserRole,
     status: UserStatus,
     isVerified: boolean,
-    companyName: string,
+    isProfileCompleted: boolean,
     createdAt: Date,
 
+    password?: HashedPassword,
+    companyName?: string,
     avatarUrl?: string,
   ) {
     super(
@@ -28,18 +29,19 @@ export class Advertiser extends BaseUser {
       lastName,
       displayName,
       email,
-      password,
       role,
       status,
       isVerified,
+      isProfileCompleted,
       createdAt,
+      password,
       avatarUrl,
     );
 
     this._companyName = companyName;
   }
 
-  get companyName(): string {
+  get companyName(): string | undefined {
     return this._companyName;
   }
 
@@ -56,12 +58,13 @@ export class Advertiser extends BaseUser {
       props.lastName,
       displayName,
       props.email,
-      props.password,
       UserRole.ADVERTISER,
       UserStatus.ACTIVE,
-      false,
-      props.companyName,
+      props.isVerified || false,
+      props.isProfileCompleted,
       new Date(),
+      props.password,
+      props.companyName,
     );
   }
 
@@ -72,12 +75,13 @@ export class Advertiser extends BaseUser {
       props.lastName,
       props.displayName,
       Email.restore(props.email),
-      HashedPassword.restore(props.password),
       props.role,
       props.status,
       props.isVerified,
-      props.companyName,
+      props.isProfileCompleted,
       props.createdAt,
+      HashedPassword.restore(props.password),
+      props.companyName,
     );
   }
 }

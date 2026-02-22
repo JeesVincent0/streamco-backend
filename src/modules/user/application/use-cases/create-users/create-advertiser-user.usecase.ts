@@ -22,6 +22,7 @@ export class CreateAdvertiserUserUseCase implements CreateAdvertiserUserPort {
       email,
       password: HashedPassword.create(input.password),
       companyName: input.companyName,
+      isProfileCompleted: true,
     });
 
     await this._userRepo.save(newUser);

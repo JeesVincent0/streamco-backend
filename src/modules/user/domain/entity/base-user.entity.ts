@@ -17,18 +17,23 @@ export abstract class BaseUser {
     protected _lastName: string,
     protected _displayName: string,
     protected _email: Email,
-    protected _password: HashedPassword,
     protected _role: UserRole,
     protected _status: UserStatus,
     protected _isVerified: boolean,
+    protected _isProfileCompleted: boolean,
     protected readonly _createdAt: Date,
 
+    protected _password?: HashedPassword,
     protected _avatarUrl?: string,
     protected _updatedAt?: Date,
     protected _deletedAt?: Date,
   ) {}
 
   /* ==================== Getters ==================== */
+
+  get isProfileCompleted(): boolean {
+    return this._isProfileCompleted;
+  }
 
   get isVerified(): boolean {
     return this._isVerified;
@@ -54,7 +59,7 @@ export abstract class BaseUser {
     return this._email;
   }
 
-  get password(): HashedPassword {
+  get password(): HashedPassword | undefined {
     return this._password;
   }
 

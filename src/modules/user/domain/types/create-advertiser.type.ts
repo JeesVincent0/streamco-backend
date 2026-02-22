@@ -4,6 +4,9 @@ export interface CreateAdvertiserProps {
   firstName: string;
   lastName: string;
   email: Email;
-  password: HashedPassword;
-  companyName: string;
+  isProfileCompleted: boolean;
+  isVerified?: boolean;
+  displayName?: string;
+  password?: HashedPassword;
+  companyName?: string;
 }

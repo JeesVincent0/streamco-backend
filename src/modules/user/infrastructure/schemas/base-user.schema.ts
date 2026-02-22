@@ -25,7 +25,7 @@ export class BaseUserDocument extends Document {
   @Prop({ required: true, unique: true, index: true })
   email: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   password: string;
 
   @Prop({ required: true, enum: Object.values(UserRole), type: String })
@@ -33,6 +33,9 @@ export class BaseUserDocument extends Document {
 
   @Prop({ required: true, enum: Object.values(UserStatus) })
   status: string;
+
+  @Prop({ required: true, type: Boolean, default: false })
+  isProfileCompleted: boolean;
 
   @Prop({ required: true, type: Boolean, default: false })
   isVerified: boolean;

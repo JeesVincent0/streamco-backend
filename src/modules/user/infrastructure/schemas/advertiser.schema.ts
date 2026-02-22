@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
 export class AdvertiserDocument {
-  @Prop({ required: true })
+  @Prop({ required: false })
   companyName: string;
 }
 

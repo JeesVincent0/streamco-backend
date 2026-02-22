@@ -9,6 +9,7 @@ export interface BaseUserRestoreProps {
   password: string;
   role: UserRole;
   isVerified: boolean;
+  isProfileCompleted: boolean;
   status: UserStatus;
   createdAt: Date;
   avatarUrl?: string;

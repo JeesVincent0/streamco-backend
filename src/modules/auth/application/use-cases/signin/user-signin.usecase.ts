@@ -17,7 +17,7 @@ export class SigninUseCase {
 
     const existingUser = await this._userRepository.findByEmail(email);
 
-    if (!existingUser) {
+    if (!existingUser || !existingUser.password) {
       throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 

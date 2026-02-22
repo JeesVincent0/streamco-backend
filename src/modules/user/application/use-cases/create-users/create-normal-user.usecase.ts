@@ -28,6 +28,7 @@ export class CreateNormalUserUseCase implements CreateNormalUserPort {
       password: HashedPassword.create(input.password),
       gender: Gender.create(input.gender),
       dob: input.dob,
+      isProfileCompleted: true,
     });
 
     await this._userRepo.save(newUser);

@@ -17,7 +17,7 @@ export class AdminSigninUseCase {
     const password = Password.create(input.password);
 
     const user = await this._userRepo.findByEmail(email);
-    if (!user) {
+    if (!user || !user.password) {
       throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 
