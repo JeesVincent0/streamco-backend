@@ -37,6 +37,9 @@ export class ResetPasswordUseCase {
     return {
       status: 'success',
       message: 'Password changed successfully',
+      data: {
+        role: user.role,
+      },
     };
   }
 }

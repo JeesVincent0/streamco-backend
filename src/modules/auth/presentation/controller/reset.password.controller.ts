@@ -50,11 +50,21 @@ export class ResetPasswordController {
   async resetPassword(
     @Body() dto: ResetPasswordDto,
     @Req() req: RequestWithUserInterface,
+    @Res({ passthrough: true }) res: Response,
   ) {
-    return this._resetPasswordUseCase.execute({
+    const result = await this._resetPasswordUseCase.execute({
       ...dto,
       payload: req.user,
       jwtToken: req.jwtToken,
     });
+
+    res.clearCookie('resetPassword', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      path: '/api/auth',
+    });
+
+    return result;
   }
 }
