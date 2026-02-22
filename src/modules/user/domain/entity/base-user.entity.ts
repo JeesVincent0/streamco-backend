@@ -23,6 +23,7 @@ export abstract class BaseUser {
     protected _isProfileCompleted: boolean,
     protected readonly _createdAt: Date,
 
+    protected _googleId?: string,
     protected _password?: HashedPassword,
     protected _avatarUrl?: string,
     protected _updatedAt?: Date,
@@ -30,6 +31,10 @@ export abstract class BaseUser {
   ) {}
 
   /* ==================== Getters ==================== */
+
+  get googleId(): string | undefined {
+    return this._googleId;
+  }
 
   get isProfileCompleted(): boolean {
     return this._isProfileCompleted;

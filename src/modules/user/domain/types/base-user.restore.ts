@@ -12,6 +12,7 @@ export interface BaseUserRestoreProps {
   isProfileCompleted: boolean;
   status: UserStatus;
   createdAt: Date;
+  googleId?: string;
   avatarUrl?: string;
   updatedAt?: Date;
   deletedAt?: Date;

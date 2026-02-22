@@ -13,14 +13,17 @@ export class BaseUserDocument extends Document {
   @Prop({ required: true, unique: true, index: true })
   id: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   firstName: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   lastName: string;
 
   @Prop({ required: true })
   displayName: string;
+
+  @Prop({ required: false })
+  googleId: string;
 
   @Prop({ required: true, unique: true, index: true })
   email: string;

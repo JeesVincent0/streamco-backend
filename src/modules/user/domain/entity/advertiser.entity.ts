@@ -19,6 +19,7 @@ export class Advertiser extends BaseUser {
     isProfileCompleted: boolean,
     createdAt: Date,
 
+    googleId?: string,
     password?: HashedPassword,
     companyName?: string,
     avatarUrl?: string,
@@ -34,6 +35,7 @@ export class Advertiser extends BaseUser {
       isVerified,
       isProfileCompleted,
       createdAt,
+      googleId,
       password,
       avatarUrl,
     );
@@ -63,6 +65,7 @@ export class Advertiser extends BaseUser {
       props.isVerified || false,
       props.isProfileCompleted,
       new Date(),
+      props.googleId,
       props.password,
       props.companyName,
     );
@@ -80,6 +83,7 @@ export class Advertiser extends BaseUser {
       props.isVerified,
       props.isProfileCompleted,
       props.createdAt,
+      props.googleId,
       HashedPassword.restore(props.password),
       props.companyName,
     );

@@ -24,8 +24,8 @@ import { UniqueIdService } from '@/shared/domain';
  * Encapsulates profile-related behavior.
  */
 export class User extends BaseUser {
-  private _dateOfBirth: Date;
-  private _gender: UserGender;
+  private _dateOfBirth?: Date;
+  private _gender?: UserGender;
   private _bio?: string;
   private _location?: string;
   private _socialLinks: SocialLink[] = [];
@@ -37,9 +37,6 @@ export class User extends BaseUser {
     lastName: string,
     displayName: string,
     email: Email,
-    password: HashedPassword,
-    gender: UserGender,
-    dateOfBirth: Date,
     contentType: UserContentType,
     role: UserRole,
     isProfileCompleted: boolean,
@@ -47,6 +44,10 @@ export class User extends BaseUser {
     status: UserStatus,
     createdAt: Date,
 
+    dateOfBirth?: Date,
+    gender?: UserGender,
+    googleId?: string,
+    password?: HashedPassword,
     avatarUrl?: string,
     bio?: string,
     location?: string,
@@ -60,9 +61,10 @@ export class User extends BaseUser {
       email,
       role,
       status,
-      isProfileCompleted,
       isVerified,
+      isProfileCompleted,
       createdAt,
+      googleId,
       password,
       avatarUrl,
     );
@@ -212,7 +214,8 @@ export class User extends BaseUser {
   }
 
   static create(props: CreateUserProps): User {
-    const displayName = `${props.firstName} ${props.lastName}`;
+    const displayName =
+      props.displayName || `${props.firstName} ${props.lastName}`;
     const id = UniqueIdService.generate();
 
     return new User(
@@ -221,15 +224,17 @@ export class User extends BaseUser {
       props.lastName,
       displayName,
       props.email,
-      props.password,
-      props.gender,
-      props.dob,
       UserContentType.SAFE_MODE,
       UserRole.USER,
       props.isProfileCompleted,
-      false,
+      props.isVerified || false,
       UserStatus.ACTIVE,
       new Date(),
+
+      props.dob,
+      props.gender,
+      props.googleId,
+      props.password,
     );
   }
 
@@ -240,15 +245,16 @@ export class User extends BaseUser {
       props.lastName,
       props.displayName,
       Email.restore(props.email),
-      HashedPassword.restore(props.password),
-      props.gender,
-      props.dateOfBirth,
       props.contentType,
       props.role,
       props.isProfileCompleted,
       props.isVerified,
       props.status,
       props.createdAt,
+      props.dateOfBirth,
+      props.gender,
+      props.googleId,
+      HashedPassword.restore(props.password),
       props.avatarUrl,
       props.bio,
       props.location,

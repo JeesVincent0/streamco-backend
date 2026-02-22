@@ -33,6 +33,7 @@ export class AdvertiserMapper {
       password: user.password?.getValue(),
       role: user.role,
       status: user.status,
+      googleId: user.googleId,
       isProfileCompleted: user.isProfileCompleted,
       isVerified: user.isVerified,
       companyName: user.companyName,

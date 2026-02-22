@@ -8,11 +8,11 @@ import { SocialLink } from '../../domain/value-objects';
 
 @Schema()
 export class UserDocument {
-  @Prop({ required: true })
+  @Prop({ required: false })
   dateOfBirth: Date;
 
   @Prop({
-    required: true,
+    required: false,
     enum: Object.values(UserGender),
   })
   gender: UserGender;

@@ -5,8 +5,12 @@ export interface CreateUserProps {
   firstName: string;
   lastName: string;
   email: Email;
-  password: HashedPassword;
-  dob: Date;
-  gender: UserGender;
   isProfileCompleted: boolean;
+
+  isVerified?: boolean;
+  displayName?: string;
+  googleId?: string;
+  password?: HashedPassword;
+  dob?: Date;
+  gender?: UserGender;
 }

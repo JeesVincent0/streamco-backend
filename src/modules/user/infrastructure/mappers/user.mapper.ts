@@ -45,6 +45,8 @@ export class UserMappers {
       role: user.role,
       status: user.status,
       dateOfBirth: user.dateOfBirth,
+      isProfileCompleted: user.isProfileCompleted,
+      googleId: user.googleId,
       isVerified: user.isVerified,
       avatarUrl: user.avatarUrl,
       createdAt: user.createdAt,

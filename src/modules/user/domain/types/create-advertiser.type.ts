@@ -7,6 +7,7 @@ export interface CreateAdvertiserProps {
   isProfileCompleted: boolean;
   isVerified?: boolean;
   displayName?: string;
+  googleId?: string;
   password?: HashedPassword;
   companyName?: string;
 }
