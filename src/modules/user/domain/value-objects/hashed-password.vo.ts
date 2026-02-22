@@ -1,3 +1,4 @@
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { BadRequestError } from '@/shared/errors';
 
 export class HashedPassword {
@@ -9,7 +10,7 @@ export class HashedPassword {
 
   static create(hash: string): HashedPassword {
     if (!hash) {
-      throw new BadRequestError('Hashed password is required');
+      throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 
     return new HashedPassword(hash);

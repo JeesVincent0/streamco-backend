@@ -1,4 +1,4 @@
-import { Email } from '@/modules/user/domain/value-objects';
+import { Email, HashedPassword } from '@/modules/user/domain/value-objects';
 import { SigninInput } from '../../inputs';
 import { UserRepositoryPort } from '@/modules/user/application';
 import { BadRequestError } from '@/shared/errors';
@@ -17,10 +17,15 @@ export class SigninUseCase {
 
     const existingUser = await this._userRepository.findByEmail(email);
 
-    if (!existingUser || !existingUser.password) {
+    if (!existingUser) {
       throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 
+    if (!existingUser.password?.getValue()) {
+      throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
+    } else {
+      HashedPassword.create(existingUser.password?.getValue());
+    }
     existingUser.assertCanSignin();
 
     const isPasswordMatch = await this._passwordHasher.compare(
