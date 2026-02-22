@@ -191,10 +191,15 @@ export const signupProvider = [
     useFactory: (
       userRepo: UserRepositoryPort,
       verifyOtpUseCase: VerifyOtpUseCase,
+      tokenService: TokenServicePort,
     ) => {
-      return new ConfirmSignupUserUseCase(userRepo, verifyOtpUseCase);
+      return new ConfirmSignupUserUseCase(
+        userRepo,
+        verifyOtpUseCase,
+        tokenService,
+      );
     },
-    inject: [USER_REPOSITORY_PORT, VerifyOtpUseCase],
+    inject: [USER_REPOSITORY_PORT, VerifyOtpUseCase, TOKEN_SERVICE],
   },
 
   {

@@ -59,11 +59,38 @@ export class RegistrationController {
   // Confrim registration by OTP verification
   @Post('signup/confirm')
   @HttpCode(HttpStatus.OK)
-  confirm(@Body() dto: { id: string; otp: number }) {
-    return this._confirmSignupUserUseCase.execute({
-      id: dto.id,
-      otp: dto.otp,
+  async confirm(
+    @Body() dto: { id: string; otp: number },
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken, role } =
+      await this._confirmSignupUserUseCase.execute({
+        id: dto.id,
+        otp: dto.otp,
+      });
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 5,
+      secure: false,
+      sameSite: 'lax',
+      path: '/',
     });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      secure: false,
+      sameSite: 'lax',
+      path: '/api/refresh-token',
+    });
+
+    return {
+      status: 'success',
+      message: 'Signup successfull',
+      data: {
+        role,
+      },
+    };
   }
 
   // Signin for both user and advertiser
@@ -88,14 +115,14 @@ export class RegistrationController {
       maxAge: 1000 * 60 * 5,
       secure: false,
       sameSite: 'lax',
-      path: '/',
+      path: '/api/admin',
     });
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: false,
       sameSite: 'lax',
-      path: '/',
+      path: '/api/refresh-token',
     });
 
     return {

@@ -3,6 +3,8 @@ import { ConfirmRegistrationInput } from '../../inputs';
 import { VerifyOtpUseCase } from '../otp/verify-otp.usecase';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
 import { Email } from '@/modules/user/domain/value-objects';
+import { TokenPayload } from '@/modules/auth/domain';
+import { TokenServicePort } from '../../ports';
 
 /*
  *
@@ -19,6 +21,7 @@ export class ConfirmSignupUserUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _verifyOtpUseCase: VerifyOtpUseCase,
+    private readonly _tokenService: TokenServicePort,
   ) {}
   async execute(input: ConfirmRegistrationInput) {
     // Verifying the OTP provided by the user
@@ -41,9 +44,22 @@ export class ConfirmSignupUserUseCase {
     // Saving updated user
     await this._userRepo.save(user);
 
+    const accessTokenPayload = TokenPayload.generateAccessPayload(
+      user.id,
+      user.role,
+      `${user.role}:read ${user.role}:write`,
+    );
+    const refreshTokenPayload = TokenPayload.generateRefreshPayload(user.id);
+
+    const accessToken =
+      await this._tokenService.generateAccessToken(accessTokenPayload);
+    const refreshToken =
+      await this._tokenService.generateRefreshToken(refreshTokenPayload);
+
     return {
-      status: 'success',
-      message: 'Registration confirmed successfully',
+      accessToken,
+      refreshToken,
+      role: user.role,
     };
   }
 }
