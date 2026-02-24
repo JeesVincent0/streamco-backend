@@ -92,10 +92,11 @@ export const signupProvider = [
     useFactory: (
       userRepo: UserRepositoryPort,
       passwordHasher: PasswordHasherPort,
+      tokenService: TokenServicePort,
     ) => {
-      return new SigninUseCase(userRepo, passwordHasher);
+      return new SigninUseCase(userRepo, passwordHasher, tokenService);
     },
-    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT],
+    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT, TOKEN_SERVICE],
   },
 
   {

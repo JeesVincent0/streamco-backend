@@ -9,9 +9,11 @@ export class ResponseData {
     role: UserRole,
   ) {
     return {
-      id,
-      displayName,
-      email: email.getValue(),
+      user: {
+        id,
+        displayName,
+        email: email.getValue(),
+      },
       role,
     };
   }

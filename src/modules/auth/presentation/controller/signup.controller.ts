@@ -96,8 +96,33 @@ export class RegistrationController {
   // Signin for both user and advertiser
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  async signin(@Body() dto: SigninDto) {
-    return this._signinUseCase.execute(dto);
+  async signin(
+    @Body() dto: SigninDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken, responseData } =
+      await this._signinUseCase.execute(dto);
+
+    res.cookie('accessToken', accessToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 5,
+      secure: false,
+      sameSite: 'lax',
+      path: '/api',
+    });
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      secure: false,
+      sameSite: 'lax',
+      path: '/api/refresh-token',
+    });
+
+    return {
+      status: 'success',
+      message: 'User successfully signined',
+      data: responseData,
+    };
   }
 
   // admin signin
