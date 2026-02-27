@@ -42,8 +42,17 @@ import { ResetPasswordUseCase } from '../application/use-cases/reset-password/re
 import { SigninUseCase } from '../application/use-cases/signin';
 import { RedisTokenBlackListRepository } from '../infrastructure/cache';
 import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
+import { SignoutUseCase } from '../application/use-cases/signup/signout.usecase';
 
 export const signupProvider = [
+  {
+    provide: SignoutUseCase,
+    useFactory: (tokenBlacklistUseCase: TokenBlackListUseCase) => {
+      return new SignoutUseCase(tokenBlacklistUseCase);
+    },
+    inject: [TokenBlackListUseCase],
+  },
+
   {
     provide: GoogleAuthUseCase,
     useFactory: (

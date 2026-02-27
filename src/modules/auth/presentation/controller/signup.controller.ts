@@ -19,6 +19,7 @@ import {
 import { SigninUseCase } from '../../application/use-cases/signin';
 import { AdminSigninUseCase } from '../../application/use-cases/signin/admin-signin-usecase';
 import { type Response } from 'express';
+import { SignoutUseCase } from '../../application/use-cases/signup/signout.usecase';
 
 // Controller for handling registration
 // of both normal users and advertisers.
@@ -35,6 +36,7 @@ export class RegistrationController {
     private readonly _signupAdvertiserUserUseCase: SignupAdvertiserUseCase,
     private readonly _confirmSignupUserUseCase: ConfirmSignupUserUseCase,
     private readonly _adminSigninUseCase: AdminSigninUseCase,
+    private readonly _signoutUseCase: SignoutUseCase,
   ) {}
 
   // Normal User registration
@@ -108,7 +110,7 @@ export class RegistrationController {
       maxAge: 1000 * 60 * 5,
       secure: false,
       sameSite: 'lax',
-      path: '/api',
+      path: '/',
     });
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -154,5 +156,24 @@ export class RegistrationController {
       status: 'success',
       message: 'Admin signin successfull',
     };
+  }
+
+  @Post(`/logout`)
+  @HttpCode(HttpStatus.OK)
+  logout(@Res({ passthrough: true }) res: Response) {
+    const data = this._signoutUseCase.execute();
+    res.clearCookie('accessToken', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      path: '/',
+    });
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      path: '/api/refresh-token',
+    });
+    return data;
   }
 }
