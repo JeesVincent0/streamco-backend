@@ -38,7 +38,7 @@ export class ResendOtpUseCase {
     // await this._mailService.sendOtp(Email.create(cachedUser.email), otp);
 
     return {
-      success: true,
+      status: 'success',
       message: 'New OTP is send to the email',
       data: {
         otpResendAt: otpState.otpResendAt,

@@ -6,6 +6,7 @@ import {
   IVerifiedResetPasswordTokenPayload,
 } from '../../ports/token/type';
 import { UnauthorizedException } from '@nestjs/common';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 export class TokenBlackListUseCase {
   constructor(
@@ -25,7 +26,7 @@ export class TokenBlackListUseCase {
     } else if (type === TOKEN_TYPE.REFRESH_TOKEN) {
       payload = await this._tokenService.verifyRefreshToken(token);
     } else {
-      throw new UnauthorizedException('Invalid token type');
+      throw new UnauthorizedException(ERROR_MESSAGES.SOMETHING_WENT_WRONG);
     }
 
     const { jti, exp } = payload;
