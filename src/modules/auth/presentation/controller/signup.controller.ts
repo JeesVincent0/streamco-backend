@@ -65,7 +65,7 @@ export class RegistrationController {
     @Body() dto: { id: string; otp: number },
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken, role } =
+    const { accessToken, refreshToken, responseData } =
       await this._confirmSignupUserUseCase.execute({
         id: dto.id,
         otp: dto.otp,
@@ -89,9 +89,7 @@ export class RegistrationController {
     return {
       status: 'success',
       message: 'Signup successfull',
-      data: {
-        role,
-      },
+      data: responseData,
     };
   }
 

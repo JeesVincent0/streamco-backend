@@ -68,6 +68,7 @@ export class Advertiser extends BaseUser {
       props.googleId,
       props.password,
       props.companyName,
+      props.avatarUrl,
     );
   }
 

@@ -3,7 +3,7 @@ import { ConfirmRegistrationInput } from '../../inputs';
 import { VerifyOtpUseCase } from '../otp/verify-otp.usecase';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
 import { Email } from '@/modules/user/domain/value-objects';
-import { TokenPayload } from '@/modules/auth/domain';
+import { ResponseData, TokenPayload } from '@/modules/auth/domain';
 import { TokenServicePort } from '../../ports';
 
 /*
@@ -56,10 +56,18 @@ export class ConfirmSignupUserUseCase {
     const refreshToken =
       await this._tokenService.generateRefreshToken(refreshTokenPayload);
 
+    const responseData = ResponseData.getDate(
+      user.id,
+      user.displayName,
+      user.email,
+      user.role,
+      user.avatarUrl,
+    );
+
     return {
       accessToken,
       refreshToken,
-      role: user.role,
+      responseData,
     };
   }
 }

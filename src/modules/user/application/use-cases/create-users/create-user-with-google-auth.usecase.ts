@@ -22,6 +22,7 @@ export class CreateUserWithGoogleAuthUseCase {
         googleId: input.googleId,
         isProfileCompleted: false,
         isVerified: true,
+        avatarUrl: input.avatarUrl,
       });
     } else if (input.role === UserRole.USER) {
       user = User.create({
@@ -32,6 +33,7 @@ export class CreateUserWithGoogleAuthUseCase {
         email,
         isProfileCompleted: false,
         isVerified: true,
+        avatarUrl: input.avatarUrl,
       });
     }
 

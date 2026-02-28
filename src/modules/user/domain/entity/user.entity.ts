@@ -235,6 +235,7 @@ export class User extends BaseUser {
       props.gender,
       props.googleId,
       props.password,
+      props.avatarUrl,
     );
   }
 

@@ -7,12 +7,14 @@ export class ResponseData {
     displayName: string,
     email: Email,
     role: UserRole,
+    avatarUrl?: string,
   ) {
     return {
       user: {
         id,
         displayName,
         email: email.getValue(),
+        avatarUrl,
       },
       role,
     };

@@ -8,8 +8,7 @@ import {
 import { Email } from '@/modules/user/domain/value-objects';
 import { OtpPolicy } from '../../../domain/service/otp-policy';
 import { GenerateOtpInput } from '../../inputs';
-import { BadRequestError } from '@/shared/errors';
-// import { Inject } from '@nestjs/common';
+import { UniqueIdService } from '@/shared/domain';
 // import { MAIL_SERVICE } from '../../ports/tokens.port';
 
 /*
@@ -39,7 +38,13 @@ export class GenerateOtpUseCase {
     // Checking if user existing with the email and if not existing throw error
     const userExiting = await this._userRepository.findByEmail(email);
     if (!userExiting) {
-      throw new BadRequestError('Wrong email ID');
+      const id = UniqueIdService.generate();
+      const time = new Date(Date.now() + 30000);
+      return {
+        status: 'success',
+        message: 'OTP generated and sent to email successfully',
+        data: { id, purpose: input.purpose, otpResendAt: time },
+      };
     }
 
     // OTP generating and OTP hashing

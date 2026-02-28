@@ -44,6 +44,7 @@ export class SigninUseCase {
       existingUser.displayName,
       existingUser.email,
       existingUser.role,
+      existingUser.avatarUrl,
     );
 
     const accessTokePayload = TokenPayload.generateAccessPayload(

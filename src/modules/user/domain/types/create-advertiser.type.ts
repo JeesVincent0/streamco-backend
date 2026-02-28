@@ -10,4 +10,5 @@ export interface CreateAdvertiserProps {
   googleId?: string;
   password?: HashedPassword;
   companyName?: string;
+  avatarUrl?: string;
 }

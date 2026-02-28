@@ -13,4 +13,5 @@ export interface CreateUserProps {
   password?: HashedPassword;
   dob?: Date;
   gender?: UserGender;
+  avatarUrl?: string;
 }
