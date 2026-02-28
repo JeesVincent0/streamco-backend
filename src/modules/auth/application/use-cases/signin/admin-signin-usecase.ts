@@ -3,8 +3,9 @@ import { SigninInput } from '../../inputs';
 import { Email, Password, UserRole } from '@/modules/user/domain';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-import { PasswordHasherPort, TokenServicePort } from '../../ports';
+import { PasswordHasherPort } from '../../ports';
 import { TokenPayload } from '@/modules/auth/domain';
+import { TokenServicePort } from '@/modules/auth-security/application';
 
 export class AdminSigninUseCase {
   constructor(

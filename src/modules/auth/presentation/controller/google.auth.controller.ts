@@ -9,10 +9,11 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import type { Response, Request } from 'express';
-import { GoogleAuthGuard } from '../../infrastructure/guards';
+
 import { GoogleAuthUseCase } from '../../application';
 import { RequestWithGoogle } from '../interfaces/request-with-google.interface';
 import { AUTH_REDIRECT_MAP } from '../config';
+import { GoogleAuthGuard } from '../../infrastructure';
 
 @Controller('auth')
 export class GoogleAuthController {

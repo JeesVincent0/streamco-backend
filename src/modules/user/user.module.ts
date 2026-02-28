@@ -15,6 +15,7 @@ import {
   CREATE_USER_WITH_GOOGLE_AUTH_PORT,
   USER_REPOSITORY_PORT,
 } from './application';
+import { AuthSecurityModule } from '../auth-security/auth-security.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import {
         },
       },
     ]),
+    AuthSecurityModule,
   ],
   controllers: [UserController],
   providers: [...userProviders],

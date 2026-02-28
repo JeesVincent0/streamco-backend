@@ -5,5 +5,5 @@ export * from './id-generator';
 
 export * from './security';
 export * from './tokens.port';
-export * from './token';
+export * from '../../../auth-security/application/ports/token';
 export * from './cache';

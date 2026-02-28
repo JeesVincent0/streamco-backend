@@ -4,8 +4,8 @@ import {
 } from '@/modules/user/application';
 import { Email, UserRole } from '@/modules/user/domain';
 import { IGoogleAuth } from '../../inputs/signup/google-auth.input';
-import { TokenPayload } from '@/modules/auth/domain';
-import { TokenServicePort } from '../../ports';
+import { TokenPayload } from '../../../domain';
+import { TokenServicePort } from '@/modules/auth-security/application';
 
 export class GoogleAuthUseCase {
   constructor(

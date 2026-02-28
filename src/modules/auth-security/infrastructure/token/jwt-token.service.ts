@@ -1,5 +1,5 @@
 import { JwtService } from '@nestjs/jwt';
-import { TokenServicePort } from '../../application';
+import { TokenServicePort } from '../../../auth/application';
 import {
   IAccessTokenPayload,
   IRefreshTokenPayload,
@@ -7,7 +7,7 @@ import {
   IVerifiedAccessTokenPayload,
   IVerifiedRefreshTokenPayload,
   IVerifiedResetPasswordTokenPayload,
-} from '../../application/ports/token/type';
+} from '../../../../shared/interfaces/token-type';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()

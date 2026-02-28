@@ -9,32 +9,27 @@ import { RegistrationController } from './presentation/controller/signup.control
 import { signupProvider } from './provider/signup.provider';
 import { OtpController } from './presentation/controller/otp.controller';
 import { ResetPasswordController } from './presentation/controller/reset.password.controller';
-import { tokenProviders } from './provider/token.provider';
 import { JwtModule } from '@nestjs/jwt';
-import { TOKEN_SERVICE } from './application';
-import {
-  AccessTokenGuard,
-  GoogleAuthGuard,
-  RefreshTokenGuard,
-} from './infrastructure/guards';
+import { GoogleAuthGuard } from './infrastructure';
 import { GoogleAuthController } from './presentation/controller/google.auth.controller';
 import { PassportModule } from '@nestjs/passport';
 import { GoogleStrategy } from './infrastructure';
+import { AuthSecurityModule } from '../auth-security/auth-security.module';
 
 @Module({
-  imports: [JwtModule.register({}), PassportModule, UserModule, RedisModule],
+  imports: [
+    JwtModule.register({}),
+    PassportModule,
+    UserModule,
+    RedisModule,
+    AuthSecurityModule,
+  ],
   controllers: [
     RegistrationController,
     OtpController,
     ResetPasswordController,
     GoogleAuthController,
   ],
-  providers: [
-    ...signupProvider,
-    ...tokenProviders,
-    GoogleStrategy,
-    GoogleAuthGuard,
-  ],
-  exports: [TOKEN_SERVICE, AccessTokenGuard, RefreshTokenGuard],
+  providers: [...signupProvider, GoogleStrategy, GoogleAuthGuard],
 })
 export class AuthModule {}

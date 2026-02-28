@@ -3,7 +3,7 @@ import {
   IAccessTokenPayload,
   IRefreshTokenPayload,
   IResetPasswordPayload,
-} from '../../application/ports/token/type';
+} from '@/shared/interfaces/token-type';
 
 export interface RequestWithUserInterface extends Request {
   user: IResetPasswordPayload | IRefreshTokenPayload | IAccessTokenPayload;

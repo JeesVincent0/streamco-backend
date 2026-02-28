@@ -4,7 +4,7 @@ import { UniqueIdService } from '@/shared/domain';
 import {
   IAccessTokenPayload,
   IRefreshTokenPayload,
-} from '../../application/ports/token/type';
+} from '../../../../shared/interfaces/token-type';
 
 export class TokenPayload {
   private static getJwtConfig() {

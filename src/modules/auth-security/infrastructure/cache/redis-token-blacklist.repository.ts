@@ -1,9 +1,9 @@
 import { RedisService } from '@/shared/infrastructure/cache/redis.service';
-import { BaseCachedUserRepositoryPort } from '../../application';
 import { Injectable } from '@nestjs/common';
+import { BlacklistTokenPort } from '../../application';
 
 @Injectable()
-export class RedisTokenBlackListRepository implements BaseCachedUserRepositoryPort {
+export class BlacklistTokenService implements BlacklistTokenPort {
   constructor(private readonly _redisService: RedisService) {}
   private buildKey(key: string): string {
     return `token:blackList:${key}`;

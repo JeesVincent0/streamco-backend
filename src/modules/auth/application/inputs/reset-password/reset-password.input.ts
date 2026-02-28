@@ -1,4 +1,4 @@
-import { IResetPasswordPayload } from '../../ports/token/type';
+import { IResetPasswordPayload } from '../../../../../shared/interfaces/token-type';
 
 export interface ResetPasswordInput {
   payload: IResetPasswordPayload;

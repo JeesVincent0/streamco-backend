@@ -2,10 +2,11 @@ import { Email, HashedPassword } from '@/modules/user/domain/value-objects';
 import { SigninInput } from '../../inputs';
 import { UserRepositoryPort } from '@/modules/user/application';
 import { BadRequestError } from '@/shared/errors';
-import { PasswordHasherPort, TokenServicePort } from '../../ports';
+import { PasswordHasherPort } from '../../ports';
 import { ResponseData } from '../../../domain/service/signin-reposnse';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { TokenPayload } from '@/modules/auth/domain';
+import { TokenServicePort } from '@/modules/auth-security/application';
 
 export class SigninUseCase {
   constructor(

@@ -4,22 +4,25 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import {
-  type BaseCachedUserRepositoryPort,
-  TOKEN_BLACK_LIST_CACHE,
-  TOKEN_SERVICE,
-  type TokenServicePort,
-} from '../../application';
+
 import { Request } from 'express';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { UnauthorizedError } from '@/shared/errors';
+import type {
+  BlacklistTokenPort,
+  TokenServicePort,
+} from '@/modules/auth-security/application';
+import {
+  BLACKLIST_TOKEN_CACKE,
+  TOKEN_SERVICE,
+} from '@/modules/auth-security/application/tokens';
 
 @Injectable()
 export class ResetPasswordTokenGuard implements CanActivate {
   constructor(
     @Inject(TOKEN_SERVICE) private readonly _tokenService: TokenServicePort,
-    @Inject(TOKEN_BLACK_LIST_CACHE)
-    private readonly _tokenBlacklistRepo: BaseCachedUserRepositoryPort,
+    @Inject(BLACKLIST_TOKEN_CACKE)
+    private readonly _tokenBlacklistRepo: BlacklistTokenPort,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

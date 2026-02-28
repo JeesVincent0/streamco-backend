@@ -4,7 +4,7 @@ import {
   IVerifiedAccessTokenPayload,
   IVerifiedRefreshTokenPayload,
   IVerifiedResetPasswordTokenPayload,
-} from '../../ports/token/type';
+} from '../../../../../shared/interfaces/token-type';
 import { UnauthorizedException } from '@nestjs/common';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 

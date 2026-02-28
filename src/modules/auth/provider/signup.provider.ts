@@ -33,16 +33,17 @@ import {
   OtpServicePort,
   PASSWORD_HASHER_PORT,
   PasswordHasherPort,
-  TOKEN_BLACK_LIST_CACHE,
-  TOKEN_SERVICE,
-  TokenServicePort,
 } from '../application';
 import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/repositories/redis-auth-cached-user.repository';
 import { ResetPasswordUseCase } from '../application/use-cases/reset-password/reset-password.usecase';
 import { SigninUseCase } from '../application/use-cases/signin';
-import { RedisTokenBlackListRepository } from '../infrastructure/cache';
 import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
 import { SignoutUseCase } from '../application/use-cases/signup/signout.usecase';
+import {
+  BLACKLIST_TOKEN_CACKE,
+  TOKEN_SERVICE,
+} from '@/modules/auth-security/application/tokens';
+import { TokenServicePort } from '@/modules/auth-security/application/ports';
 
 export const signupProvider = [
   {
@@ -93,7 +94,7 @@ export const signupProvider = [
     ) => {
       return new TokenBlackListUseCase(tokenBlacklistRepo, tokenService);
     },
-    inject: [TOKEN_BLACK_LIST_CACHE, TOKEN_SERVICE],
+    inject: [BLACKLIST_TOKEN_CACKE, TOKEN_SERVICE],
   },
 
   {
@@ -261,10 +262,5 @@ export const signupProvider = [
   {
     provide: MAIL_SERVICE,
     useClass: NodemailerService,
-  },
-
-  {
-    provide: TOKEN_BLACK_LIST_CACHE,
-    useClass: RedisTokenBlackListRepository,
   },
 ];

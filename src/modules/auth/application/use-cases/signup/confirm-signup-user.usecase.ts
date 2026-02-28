@@ -4,7 +4,7 @@ import { VerifyOtpUseCase } from '../otp/verify-otp.usecase';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
 import { Email } from '@/modules/user/domain/value-objects';
 import { ResponseData, TokenPayload } from '@/modules/auth/domain';
-import { TokenServicePort } from '../../ports';
+import { TokenServicePort } from '@/modules/auth-security/application';
 
 /*
  *
