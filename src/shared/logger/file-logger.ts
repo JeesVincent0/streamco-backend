@@ -6,28 +6,47 @@ import * as path from 'path';
 export class FileLogger extends Logger {
   private readonly logFile = path.join(process.cwd(), 'logs', 'app.log');
 
-  private writeToFile(data: any) {
-    fs.mkdirSync(path.dirname(this.logFile), { recursive: true });
-    fs.appendFileSync(this.logFile, data + '\n');
+  constructor() {
+    super();
+    const logDir = path.dirname(this.logFile);
+
+    if (!fs.existsSync(logDir)) {
+      fs.mkdirSync(logDir, { recursive: true });
+    }
   }
 
-  log(data: any) {
-    super.log(data);
-    this.writeToFile(`[LOG] ${new Date().toISOString()} - ${data}`);
+  private writeToFile(level: string, data: unknown) {
+    const logEntry = {
+      level,
+      timestamp: new Date().toISOString(),
+      data,
+    };
+
+    // Async write (non-blocking)
+    fs.appendFile(this.logFile, JSON.stringify(logEntry) + '\n', (err) => {
+      if (err) {
+        super.error('Failed to write log file', err.stack);
+      }
+    });
   }
 
-  warn(data: any) {
-    super.warn(data);
-    this.writeToFile(`[WARN] ${new Date().toISOString()} - ${data}`);
+  log(message: unknown) {
+    super.log(message);
+    this.writeToFile('INFO', message);
   }
 
-  error(data: any) {
-    super.error(data);
-    this.writeToFile(`[ERROR] ${new Date().toISOString()} - ${data}`);
+  warn(message: unknown) {
+    super.warn(message);
+    this.writeToFile('WARN', message);
   }
 
-  debug(data: any) {
-    super.debug(data);
-    this.writeToFile(`[DEBUG] ${new Date().toISOString()} - ${data}`);
+  error(message: unknown, trace?: string) {
+    super.error(message, trace);
+    this.writeToFile('ERROR', { message, trace });
+  }
+
+  debug(message: unknown) {
+    super.debug(message);
+    this.writeToFile('DEBUG', message);
   }
 }

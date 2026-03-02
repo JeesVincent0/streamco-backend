@@ -1,6 +1,6 @@
 import { UserRole } from '@/modules/user/domain';
 
-export interface IGoogleAuth {
+export interface GoogleAuth {
   email: string;
   avatarUrl: string;
   googleId: string;

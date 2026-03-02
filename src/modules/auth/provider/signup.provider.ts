@@ -44,6 +44,7 @@ import {
   TOKEN_SERVICE,
 } from '@/modules/auth-security/application/tokens';
 import { TokenServicePort } from '@/modules/auth-security/application/ports';
+import { FileLogger } from '@/shared/logger/file-logger';
 
 export const signupProvider = [
   {
@@ -115,8 +116,14 @@ export const signupProvider = [
       userRepo: UserRepositoryPort,
       passwordHasher: PasswordHasherPort,
       tokenBlacklist: TokenBlackListUseCase,
+      logger: FileLogger,
     ) => {
-      return new ResetPasswordUseCase(userRepo, passwordHasher, tokenBlacklist);
+      return new ResetPasswordUseCase(
+        userRepo,
+        passwordHasher,
+        tokenBlacklist,
+        logger,
+      );
     },
     inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT, TokenBlackListUseCase],
   },
@@ -155,12 +162,14 @@ export const signupProvider = [
       otpService: OtpServicePort,
       otpHasher: PasswordHasherPort,
       mailService: MailServicePort,
+      logger: FileLogger,
     ) => {
       return new ResendOtpUseCase(
         cachedRepo,
         otpService,
         otpHasher,
         mailService,
+        logger,
       );
     },
     inject: [
@@ -168,6 +177,7 @@ export const signupProvider = [
       OTP_SERVICE,
       PASSWORD_HASHER_PORT,
       MAIL_SERVICE,
+      FileLogger,
     ],
   },
 
@@ -179,6 +189,7 @@ export const signupProvider = [
       passwordHasher: PasswordHasherPort,
       cacheRepo: BaseCachedUserRepositoryPort,
       mailService: MailServicePort,
+      logger: FileLogger,
     ) => {
       return new GenerateOtpUseCase(
         otpService,
@@ -186,6 +197,7 @@ export const signupProvider = [
         passwordHasher,
         cacheRepo,
         mailService,
+        logger,
       );
     },
     inject: [
@@ -194,6 +206,7 @@ export const signupProvider = [
       PASSWORD_HASHER_PORT,
       AUTH_CACHED_USER_REPOSITORY_PORT,
       MAIL_SERVICE,
+      FileLogger,
     ],
   },
 

@@ -1,19 +1,19 @@
 import {
-  IAccessTokenPayload,
-  IRefreshTokenPayload,
-  IResetPasswordPayload,
-  IVerifiedAccessTokenPayload,
-  IVerifiedRefreshTokenPayload,
-  IVerifiedResetPasswordTokenPayload,
+  AccessTokenPayload,
+  RefreshTokenPayload,
+  ResetPasswordPayload,
+  VerifiedAccessTokenPayload,
+  VerifiedRefreshTokenPayload,
+  VerifiedResetPasswordTokenPayload,
 } from '../../types';
 
 export interface TokenServicePort {
-  generateAccessToken(payload: IAccessTokenPayload): Promise<string>;
-  generateRefreshToken(payload: IRefreshTokenPayload): Promise<string>;
-  generateResetPasswordToken(payload: IResetPasswordPayload): Promise<string>;
-  verifyRefreshToken(token: string): Promise<IVerifiedRefreshTokenPayload>;
-  verifyAccessToken(token: string): Promise<IVerifiedAccessTokenPayload>;
+  generateAccessToken(payload: AccessTokenPayload): Promise<string>;
+  generateRefreshToken(payload: RefreshTokenPayload): Promise<string>;
+  generateResetPasswordToken(payload: ResetPasswordPayload): Promise<string>;
+  verifyRefreshToken(token: string): Promise<VerifiedRefreshTokenPayload>;
+  verifyAccessToken(token: string): Promise<VerifiedAccessTokenPayload>;
   verifyResetPassword(
     token: string,
-  ): Promise<IVerifiedResetPasswordTokenPayload>;
+  ): Promise<VerifiedResetPasswordTokenPayload>;
 }

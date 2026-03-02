@@ -1,15 +1,16 @@
-import { UserRepositoryPort } from '@/modules/user/application/ports';
+import { Email } from '@/modules/user/domain/';
+import { UserRepositoryPort } from '@/modules/user/application';
 import {
   BaseCachedUserRepositoryPort,
   type MailServicePort,
   OtpServicePort,
   PasswordHasherPort,
 } from '../../ports';
-import { Email } from '@/modules/user/domain/value-objects';
-import { OtpPolicy } from '../../../domain/service/otp-policy';
+import { OtpPolicy } from '../../../domain/';
 import { GenerateOtpInput } from '../../inputs';
 import { UniqueIdService } from '@/shared/domain';
-// import { MAIL_SERVICE } from '../../ports/tokens.port';
+import { FileLogger } from '@/shared/logger/file-logger';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 
 /*
  *
@@ -30,6 +31,7 @@ export class GenerateOtpUseCase {
     private readonly _passwordHasher: PasswordHasherPort,
     private readonly _cacheRepository: BaseCachedUserRepositoryPort,
     private readonly _mailService: MailServicePort,
+    private readonly _logger: FileLogger,
   ) {}
 
   async execute(input: GenerateOtpInput) {
@@ -38,6 +40,11 @@ export class GenerateOtpUseCase {
     // Checking if user existing with the email and if not existing throw error
     const userExiting = await this._userRepository.findByEmail(email);
     if (!userExiting) {
+      this._logger.error({
+        event: LOG_EVENTS.USER_NOT_FOUND,
+        context: 'GenerateOtpUseCase',
+        userEmail: email.getValue(),
+      });
       const id = UniqueIdService.generate();
       const time = new Date(Date.now() + 30000);
       return {
@@ -63,9 +70,11 @@ export class GenerateOtpUseCase {
 
     // Saving OTP state in cache with user ID as key and 5 minutes expiration time
     await this._cacheRepository.save(id, otpState, 300);
-
-    console.log('OTP: ', otp);
-    console.log('ID: ', id);
+    this._logger.log({
+      event: LOG_EVENTS.OTP_CREATED,
+      constext: 'GenerateOtpUseCase',
+      userId: id,
+    });
 
     // mail service to send OTP to user email
     await this._mailService.sendOtp(email, otp);

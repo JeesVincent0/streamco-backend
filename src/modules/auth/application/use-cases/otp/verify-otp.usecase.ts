@@ -1,6 +1,6 @@
 import { BadRequestError } from '@/shared/errors';
 import { BaseCachedUserRepositoryPort, PasswordHasherPort } from '../../ports';
-import { OtpPolicy, OtpSate } from '@/modules/auth/domain/service/otp-policy';
+import { OtpPolicy, OtpState } from '@/modules/auth/domain/';
 import { VerifyOtpInput } from '../../inputs';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
@@ -19,7 +19,7 @@ export class VerifyOtpUseCase {
 
   async execute(input: VerifyOtpInput) {
     // Checking user from cache DB, if not found that means session expired.
-    const cachedUser = await this._cacheRepository.get<OtpSate>(input.id);
+    const cachedUser = await this._cacheRepository.get<OtpState>(input.id);
     if (!cachedUser) {
       throw new BadRequestError('Session expired', {
         cachedUser: false,

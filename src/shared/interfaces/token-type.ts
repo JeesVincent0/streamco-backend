@@ -1,6 +1,6 @@
 import { UserRole } from '@/modules/user/domain';
 
-export interface IAccessTokenPayload {
+export interface AccessTokenPayload {
   sub: string;
   iss: string;
   aud: string;
@@ -11,7 +11,7 @@ export interface IAccessTokenPayload {
   role: UserRole;
 }
 
-export interface IRefreshTokenPayload {
+export interface RefreshTokenPayload {
   sub: string;
   iss: string;
   aud: string;
@@ -19,7 +19,7 @@ export interface IRefreshTokenPayload {
   iat: number;
 }
 
-export interface IResetPasswordPayload {
+export interface ResetPasswordPayload {
   sub: string;
   jti: string;
 }
@@ -29,11 +29,11 @@ export interface JwtMeta {
   exp: number;
 }
 
-export interface IVerifiedAccessTokenPayload
-  extends IAccessTokenPayload, JwtMeta {}
+export interface VerifiedAccessTokenPayload
+  extends AccessTokenPayload, JwtMeta {}
 
-export interface IVerifiedRefreshTokenPayload
-  extends IRefreshTokenPayload, JwtMeta {}
+export interface VerifiedRefreshTokenPayload
+  extends RefreshTokenPayload, JwtMeta {}
 
-export interface IVerifiedResetPasswordTokenPayload
-  extends IResetPasswordPayload, JwtMeta {}
+export interface VerifiedResetPasswordTokenPayload
+  extends ResetPasswordPayload, JwtMeta {}

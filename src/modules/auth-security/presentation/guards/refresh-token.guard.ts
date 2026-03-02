@@ -5,10 +5,10 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { type TokenServicePort } from '../../application';
 import { Request } from 'express';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { TOKEN_SERVICE } from '../../application/tokens';
+import type { TokenServicePort } from '../../application';
 
 @Injectable()
 export class RefreshTokenGuard implements CanActivate {

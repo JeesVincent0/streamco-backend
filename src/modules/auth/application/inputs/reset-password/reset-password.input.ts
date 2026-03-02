@@ -1,7 +1,7 @@
-import { IResetPasswordPayload } from '../../../../../shared/interfaces/token-type';
+import { ResetPasswordPayload } from '@/shared/interfaces/token-type';
 
 export interface ResetPasswordInput {
-  payload: IResetPasswordPayload;
+  payload: ResetPasswordPayload;
   jwtToken: string;
   password: string;
   confirmPassword: string;

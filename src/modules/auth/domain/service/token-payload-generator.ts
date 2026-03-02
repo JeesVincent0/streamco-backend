@@ -2,8 +2,8 @@ import { UserRole } from '@/modules/user/domain';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { UniqueIdService } from '@/shared/domain';
 import {
-  IAccessTokenPayload,
-  IRefreshTokenPayload,
+  AccessTokenPayload,
+  RefreshTokenPayload,
 } from '../../../../shared/interfaces/token-type';
 
 export class TokenPayload {
@@ -24,7 +24,7 @@ export class TokenPayload {
     id: string,
     role: UserRole,
     scope: string,
-  ): IAccessTokenPayload {
+  ): AccessTokenPayload {
     const { issuer, audience } = this.getJwtConfig();
 
     return {
@@ -38,7 +38,7 @@ export class TokenPayload {
     };
   }
 
-  static generateRefreshPayload(id: string): IRefreshTokenPayload {
+  static generateRefreshPayload(id: string): RefreshTokenPayload {
     const { issuer, audience } = this.getJwtConfig();
 
     return {

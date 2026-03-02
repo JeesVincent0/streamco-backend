@@ -1,8 +1,8 @@
 import { OtpPurpose } from '@/modules/auth/domain';
-import { VerifyResetPasswordOtpInput } from '../../inputs/reset-password/verify-reset-password-otp.input';
 import { VerifyOtpUseCase } from '../otp';
 import { UniqueIdService } from '@/shared/domain';
 import { TokenServicePort } from '@/modules/auth-security/application';
+import { VerifyResetPasswordOtpInput } from '../../inputs';
 
 export class VerifyResetPasswordOtpUseCase {
   constructor(

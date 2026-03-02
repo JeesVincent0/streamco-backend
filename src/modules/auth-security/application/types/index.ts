@@ -1,1 +1,1 @@
-export * from '../../../../shared/interfaces/token-type';
+export * from '@/shared/interfaces/token-type';

@@ -1,6 +1,6 @@
 import { type Request } from 'express';
-import { IGoogleAuth } from '../../application/inputs/signup/google-auth.input';
+import { GoogleAuth } from '../../application';
 
 export class RequestWithGoogle extends Request {
-  user: IGoogleAuth;
+  user: GoogleAuth;
 }

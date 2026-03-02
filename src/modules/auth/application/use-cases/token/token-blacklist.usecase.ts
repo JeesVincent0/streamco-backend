@@ -1,12 +1,13 @@
 import { TOKEN_TYPE } from '@/modules/auth/domain';
-import { BaseCachedUserRepositoryPort, TokenServicePort } from '../../ports';
+import { BaseCachedUserRepositoryPort } from '../../ports';
 import {
-  IVerifiedAccessTokenPayload,
-  IVerifiedRefreshTokenPayload,
-  IVerifiedResetPasswordTokenPayload,
-} from '../../../../../shared/interfaces/token-type';
+  VerifiedAccessTokenPayload,
+  VerifiedRefreshTokenPayload,
+  VerifiedResetPasswordTokenPayload,
+} from '@/shared/interfaces/token-type';
 import { UnauthorizedException } from '@nestjs/common';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { TokenServicePort } from '@/modules/auth-security/application';
 
 export class TokenBlackListUseCase {
   constructor(
@@ -15,9 +16,9 @@ export class TokenBlackListUseCase {
   ) {}
   async execute(token: string, type: TOKEN_TYPE) {
     let payload:
-      | IVerifiedAccessTokenPayload
-      | IVerifiedRefreshTokenPayload
-      | IVerifiedResetPasswordTokenPayload;
+      | VerifiedAccessTokenPayload
+      | VerifiedRefreshTokenPayload
+      | VerifiedResetPasswordTokenPayload;
 
     if (type === TOKEN_TYPE.RESET_PASSWORD_TOKEN) {
       payload = await this._tokenService.verifyResetPassword(token);

@@ -1,3 +1,5 @@
+export const OTP_SERVICE = Symbol('OTP_SERVICE');
+export const TOKEN_BLACK_LIST_CACHE = Symbol('TOKEN_BLACK_LIST_CACHE');
 export const MAIL_SERVICE = Symbol('MAIL_SERVICE');
 export const PASSWORD_HASHER_PORT = Symbol('PASSWORD_HASHER_PORT');
 

@@ -1,17 +1,20 @@
 import { TOKEN_TYPE, VerifyPassword } from '@/modules/auth/domain';
-import { ResetPasswordInput } from '../../inputs/reset-password/reset-password.input';
 import { UserRepositoryPort } from '@/modules/user/application';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { PasswordHasherPort } from '../../ports';
 import { HashedPassword } from '@/modules/user/domain';
 import { TokenBlackListUseCase } from '../token';
+import { ResetPasswordInput } from '../../inputs';
+import { FileLogger } from '@/shared/logger/file-logger';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 
 export class ResetPasswordUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _passwordHasher: PasswordHasherPort,
     private readonly _tokenBlacklistUseCase: TokenBlackListUseCase,
+    private readonly _logger: FileLogger,
   ) {}
   async execute(input: ResetPasswordInput) {
     const { password } = VerifyPassword.verify({
@@ -21,6 +24,11 @@ export class ResetPasswordUseCase {
 
     const user = await this._userRepo.findById(input.payload.sub);
     if (!user) {
+      this._logger.log({
+        event: LOG_EVENTS.USER_NOT_FOUND,
+        constext: 'ResetPasswordUseCase',
+        userId: input.payload.sub,
+      });
       throw new BadRequestError(ERROR_MESSAGES.MISSING_TOKEN);
     }
 
@@ -29,6 +37,11 @@ export class ResetPasswordUseCase {
     user.changePassword(HashedPassword.create(hashedPassword));
 
     await this._userRepo.save(user);
+    this._logger.log({
+      event: LOG_EVENTS.PASSWORD_RESET,
+      context: 'ResetPasswordUseCase',
+      userId: user.id,
+    });
     await this._tokenBlacklistUseCase.execute(
       input.jwtToken,
       TOKEN_TYPE.RESET_PASSWORD_TOKEN,

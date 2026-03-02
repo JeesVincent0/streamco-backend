@@ -3,10 +3,10 @@ import {
   UserRepositoryPort,
 } from '@/modules/user/application';
 import { Email, UserRole } from '@/modules/user/domain';
-import { IGoogleAuth } from '../../inputs/signup/google-auth.input';
 import { TokenPayload } from '../../../domain';
-import { TokenServicePort } from '@/modules/auth-security/application';
 import { SCOPE } from '@/modules/auth-security/domain';
+import { GoogleAuth } from '../../inputs';
+import { TokenServicePort } from '@/modules/auth-security/application';
 
 export class GoogleAuthUseCase {
   constructor(
@@ -14,7 +14,7 @@ export class GoogleAuthUseCase {
     private readonly _createUserWithGoogleAuth: CreateUserWIthGoogleAuthPort,
     private readonly _tokenService: TokenServicePort,
   ) {}
-  async execute(input: IGoogleAuth) {
+  async execute(input: GoogleAuth) {
     const email = Email.create(input.email);
 
     let user = await this._userRepo.findByEmail(email);

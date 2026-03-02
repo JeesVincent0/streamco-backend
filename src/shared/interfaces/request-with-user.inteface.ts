@@ -1,11 +1,11 @@
 import { Request } from 'express';
 import {
-  IAccessTokenPayload,
-  IRefreshTokenPayload,
-  IResetPasswordPayload,
+  AccessTokenPayload,
+  RefreshTokenPayload,
+  ResetPasswordPayload,
 } from '@/shared/interfaces/token-type';
 
 export interface RequestWithUserInterface extends Request {
-  user: IResetPasswordPayload | IRefreshTokenPayload | IAccessTokenPayload;
+  user: ResetPasswordPayload | RefreshTokenPayload | AccessTokenPayload;
   jwtToken: string;
 }

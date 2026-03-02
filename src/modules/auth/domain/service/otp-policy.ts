@@ -2,7 +2,7 @@ import { BadRequestError } from '@/shared/errors';
 import { OtpPurpose } from '../enums';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
-export interface OtpSate {
+export interface OtpState {
   id: string;
   email: string;
   hashedOtp: string;
@@ -22,7 +22,7 @@ export class OtpPolicy {
     email: string,
     hashedOtp: string,
     purpose: OtpPurpose,
-  ): OtpSate {
+  ): OtpState {
     return {
       id,
       email,
@@ -34,14 +34,17 @@ export class OtpPolicy {
     };
   }
 
-  static consumeAttempt(state: OtpSate): OtpSate {
+  static consumeAttempt(state: OtpState): OtpState {
     return {
       ...state,
       verificationCount: state.verificationCount - 1,
     };
   }
 
-  static createStateAFterResendOtp(state: OtpSate, hashedOtp: string): OtpSate {
+  static createStateAFterResendOtp(
+    state: OtpState,
+    hashedOtp: string,
+  ): OtpState {
     return {
       ...state,
       otpGenerateCount: state.otpGenerateCount - 1,
@@ -50,13 +53,13 @@ export class OtpPolicy {
     };
   }
 
-  static canResendOtp(state: OtpSate): void {
+  static canResendOtp(state: OtpState): void {
     if (state.otpGenerateCount <= 0) {
       throw new BadRequestError(ERROR_MESSAGES.TOO_MANY_ATTEM);
     }
   }
 
-  static isExhausted(state: OtpSate): boolean {
+  static isExhausted(state: OtpState): boolean {
     return state.verificationCount <= 0;
   }
 }
