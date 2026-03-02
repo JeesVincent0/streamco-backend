@@ -6,6 +6,7 @@ import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { PasswordHasherPort } from '../../ports';
 import { TokenPayload } from '@/modules/auth/domain';
 import { TokenServicePort } from '@/modules/auth-security/application';
+import { SCOPE } from '@/modules/auth-security/domain';
 
 export class AdminSigninUseCase {
   constructor(
@@ -40,7 +41,7 @@ export class AdminSigninUseCase {
     const accessPayload = TokenPayload.generateAccessPayload(
       user.id,
       UserRole.ADMIN,
-      'admin:read admin:write',
+      `${SCOPE.ADMIN_WRITE} ${SCOPE.ADMIN_READ}`,
     );
     const refreshPayload = TokenPayload.generateRefreshPayload(user.id);
 

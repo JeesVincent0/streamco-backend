@@ -5,6 +5,7 @@ import { OtpPurpose } from '@/modules/auth/domain/enums';
 import { Email } from '@/modules/user/domain/value-objects';
 import { ResponseData, TokenPayload } from '@/modules/auth/domain';
 import { TokenServicePort } from '@/modules/auth-security/application';
+import { SCOPE } from '@/modules/auth-security/domain';
 
 /*
  *
@@ -47,7 +48,7 @@ export class ConfirmSignupUserUseCase {
     const accessTokenPayload = TokenPayload.generateAccessPayload(
       user.id,
       user.role,
-      `${user.role}:read ${user.role}:write`,
+      `${SCOPE.USER_READ} ${SCOPE.USER_WRITE}`,
     );
     const refreshTokenPayload = TokenPayload.generateRefreshPayload(user.id);
 

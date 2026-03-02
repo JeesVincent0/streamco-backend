@@ -7,6 +7,7 @@ import {
   PasswordHasherPort,
 } from '../../ports';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { Email } from '@/modules/user/domain';
 
 export class ResendOtpUseCase {
   constructor(
@@ -35,7 +36,7 @@ export class ResendOtpUseCase {
 
     console.log({ id: input.id, email: otpState.email, otp });
 
-    // await this._mailService.sendOtp(Email.create(cachedUser.email), otp);
+    await this._mailService.sendOtp(Email.create(cachedUser.email), otp);
 
     return {
       status: 'success',

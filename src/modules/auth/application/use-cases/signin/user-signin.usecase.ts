@@ -7,6 +7,7 @@ import { ResponseData } from '../../../domain/service/signin-reposnse';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { TokenPayload } from '@/modules/auth/domain';
 import { TokenServicePort } from '@/modules/auth-security/application';
+import { SCOPE } from '@/modules/auth-security/domain';
 
 export class SigninUseCase {
   constructor(
@@ -51,7 +52,7 @@ export class SigninUseCase {
     const accessTokePayload = TokenPayload.generateAccessPayload(
       existingUser.id,
       existingUser.role,
-      `${existingUser.role}: read ${existingUser.role}: write`,
+      `${SCOPE.USER_READ} ${SCOPE.USER_WRITE}`,
     );
     const refreshTokenPayload = TokenPayload.generateRefreshPayload(
       existingUser.id,

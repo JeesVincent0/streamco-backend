@@ -6,6 +6,7 @@ import { Email, UserRole } from '@/modules/user/domain';
 import { IGoogleAuth } from '../../inputs/signup/google-auth.input';
 import { TokenPayload } from '../../../domain';
 import { TokenServicePort } from '@/modules/auth-security/application';
+import { SCOPE } from '@/modules/auth-security/domain';
 
 export class GoogleAuthUseCase {
   constructor(
@@ -25,7 +26,7 @@ export class GoogleAuthUseCase {
     const accessPayload = TokenPayload.generateAccessPayload(
       user.id,
       user.role,
-      `${user?.role}:read ${user?.role}:write`,
+      `${SCOPE.USER_READ} ${SCOPE.USER_WRITE}`,
     );
     const refreshPayload = TokenPayload.generateRefreshPayload(user.id);
 

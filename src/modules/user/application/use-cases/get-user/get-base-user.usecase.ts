@@ -1,7 +1,7 @@
 import { BadRequestError } from '@/shared/errors';
-import { UserResponseMapper } from '../../mappers';
 import { UserRepositoryPort } from '../../ports';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { UserResponseMapper } from '../../mappers';
 
 export class GetBaseUserUseCase {
   constructor(private readonly _useRepo: UserRepositoryPort) {}

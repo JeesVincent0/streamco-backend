@@ -2,8 +2,8 @@ import { RedisModule } from '@/shared/infrastructure/cache/redis.module';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { tokenProviders } from './providers';
-import { AccessTokenGuard, RefreshTokenGuard } from './infrastructure';
-import { ResetPasswordTokenGuard } from './infrastructure/guards/reset-password.guard';
+import { AccessTokenGuard, RefreshTokenGuard } from './presentation';
+import { ResetPasswordTokenGuard } from './presentation/guards/reset-password.guard';
 import { BLACKLIST_TOKEN_CACKE, TOKEN_SERVICE } from './application/tokens';
 
 @Module({

@@ -11,7 +11,7 @@ import {
 import { ResetPasswordDto, VerifyResetPasswordOtpDto } from '../dto';
 import { VerifyResetPasswordOtpUseCase } from '../../application';
 import { type Response } from 'express';
-import { ResetPasswordTokenGuard } from '@/modules/auth-security/infrastructure/guards/reset-password.guard';
+import { ResetPasswordTokenGuard } from '@/modules/auth-security/presentation/guards/reset-password.guard';
 import { ResetPasswordUseCase } from '../../application/use-cases/';
 import { type RequestWithUserInterface } from '../interfaces';
 
