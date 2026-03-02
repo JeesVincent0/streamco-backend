@@ -4,7 +4,7 @@ import { Email, Password, UserRole } from '@/modules/user/domain';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { PasswordHasherPort } from '../../ports';
-import { TokenPayload } from '@/modules/auth/domain';
+import { ResponseData, TokenPayload } from '@/modules/auth/domain';
 import { TokenServicePort } from '@/modules/auth-security/application';
 import { SCOPE } from '@/modules/auth-security/domain';
 
@@ -50,6 +50,14 @@ export class AdminSigninUseCase {
     const refreshToken =
       await this._tokenService.generateRefreshToken(refreshPayload);
 
-    return { accessToken, refreshToken };
+    const responseData = ResponseData.getDate(
+      user.id,
+      user.displayName,
+      user.email,
+      user.role,
+      user.avatarUrl,
+    );
+
+    return { accessToken, refreshToken, responseData };
   }
 }

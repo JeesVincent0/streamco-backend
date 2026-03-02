@@ -132,7 +132,7 @@ export class RegistrationController {
     @Body() dto: SigninDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { accessToken, refreshToken } =
+    const { accessToken, refreshToken, responseData } =
       await this._adminSigninUseCase.execute(dto);
 
     res.cookie('accessToken', accessToken, {
@@ -140,7 +140,7 @@ export class RegistrationController {
       maxAge: 1000 * 60 * 5,
       secure: false,
       sameSite: 'lax',
-      path: '/api/admin',
+      path: '/',
     });
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
@@ -153,6 +153,7 @@ export class RegistrationController {
     return {
       status: 'success',
       message: 'Admin signin successfull',
+      data: responseData,
     };
   }
 
