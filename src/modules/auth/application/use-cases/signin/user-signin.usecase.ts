@@ -8,12 +8,15 @@ import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { TokenPayload } from '@/modules/auth/domain';
 import { TokenServicePort } from '@/modules/auth-security/application';
 import { SCOPE } from '@/modules/auth-security/domain';
+import { FileLogger } from '@/shared/logger/file-logger';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 
 export class SigninUseCase {
   constructor(
     private _userRepository: UserRepositoryPort,
     private readonly _passwordHasher: PasswordHasherPort,
     private readonly _tokenService: TokenServicePort,
+    private readonly _logger: FileLogger,
   ) {}
 
   async execute(input: SigninInput) {
@@ -22,6 +25,11 @@ export class SigninUseCase {
     const existingUser = await this._userRepository.findByEmail(email);
 
     if (!existingUser) {
+      this._logger.error({
+        event: LOG_EVENTS.WRONG_EMAIL_ID,
+        context: 'SigninUseCase',
+        userEmail: email.getValue(),
+      });
       throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 
@@ -38,6 +46,11 @@ export class SigninUseCase {
     );
 
     if (!isPasswordMatch) {
+      this._logger.error({
+        event: LOG_EVENTS.WRONG_PASSWORD_ENTERED,
+        context: 'SigninUseCase',
+        useId: existingUser.id,
+      });
       throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 
@@ -62,6 +75,12 @@ export class SigninUseCase {
       await this._tokenService.generateAccessToken(accessTokePayload);
     const refreshToken =
       await this._tokenService.generateRefreshToken(refreshTokenPayload);
+
+    this._logger.log({
+      event: LOG_EVENTS.USER_SIGNIN_SUCCESSFULL,
+      context: 'SigninUseCase',
+      userId: existingUser.id,
+    });
 
     return {
       accessToken,

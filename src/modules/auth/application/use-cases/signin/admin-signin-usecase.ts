@@ -7,12 +7,15 @@ import { PasswordHasherPort } from '../../ports';
 import { ResponseData, TokenPayload } from '@/modules/auth/domain';
 import { TokenServicePort } from '@/modules/auth-security/application';
 import { SCOPE } from '@/modules/auth-security/domain';
+import { FileLogger } from '@/shared/logger/file-logger';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 
 export class AdminSigninUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _passwordHashser: PasswordHasherPort,
     private readonly _tokenService: TokenServicePort,
+    private readonly _logger: FileLogger,
   ) {}
   async execute(input: SigninInput) {
     const email = Email.create(input.email);
@@ -20,6 +23,11 @@ export class AdminSigninUseCase {
 
     const user = await this._userRepo.findByEmail(email);
     if (!user || !user.password) {
+      this._logger.error({
+        event: LOG_EVENTS.INCORRECT_CREDENTIALS,
+        constext: 'AdminSigninUseCase',
+        userEmail: email.getValue(),
+      });
       throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 
@@ -31,10 +39,19 @@ export class AdminSigninUseCase {
     );
 
     if (!isPasswordMatch) {
+      this._logger.error({
+        event: LOG_EVENTS.WRONG_PASSWORD_ENTERED,
+        context: 'AdminSigninUseCase',
+        userId: user.id,
+      });
       throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 
     if (!process.env.JWT_ISSUER || !process.env.JWT_AUDIENCE) {
+      this._logger.error({
+        event: LOG_EVENTS.ENV_FILE_NOT_ATTACHED,
+        context: 'AdminSigninUseCase',
+      });
       throw new Error(ERROR_MESSAGES.ENV_FILE_NOT_ATTACHED);
     }
 
@@ -49,6 +66,12 @@ export class AdminSigninUseCase {
       await this._tokenService.generateAccessToken(accessPayload);
     const refreshToken =
       await this._tokenService.generateRefreshToken(refreshPayload);
+
+    this._logger.log({
+      event: LOG_EVENTS.ADMIN_LOGGED_IN,
+      context: 'AdminSigninUseCase',
+      userId: user.id,
+    });
 
     const responseData = ResponseData.getDate(
       user.id,

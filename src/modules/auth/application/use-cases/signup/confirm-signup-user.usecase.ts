@@ -6,6 +6,9 @@ import { Email } from '@/modules/user/domain/value-objects';
 import { ResponseData, TokenPayload } from '@/modules/auth/domain';
 import { TokenServicePort } from '@/modules/auth-security/application';
 import { SCOPE } from '@/modules/auth-security/domain';
+import { FileLogger } from '@/shared/logger/file-logger';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 
 /*
  *
@@ -23,6 +26,7 @@ export class ConfirmSignupUserUseCase {
     private readonly _userRepo: UserRepositoryPort,
     private readonly _verifyOtpUseCase: VerifyOtpUseCase,
     private readonly _tokenService: TokenServicePort,
+    private readonly _logger: FileLogger,
   ) {}
   async execute(input: ConfirmRegistrationInput) {
     // Verifying the OTP provided by the user
@@ -37,13 +41,23 @@ export class ConfirmSignupUserUseCase {
     // Finding user by email
     const user = await this._userRepo.findByEmail(email);
     if (!user) {
-      throw new Error('User not found');
+      this._logger.error({
+        event: LOG_EVENTS.USER_NOT_FOUND,
+        context: 'ConfirmSignupUserUseCase',
+        userEmail: email.getValue(),
+      });
+      throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
     }
 
     user.verify();
 
     // Saving updated user
     await this._userRepo.save(user);
+    this._logger.log({
+      event: LOG_EVENTS.USER_VERIFIED,
+      context: 'ConfirmSignupUserUseCase',
+      userId: user.id,
+    });
 
     const accessTokenPayload = TokenPayload.generateAccessPayload(
       user.id,
@@ -64,6 +78,12 @@ export class ConfirmSignupUserUseCase {
       user.role,
       user.avatarUrl,
     );
+
+    this._logger.log({
+      event: LOG_EVENTS.USER_SIGNIN_SUCCESSFULL,
+      context: 'ConfirmSignupUserUseCase',
+      userId: user.id,
+    });
 
     return {
       accessToken,

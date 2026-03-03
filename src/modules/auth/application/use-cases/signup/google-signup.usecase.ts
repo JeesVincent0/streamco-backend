@@ -7,12 +7,15 @@ import { TokenPayload } from '../../../domain';
 import { SCOPE } from '@/modules/auth-security/domain';
 import { GoogleAuth } from '../../inputs';
 import { TokenServicePort } from '@/modules/auth-security/application';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { FileLogger } from '@/shared/logger/file-logger';
 
 export class GoogleAuthUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _createUserWithGoogleAuth: CreateUserWIthGoogleAuthPort,
     private readonly _tokenService: TokenServicePort,
+    private readonly _logger: FileLogger,
   ) {}
   async execute(input: GoogleAuth) {
     const email = Email.create(input.email);
@@ -21,6 +24,11 @@ export class GoogleAuthUseCase {
     if (!user) {
       if (input.intent === 'login') input.role = UserRole.USER;
       user = await this._createUserWithGoogleAuth.execute(input);
+      this._logger.log({
+        event: LOG_EVENTS.USER_CREATED,
+        context: 'GoogleAuthUseCase',
+        userId: user.id,
+      });
     }
 
     const accessPayload = TokenPayload.generateAccessPayload(
@@ -34,6 +42,12 @@ export class GoogleAuthUseCase {
       await this._tokenService.generateAccessToken(accessPayload);
     const refreshToken =
       await this._tokenService.generateRefreshToken(refreshPayload);
+
+    this._logger.log({
+      event: LOG_EVENTS.USER_SIGNIN_SUCCESSFULL,
+      context: 'GoogleAuthUseCase',
+      userId: user.id,
+    });
 
     return {
       accessToken,

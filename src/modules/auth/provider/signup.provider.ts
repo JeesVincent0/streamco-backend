@@ -61,17 +61,20 @@ export const signupProvider = [
       userRepo: UserRepositoryPort,
       createUserWithGoogleAuth: CreateUserWIthGoogleAuthPort,
       tokenService: TokenServicePort,
+      logger: FileLogger,
     ) => {
       return new GoogleAuthUseCase(
         userRepo,
         createUserWithGoogleAuth,
         tokenService,
+        logger,
       );
     },
     inject: [
       USER_REPOSITORY_PORT,
       CREATE_USER_WITH_GOOGLE_AUTH_PORT,
       TOKEN_SERVICE,
+      FileLogger,
     ],
   },
 
@@ -81,10 +84,21 @@ export const signupProvider = [
       userRepo: UserRepositoryPort,
       passwordHasher: PasswordHasherPort,
       tokenService: TokenServicePort,
+      logger: FileLogger,
     ) => {
-      return new AdminSigninUseCase(userRepo, passwordHasher, tokenService);
+      return new AdminSigninUseCase(
+        userRepo,
+        passwordHasher,
+        tokenService,
+        logger,
+      );
     },
-    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT, TOKEN_SERVICE],
+    inject: [
+      USER_REPOSITORY_PORT,
+      PASSWORD_HASHER_PORT,
+      TOKEN_SERVICE,
+      FileLogger,
+    ],
   },
 
   {
@@ -104,10 +118,16 @@ export const signupProvider = [
       userRepo: UserRepositoryPort,
       passwordHasher: PasswordHasherPort,
       tokenService: TokenServicePort,
+      logger: FileLogger,
     ) => {
-      return new SigninUseCase(userRepo, passwordHasher, tokenService);
+      return new SigninUseCase(userRepo, passwordHasher, tokenService, logger);
     },
-    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT, TOKEN_SERVICE],
+    inject: [
+      USER_REPOSITORY_PORT,
+      PASSWORD_HASHER_PORT,
+      TOKEN_SERVICE,
+      FileLogger,
+    ],
   },
 
   {
@@ -221,14 +241,16 @@ export const signupProvider = [
       userRepo: UserRepositoryPort,
       verifyOtpUseCase: VerifyOtpUseCase,
       tokenService: TokenServicePort,
+      logger: FileLogger,
     ) => {
       return new ConfirmSignupUserUseCase(
         userRepo,
         verifyOtpUseCase,
         tokenService,
+        logger,
       );
     },
-    inject: [USER_REPOSITORY_PORT, VerifyOtpUseCase, TOKEN_SERVICE],
+    inject: [USER_REPOSITORY_PORT, VerifyOtpUseCase, TOKEN_SERVICE, FileLogger],
   },
 
   {
