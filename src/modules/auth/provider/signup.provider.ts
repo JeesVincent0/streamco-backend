@@ -125,7 +125,12 @@ export const signupProvider = [
         logger,
       );
     },
-    inject: [USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT, TokenBlackListUseCase],
+    inject: [
+      USER_REPOSITORY_PORT,
+      PASSWORD_HASHER_PORT,
+      TokenBlackListUseCase,
+      FileLogger,
+    ],
   },
 
   {

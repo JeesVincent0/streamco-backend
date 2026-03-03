@@ -43,14 +43,12 @@ export class VerifyOtpUseCase {
       if (OtpPolicy.isExhausted(updateOtpState)) {
         // Delete the cache and throw error
         await this._cacheRepository.del(input.id);
-        throw new BadRequestError(
-          'Too many attempts, try again after sometimes',
-        );
+        throw new BadRequestError(ERROR_MESSAGES.SESSION_EXPIRED);
       }
 
       //   Save the updated attempt in cache and throw error
       await this._cacheRepository.save(input.id, updateOtpState, 300);
-      throw new BadRequestError('OTP expired or invalid');
+      throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
 
     // If OTP valid delete the cache and return email and purpose for next step in registration or forgot password process.

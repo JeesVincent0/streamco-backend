@@ -41,7 +41,7 @@ export class AdminSigninUseCase {
     const accessPayload = TokenPayload.generateAccessPayload(
       user.id,
       UserRole.ADMIN,
-      `${SCOPE.ADMIN_WRITE} ${SCOPE.ADMIN_READ}`,
+      `${SCOPE.ADMIN_WRITE} ${SCOPE.ADMIN_READ} ${SCOPE.USER_READ} ${SCOPE.USER_WRITE}`,
     );
     const refreshPayload = TokenPayload.generateRefreshPayload(user.id);
 
