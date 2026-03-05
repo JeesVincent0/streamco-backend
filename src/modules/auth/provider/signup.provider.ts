@@ -50,8 +50,20 @@ import { FileLogger } from '@/shared/logger/file-logger';
 import { GenerateTokenUseCase } from '../application/use-cases/token/generate-token.usecase';
 import { MonogodbRefreshTokenRepository } from '../infrastructure/repository';
 import { RefreshTokenPort } from '../application/ports/token';
+import { RefreshAccessTokenUseCase } from '../application/use-cases/token/refresh-accessp-token.usecase';
 
 export const signupProvider = [
+  {
+    provide: RefreshAccessTokenUseCase,
+    useFactory: (
+      tokenService: TokenServicePort,
+      userRepo: UserRepositoryPort,
+      logger: FileLogger,
+    ) => {
+      return new RefreshAccessTokenUseCase(tokenService, userRepo, logger);
+    },
+    inject: [TOKEN_SERVICE, USER_REPOSITORY_PORT, FileLogger],
+  },
   {
     provide: SignoutUseCase,
     useFactory: (
