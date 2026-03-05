@@ -5,14 +5,26 @@ import {
   VerifiedRefreshTokenPayload,
   VerifiedResetPasswordTokenPayload,
 } from '@/shared/interfaces/token-type';
-import { UnauthorizedException } from '@nestjs/common';
-import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { TokenServicePort } from '@/modules/auth-security/application';
+import { FileLogger } from '@/shared/logger/file-logger';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+
+/*
+  This use case is responsible for blacklisting tokens. 
+  It takes a token and its type as input, verifies the 
+  token, and if valid, extracts the jti (JWT ID) and 
+  expiration time from the token payload. It then 
+  calculates the time-to-live (TTL) for the token and 
+  saves it in the blacklist repository with the jti as the 
+  key and 'blacklisted' as the value. The logger is used to 
+  log the event of token blacklisting.
+*/
 
 export class TokenBlackListUseCase {
   constructor(
     private readonly _tokenBlacklistRepo: BaseCachedUserRepositoryPort,
     private readonly _tokenService: TokenServicePort,
+    private readonly _logger: FileLogger,
   ) {}
   async execute(token: string, type: TOKEN_TYPE) {
     let payload:
@@ -27,7 +39,7 @@ export class TokenBlackListUseCase {
     } else if (type === TOKEN_TYPE.REFRESH_TOKEN) {
       payload = await this._tokenService.verifyRefreshToken(token);
     } else {
-      throw new UnauthorizedException(ERROR_MESSAGES.SOMETHING_WENT_WRONG);
+      return;
     }
 
     const { jti, exp } = payload;
@@ -38,6 +50,13 @@ export class TokenBlackListUseCase {
     if (ttl <= 0) {
       return;
     }
+
+    this._logger.log({
+      event: LOG_EVENTS.TOKEN_BLACKLISTED,
+      context: 'TokenBlackListUseCase',
+      userId: payload.sub,
+      tokenType: type,
+    });
 
     await this._tokenBlacklistRepo.save(jti, 'blacklisted', ttl);
   }

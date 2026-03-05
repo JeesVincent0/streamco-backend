@@ -49,10 +49,10 @@ import { FileLogger } from '@/shared/logger/file-logger';
 export const signupProvider = [
   {
     provide: SignoutUseCase,
-    useFactory: (tokenBlacklistUseCase: TokenBlackListUseCase) => {
-      return new SignoutUseCase(tokenBlacklistUseCase);
+    useFactory: () => {
+      return new SignoutUseCase();
     },
-    inject: [TokenBlackListUseCase],
+    inject: [],
   },
 
   {
@@ -106,10 +106,15 @@ export const signupProvider = [
     useFactory: (
       tokenBlacklistRepo: BaseCachedUserRepositoryPort,
       tokenService: TokenServicePort,
+      logger: FileLogger,
     ) => {
-      return new TokenBlackListUseCase(tokenBlacklistRepo, tokenService);
+      return new TokenBlackListUseCase(
+        tokenBlacklistRepo,
+        tokenService,
+        logger,
+      );
     },
-    inject: [BLACKLIST_TOKEN_CACKE, TOKEN_SERVICE],
+    inject: [BLACKLIST_TOKEN_CACKE, TOKEN_SERVICE, FileLogger],
   },
 
   {
