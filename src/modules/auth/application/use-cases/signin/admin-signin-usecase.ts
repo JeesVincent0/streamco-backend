@@ -5,16 +5,16 @@ import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { PasswordHasherPort } from '../../ports';
 import { ResponseData, TokenPayload } from '@/modules/auth/domain';
-import { TokenServicePort } from '@/modules/auth-security/application';
 import { SCOPE } from '@/modules/auth-security/domain';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { GenerateTokenUseCase } from '../token/generate-token.usecase';
 
 export class AdminSigninUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _passwordHashser: PasswordHasherPort,
-    private readonly _tokenService: TokenServicePort,
+    private readonly _generateTokenUseCase: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
   async execute(input: SigninInput) {
@@ -62,10 +62,8 @@ export class AdminSigninUseCase {
     );
     const refreshPayload = TokenPayload.generateRefreshPayload(user.id);
 
-    const accessToken =
-      await this._tokenService.generateAccessToken(accessPayload);
-    const refreshToken =
-      await this._tokenService.generateRefreshToken(refreshPayload);
+    const { accessToken, refreshToken } =
+      await this._generateTokenUseCase.execute(accessPayload, refreshPayload);
 
     this._logger.log({
       event: LOG_EVENTS.ADMIN_LOGGED_IN,

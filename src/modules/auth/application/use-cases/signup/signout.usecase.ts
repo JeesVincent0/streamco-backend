@@ -1,11 +1,9 @@
-import { TokenBlackListUseCase } from '../token';
-
 export class SignoutUseCase {
-  constructor(private readonly _tokenBlacklistUseCase: TokenBlackListUseCase) {}
+  constructor() {}
   execute() {
     return {
       status: 'success',
-      message: 'Successfully logoutted',
+      message: 'Successfully logout',
     };
   }
 }

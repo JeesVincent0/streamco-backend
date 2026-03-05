@@ -4,11 +4,11 @@ import { VerifyOtpUseCase } from '../otp/verify-otp.usecase';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
 import { Email } from '@/modules/user/domain/value-objects';
 import { ResponseData, TokenPayload } from '@/modules/auth/domain';
-import { TokenServicePort } from '@/modules/auth-security/application';
 import { SCOPE } from '@/modules/auth-security/domain';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { GenerateTokenUseCase } from '../token/generate-token.usecase';
 
 /*
  *
@@ -25,7 +25,7 @@ export class ConfirmSignupUserUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _verifyOtpUseCase: VerifyOtpUseCase,
-    private readonly _tokenService: TokenServicePort,
+    private readonly _generateTokenUseCase: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
   async execute(input: ConfirmRegistrationInput) {
@@ -66,10 +66,11 @@ export class ConfirmSignupUserUseCase {
     );
     const refreshTokenPayload = TokenPayload.generateRefreshPayload(user.id);
 
-    const accessToken =
-      await this._tokenService.generateAccessToken(accessTokenPayload);
-    const refreshToken =
-      await this._tokenService.generateRefreshToken(refreshTokenPayload);
+    const { accessToken, refreshToken } =
+      await this._generateTokenUseCase.execute(
+        accessTokenPayload,
+        refreshTokenPayload,
+      );
 
     const responseData = ResponseData.getDate(
       user.id,

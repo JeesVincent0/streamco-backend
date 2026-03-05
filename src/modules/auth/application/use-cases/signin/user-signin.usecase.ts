@@ -6,16 +6,16 @@ import { PasswordHasherPort } from '../../ports';
 import { ResponseData } from '../../../domain/service/signin-reposnse';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { TokenPayload } from '@/modules/auth/domain';
-import { TokenServicePort } from '@/modules/auth-security/application';
 import { SCOPE } from '@/modules/auth-security/domain';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { GenerateTokenUseCase } from '../token/generate-token.usecase';
 
 export class SigninUseCase {
   constructor(
     private _userRepository: UserRepositoryPort,
     private readonly _passwordHasher: PasswordHasherPort,
-    private readonly _tokenService: TokenServicePort,
+    private readonly _tokenGenerator: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
 
@@ -71,10 +71,10 @@ export class SigninUseCase {
       existingUser.id,
     );
 
-    const accessToken =
-      await this._tokenService.generateAccessToken(accessTokePayload);
-    const refreshToken =
-      await this._tokenService.generateRefreshToken(refreshTokenPayload);
+    const { accessToken, refreshToken } = await this._tokenGenerator.execute(
+      accessTokePayload,
+      refreshTokenPayload,
+    );
 
     this._logger.log({
       event: LOG_EVENTS.USER_SIGNIN_SUCCESSFULL,

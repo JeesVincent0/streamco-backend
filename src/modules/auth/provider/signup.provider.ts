@@ -12,6 +12,7 @@ import {
   ConfirmSignupUserUseCase,
   GenerateOtpUseCase,
   GoogleAuthUseCase,
+  RefreshTokenUseCase,
   ResendOtpUseCase,
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
@@ -33,6 +34,7 @@ import {
   OtpServicePort,
   PASSWORD_HASHER_PORT,
   PasswordHasherPort,
+  REFRESH_TOKEN_REPOSITORY_PORT,
 } from '../application';
 import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/repositories/redis-auth-cached-user.repository';
 import { ResetPasswordUseCase } from '../application/use-cases/reset-password/reset-password.usecase';
@@ -45,6 +47,9 @@ import {
 } from '@/modules/auth-security/application/tokens';
 import { TokenServicePort } from '@/modules/auth-security/application/ports';
 import { FileLogger } from '@/shared/logger/file-logger';
+import { GenerateTokenUseCase } from '../application/use-cases/token/generate-token.usecase';
+import { MonogodbRefreshTokenRepository } from '../infrastructure/repository';
+import { RefreshTokenPort } from '../application/ports/token';
 
 export const signupProvider = [
   {
@@ -56,24 +61,56 @@ export const signupProvider = [
   },
 
   {
+    provide: RefreshTokenUseCase,
+    useFactory: (
+      refreshTokenRepository: RefreshTokenPort,
+      tokenService: TokenServicePort,
+      logger: FileLogger,
+    ) => {
+      return new RefreshTokenUseCase(
+        refreshTokenRepository,
+        tokenService,
+        logger,
+      );
+    },
+    inject: [REFRESH_TOKEN_REPOSITORY_PORT, TOKEN_SERVICE, FileLogger],
+  },
+
+  {
+    provide: GenerateTokenUseCase,
+    useFactory: (
+      tokenService: TokenServicePort,
+      refreshTokenUseCase: RefreshTokenUseCase,
+      logger: FileLogger,
+    ) => {
+      return new GenerateTokenUseCase(
+        tokenService,
+        refreshTokenUseCase,
+        logger,
+      );
+    },
+    inject: [TOKEN_SERVICE, RefreshTokenUseCase, FileLogger],
+  },
+
+  {
     provide: GoogleAuthUseCase,
     useFactory: (
       userRepo: UserRepositoryPort,
       createUserWithGoogleAuth: CreateUserWIthGoogleAuthPort,
-      tokenService: TokenServicePort,
+      generateTokenUseCase: GenerateTokenUseCase,
       logger: FileLogger,
     ) => {
       return new GoogleAuthUseCase(
         userRepo,
         createUserWithGoogleAuth,
-        tokenService,
+        generateTokenUseCase,
         logger,
       );
     },
     inject: [
       USER_REPOSITORY_PORT,
       CREATE_USER_WITH_GOOGLE_AUTH_PORT,
-      TOKEN_SERVICE,
+      GenerateTokenUseCase,
       FileLogger,
     ],
   },
@@ -83,20 +120,20 @@ export const signupProvider = [
     useFactory: (
       userRepo: UserRepositoryPort,
       passwordHasher: PasswordHasherPort,
-      tokenService: TokenServicePort,
+      generateTokenUseCase: GenerateTokenUseCase,
       logger: FileLogger,
     ) => {
       return new AdminSigninUseCase(
         userRepo,
         passwordHasher,
-        tokenService,
+        generateTokenUseCase,
         logger,
       );
     },
     inject: [
       USER_REPOSITORY_PORT,
       PASSWORD_HASHER_PORT,
-      TOKEN_SERVICE,
+      GenerateTokenUseCase,
       FileLogger,
     ],
   },
@@ -122,15 +159,20 @@ export const signupProvider = [
     useFactory: (
       userRepo: UserRepositoryPort,
       passwordHasher: PasswordHasherPort,
-      tokenService: TokenServicePort,
+      generateTokenUseCase: GenerateTokenUseCase,
       logger: FileLogger,
     ) => {
-      return new SigninUseCase(userRepo, passwordHasher, tokenService, logger);
+      return new SigninUseCase(
+        userRepo,
+        passwordHasher,
+        generateTokenUseCase,
+        logger,
+      );
     },
     inject: [
       USER_REPOSITORY_PORT,
       PASSWORD_HASHER_PORT,
-      TOKEN_SERVICE,
+      GenerateTokenUseCase,
       FileLogger,
     ],
   },
@@ -245,17 +287,22 @@ export const signupProvider = [
     useFactory: (
       userRepo: UserRepositoryPort,
       verifyOtpUseCase: VerifyOtpUseCase,
-      tokenService: TokenServicePort,
+      generateTokenUseCase: GenerateTokenUseCase,
       logger: FileLogger,
     ) => {
       return new ConfirmSignupUserUseCase(
         userRepo,
         verifyOtpUseCase,
-        tokenService,
+        generateTokenUseCase,
         logger,
       );
     },
-    inject: [USER_REPOSITORY_PORT, VerifyOtpUseCase, TOKEN_SERVICE, FileLogger],
+    inject: [
+      USER_REPOSITORY_PORT,
+      VerifyOtpUseCase,
+      GenerateTokenUseCase,
+      FileLogger,
+    ],
   },
 
   {
@@ -307,5 +354,10 @@ export const signupProvider = [
   {
     provide: MAIL_SERVICE,
     useClass: NodemailerService,
+  },
+
+  {
+    provide: REFRESH_TOKEN_REPOSITORY_PORT,
+    useClass: MonogodbRefreshTokenRepository,
   },
 ];

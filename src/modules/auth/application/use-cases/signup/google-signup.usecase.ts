@@ -6,15 +6,15 @@ import { Email, UserRole } from '@/modules/user/domain';
 import { TokenPayload } from '../../../domain';
 import { SCOPE } from '@/modules/auth-security/domain';
 import { GoogleAuth } from '../../inputs';
-import { TokenServicePort } from '@/modules/auth-security/application';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { FileLogger } from '@/shared/logger/file-logger';
+import { GenerateTokenUseCase } from '../token/generate-token.usecase';
 
 export class GoogleAuthUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _createUserWithGoogleAuth: CreateUserWIthGoogleAuthPort,
-    private readonly _tokenService: TokenServicePort,
+    private readonly _generateTokenUseCase: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
   async execute(input: GoogleAuth) {
@@ -38,10 +38,8 @@ export class GoogleAuthUseCase {
     );
     const refreshPayload = TokenPayload.generateRefreshPayload(user.id);
 
-    const accessToken =
-      await this._tokenService.generateAccessToken(accessPayload);
-    const refreshToken =
-      await this._tokenService.generateRefreshToken(refreshPayload);
+    const { accessToken, refreshToken } =
+      await this._generateTokenUseCase.execute(accessPayload, refreshPayload);
 
     this._logger.log({
       event: LOG_EVENTS.USER_SIGNIN_SUCCESSFULL,
