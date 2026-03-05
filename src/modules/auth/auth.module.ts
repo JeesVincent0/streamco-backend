@@ -15,9 +15,17 @@ import { GoogleAuthController } from './presentation/controller/google.auth.cont
 import { PassportModule } from '@nestjs/passport';
 import { GoogleStrategy } from './infrastructure';
 import { AuthSecurityModule } from '../auth-security/auth-security.module';
+import { RefreshTokenSchema } from './infrastructure/schema';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
+    MongooseModule.forFeature([
+      {
+        name: 'RefreshToken',
+        schema: RefreshTokenSchema,
+      },
+    ]),
     JwtModule.register({}),
     PassportModule,
     UserModule,
