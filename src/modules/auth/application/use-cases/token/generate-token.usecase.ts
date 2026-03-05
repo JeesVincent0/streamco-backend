@@ -14,11 +14,11 @@ export class GenerateTokenUseCase {
   constructor(
     private readonly _tokenService: TokenServicePort,
     private readonly _refreshTokenUseCase: RefreshTokenUseCase,
+    private readonly _logger: FileLogger,
   ) {}
   async execute(
     accessTokenPayload: AccessTokenPayload,
     refreshTokenPayload: RefreshTokenPayload,
-    logger: FileLogger,
   ): Promise<{ accessToken: string; refreshToken: string }> {
     const accessToken =
       await this._tokenService.generateAccessToken(accessTokenPayload);
@@ -30,7 +30,7 @@ export class GenerateTokenUseCase {
       RefreshTokenPurpose.CREATE,
     );
 
-    logger.log({
+    this._logger.log({
       event: LOG_EVENTS.TOKENS_CREATED,
       context: 'GenerateTokenUseCase',
       userId: refreshTokenPayload.sub,
