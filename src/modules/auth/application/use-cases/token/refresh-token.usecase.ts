@@ -16,22 +16,21 @@ export class RefreshTokenUseCase {
     private readonly _logger: FileLogger,
   ) {}
   async execute(token: string, purpose: RefreshTokenPurpose): Promise<void> {
-    const payload = await this._tokenService.verifyRefreshToken(token);
-    if (!payload) return;
+    if (purpose === RefreshTokenPurpose.CREATE) {
+      const payload = await this._tokenService.verifyRefreshToken(token);
+      if (!payload) return;
+      const refreshTokenDoc = await this._refreshTokenRepository.findByJti(
+        payload.jti,
+      );
 
-    const refreshTokenDoc = await this._refreshTokenRepository.findByJti(
-      payload.jti,
-    );
-
-    const tokenEntity = RefreshToken.create(
-      payload.sub,
-      payload.jti,
-      false,
-      new Date(payload.iat * 1000),
-      new Date(payload.exp * 1000),
-    );
-
-    if (!refreshTokenDoc && purpose === RefreshTokenPurpose.CREATE) {
+      if (refreshTokenDoc) return;
+      const tokenEntity = RefreshToken.create(
+        payload.sub,
+        payload.jti,
+        false,
+        new Date(payload.iat * 1000),
+        new Date(payload.exp * 1000),
+      );
       await this._refreshTokenRepository.save(tokenEntity);
       this._logger.log({
         event: LOG_EVENTS.REFRESH_TOKEN_ADDED_TO_DB,
@@ -41,12 +40,12 @@ export class RefreshTokenUseCase {
       return;
     }
 
-    if (refreshTokenDoc && purpose === RefreshTokenPurpose.REVOKE) {
-      await this._refreshTokenRepository.revokeToken(refreshTokenDoc.jti);
+    if (purpose === RefreshTokenPurpose.REVOKE) {
+      await this._refreshTokenRepository.revokeAllTokenByUserId(token);
       this._logger.log({
         event: LOG_EVENTS.REFRESH_TOKEN_REVOKED,
         context: 'RefreshTokenUseCase',
-        userId: payload.sub,
+        userId: token,
       });
       return;
     }

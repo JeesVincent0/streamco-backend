@@ -9,7 +9,9 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { ConfirmSignupUserUseCase } from '../../application/use-cases/signup/confirm-signup-user.usecase';
 import {
@@ -20,6 +22,9 @@ import { SigninUseCase } from '../../application/use-cases/signin';
 import { AdminSigninUseCase } from '../../application/use-cases/signin/admin-signin-usecase';
 import { type Response } from 'express';
 import { SignoutUseCase } from '../../application/use-cases/signup/signout.usecase';
+import type { RequestWithUserInterface } from '../interfaces';
+import { AccessTokenGuard } from '@/modules/auth-security/presentation';
+import { AccessTokenPayload } from '@/modules/auth-security/application/types';
 
 // Controller for handling registration
 // of both normal users and advertisers.
@@ -159,8 +164,12 @@ export class RegistrationController {
 
   @Post(`/logout`)
   @HttpCode(HttpStatus.OK)
-  logout(@Res({ passthrough: true }) res: Response) {
-    const data = this._signoutUseCase.execute();
+  @UseGuards(AccessTokenGuard)
+  logout(
+    @Req() req: RequestWithUserInterface,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const data = this._signoutUseCase.execute(req.user as AccessTokenPayload);
     res.clearCookie('accessToken', {
       httpOnly: true,
       secure: false,

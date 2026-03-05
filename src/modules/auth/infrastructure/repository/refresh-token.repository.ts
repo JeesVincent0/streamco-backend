@@ -33,9 +33,9 @@ export class MonogodbRefreshTokenRepository implements RefreshTokenPort {
       { $set: { revoked: true } },
     );
   }
-  async revokeToken(jti: string): Promise<void> {
+  async revokeToken(userId: string): Promise<void> {
     await this._refreshTokenDocument.updateOne(
-      { jti },
+      { userId },
       { $set: { revoked: true } },
     );
   }

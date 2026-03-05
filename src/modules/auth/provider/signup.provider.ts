@@ -54,10 +54,13 @@ import { RefreshTokenPort } from '../application/ports/token';
 export const signupProvider = [
   {
     provide: SignoutUseCase,
-    useFactory: () => {
-      return new SignoutUseCase();
+    useFactory: (
+      refreshTokenUseCase: RefreshTokenUseCase,
+      logger: FileLogger,
+    ) => {
+      return new SignoutUseCase(refreshTokenUseCase, logger);
     },
-    inject: [],
+    inject: [RefreshTokenUseCase, FileLogger],
   },
 
   {
