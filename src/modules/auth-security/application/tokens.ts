@@ -1,0 +1,2 @@
+export const TOKEN_SERVICE = Symbol('TOKEN_SERVICE');
+export const BLACKLIST_TOKEN_CACKE = Symbol('BLACKLIST_TOKEN_CACKE');

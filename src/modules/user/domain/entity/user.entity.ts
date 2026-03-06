@@ -1,0 +1,265 @@
+import {
+  UserContentType,
+  UserGender,
+  UserRole,
+  UserSocialMediaType,
+  UserStatus,
+} from '@/modules/user/domain/enums';
+
+import { BaseUser } from '@/modules/user/domain/entity/base-user.entity';
+import {
+  Email,
+  HashedPassword,
+  SocialLink,
+} from '@/modules/user/domain/value-objects';
+import { CreateUserProps } from '../types';
+import { UserRestoreProps } from '../types';
+import { BadRequestError } from '@/shared/errors';
+import { UniqueIdService } from '@/shared/domain';
+
+/**
+ * User
+ * ------
+ * Concrete user aggregate root.
+ * Encapsulates profile-related behavior.
+ */
+export class User extends BaseUser {
+  private _dateOfBirth?: Date;
+  private _gender?: UserGender;
+  private _bio?: string;
+  private _location?: string;
+  private _socialLinks: SocialLink[] = [];
+  private _contentType: UserContentType;
+
+  private constructor(
+    id: string,
+    firstName: string,
+    lastName: string,
+    displayName: string,
+    email: Email,
+    contentType: UserContentType,
+    role: UserRole,
+    isProfileCompleted: boolean,
+    isVerified: boolean,
+    status: UserStatus,
+    createdAt: Date,
+
+    dateOfBirth?: Date,
+    gender?: UserGender,
+    googleId?: string,
+    password?: HashedPassword,
+    avatarUrl?: string,
+    bio?: string,
+    location?: string,
+    socialLinks: SocialLink[] = [],
+  ) {
+    super(
+      id,
+      firstName,
+      lastName,
+      displayName,
+      email,
+      role,
+      status,
+      isVerified,
+      isProfileCompleted,
+      createdAt,
+      googleId,
+      password,
+      avatarUrl,
+    );
+
+    this._gender = gender;
+    this._dateOfBirth = dateOfBirth;
+    this._bio = bio;
+    this._location = location;
+    this._socialLinks = socialLinks;
+    this._contentType = contentType;
+  }
+
+  /* ==================== Getters ==================== */
+
+  get dateOfBirth(): Date | undefined {
+    return this._dateOfBirth;
+  }
+
+  get gender(): UserGender | undefined {
+    return this._gender;
+  }
+
+  get bio(): string | undefined {
+    return this._bio;
+  }
+
+  get location(): string | undefined {
+    return this._location;
+  }
+
+  get contentType(): UserContentType {
+    return this._contentType;
+  }
+
+  get socialLinks(): SocialLink[] {
+    return [...this._socialLinks];
+  }
+
+  /* ==================== Domain rules ==================== */
+
+  /**
+   * User must be at least 12 years old.
+   */
+  private isAtLeast12YearsOld(dob: Date): boolean {
+    const today = new Date();
+
+    const cutoff = new Date(
+      today.getFullYear() - 12,
+      today.getMonth(),
+      today.getDate(),
+    );
+
+    return dob <= cutoff;
+  }
+
+  /* ==================== Mutations ==================== */
+
+  changeDateOfBirth(dateOfBirth: Date): void {
+    this.ensureNotDeleted();
+
+    if (dateOfBirth > new Date()) {
+      throw new BadRequestError('Date of birth cannot be in the future');
+    }
+
+    if (!this.isAtLeast12YearsOld(dateOfBirth)) {
+      throw new BadRequestError('User must be at least 12 years old');
+    }
+
+    this._dateOfBirth = new Date(dateOfBirth);
+    this.touch();
+  }
+
+  changeGender(gender: UserGender): void {
+    this.ensureNotDeleted();
+    this._gender = gender;
+    this.touch();
+  }
+
+  changeBio(bio: string): void {
+    this.ensureNotDeleted();
+
+    if (bio.length > 500) {
+      throw new BadRequestError('Bio must not exceed 500 characters');
+    }
+
+    this._bio = bio;
+    this.touch();
+  }
+
+  changeLocation(location: string): void {
+    this.ensureNotDeleted();
+
+    if (location.length > 100) {
+      throw new BadRequestError('Location must not exceed 100 characters');
+    }
+
+    this._location = location;
+    this.touch();
+  }
+
+  changeContentType(contentType: UserContentType): void {
+    this.ensureNotDeleted();
+    this._contentType = contentType;
+    this.touch();
+  }
+
+  /* ==================== Social Links ==================== */
+
+  addSocialLink(link: SocialLink): void {
+    this.ensureNotDeleted();
+
+    const exists = this.socialLinks.some((l) => l.getType() === link.getType());
+
+    if (exists) {
+      throw new BadRequestError(`${link.getType()} already exists`);
+    }
+
+    this.socialLinks.push(link);
+    this.touch();
+  }
+
+  updateSocialLink(type: UserSocialMediaType, url: string): void {
+    this.ensureNotDeleted();
+
+    const index = this.socialLinks.findIndex((l) => l.getType() === type);
+
+    if (index === -1) {
+      throw new BadRequestError(`Social link ${type} not found`);
+    }
+
+    this.socialLinks[index] = SocialLink.create(type, url);
+    this.touch();
+  }
+
+  removeSocialLink(type: UserSocialMediaType): void {
+    this.ensureNotDeleted();
+
+    const initialLength = this.socialLinks.length;
+
+    this._socialLinks = this.socialLinks.filter((l) => l.getType() !== type);
+
+    if (this.socialLinks.length === initialLength) {
+      throw new BadRequestError(`Social link ${type} not found`);
+    }
+
+    this.touch();
+  }
+
+  static create(props: CreateUserProps): User {
+    const displayName =
+      props.displayName || `${props.firstName} ${props.lastName}`;
+    const id = UniqueIdService.generate();
+
+    return new User(
+      id,
+      props.firstName,
+      props.lastName,
+      displayName,
+      props.email,
+      UserContentType.SAFE_MODE,
+      UserRole.USER,
+      props.isProfileCompleted,
+      props.isVerified || false,
+      UserStatus.ACTIVE,
+      new Date(),
+
+      props.dob,
+      props.gender,
+      props.googleId,
+      props.password,
+      props.avatarUrl,
+    );
+  }
+
+  static restore(props: UserRestoreProps) {
+    return new User(
+      props.id,
+      props.firstName,
+      props.lastName,
+      props.displayName,
+      Email.restore(props.email),
+      props.contentType,
+      props.role,
+      props.isProfileCompleted,
+      props.isVerified,
+      props.status,
+      props.createdAt,
+      props.dateOfBirth,
+      props.gender,
+      props.googleId,
+      HashedPassword.restore(props.password),
+      props.avatarUrl,
+      props.bio,
+      props.location,
+      props.socialLinks.map((link) => SocialLink.restore(link.type, link.url)),
+    );
+  }
+}
