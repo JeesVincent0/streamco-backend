@@ -16,7 +16,7 @@ export class JwtTokenService implements TokenServicePort {
   generateAccessToken(payload: AccessTokenPayload): Promise<string> {
     return this._jwtService.signAsync(payload, {
       secret: process.env.ACCESS_TOKEN_SECRET_KEY,
-      expiresIn: '10min',
+      expiresIn: '5min',
     });
   }
   generateRefreshToken(payload: RefreshTokenPayload): Promise<string> {

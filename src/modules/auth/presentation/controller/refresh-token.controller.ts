@@ -16,7 +16,7 @@ import { type RequestWithUserInterface } from '../interfaces';
 // It will be responsible for validating the refresh token,
 // generating a new access token, and sending it back to the client.
 
-@Controller()
+@Controller('auth')
 export class RefreshTokenController {
   constructor(
     private readonly _refreshAccessTokenUseCase: RefreshAccessTokenUseCase,
@@ -37,5 +37,6 @@ export class RefreshTokenController {
       sameSite: 'lax',
       path: '/',
     });
+    return;
   }
 }

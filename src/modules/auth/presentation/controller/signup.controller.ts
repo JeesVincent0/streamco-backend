@@ -88,7 +88,7 @@ export class RegistrationController {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: false,
       sameSite: 'lax',
-      path: '/api/refresh-token',
+      path: '/api/auth/refresh-token',
     });
 
     return {
@@ -110,7 +110,7 @@ export class RegistrationController {
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 5,
+      maxAge: 1000 * 10,
       secure: false,
       sameSite: 'lax',
       path: '/',
@@ -120,7 +120,7 @@ export class RegistrationController {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: false,
       sameSite: 'lax',
-      path: '/api/refresh-token',
+      path: '/api/auth/refresh-token',
     });
 
     return {
@@ -142,7 +142,7 @@ export class RegistrationController {
 
     res.cookie('accessToken', accessToken, {
       httpOnly: true,
-      maxAge: 1000 * 60 * 5,
+      maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: false,
       sameSite: 'lax',
       path: '/',
@@ -152,7 +152,7 @@ export class RegistrationController {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: false,
       sameSite: 'lax',
-      path: '/api/refresh-token',
+      path: '/api/auth/refresh-token',
     });
 
     return {
