@@ -13,6 +13,7 @@ import {
   CREATE_ADVERTISER_USER_PORT,
   CREATE_NORMAL_USER_PORT,
   CREATE_USER_WITH_GOOGLE_AUTH_PORT,
+  GET_ALL_USERS_PORT,
   USER_REPOSITORY_PORT,
 } from './application';
 import { AuthSecurityModule } from '../auth-security/auth-security.module';
@@ -38,6 +39,7 @@ import { AuthSecurityModule } from '../auth-security/auth-security.module';
   providers: [...userProviders],
   exports: [
     USER_REPOSITORY_PORT,
+    GET_ALL_USERS_PORT,
     CREATE_NORMAL_USER_PORT,
     CREATE_ADVERTISER_USER_PORT,
     CREATE_USER_WITH_GOOGLE_AUTH_PORT,

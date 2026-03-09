@@ -9,10 +9,12 @@ import {
   CreateAdvertiserUserUseCase,
   UserRepositoryPort,
   CREATE_USER_WITH_GOOGLE_AUTH_PORT,
+  GET_ALL_USERS_PORT,
 } from '../application';
 import { CreateUserWithGoogleAuthUseCase } from '../application';
 import { GetBaseUserUseCase } from '../application/use-cases/get-user/get-base-user.usecase';
 import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
+import { GetAllUsersRepository } from '../infrastructure/repositories/get-all-users.impl';
 
 export const userProviders = [
   {
@@ -47,5 +49,10 @@ export const userProviders = [
   {
     provide: USER_REPOSITORY_PORT,
     useClass: MongoRepository,
+  },
+
+  {
+    provide: GET_ALL_USERS_PORT,
+    useClass: GetAllUsersRepository,
   },
 ];
