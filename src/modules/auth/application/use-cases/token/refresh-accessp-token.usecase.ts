@@ -6,6 +6,7 @@ import { TokenServicePort } from '@/modules/auth-security/application';
 import { SCOPE } from '@/modules/auth-security/domain';
 import { TokenPayload } from '@/modules/auth/domain';
 import { UserRepositoryPort } from '@/modules/user/application';
+import { UserRole } from '@/modules/user/domain';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { BadRequestError } from '@/shared/errors';
 import { FileLogger } from '@/shared/logger/file-logger';
@@ -24,7 +25,7 @@ export class RefreshAccessTokenUseCase {
     const accessTokenPayload = TokenPayload.generateAccessPayload(
       user.id,
       user.role,
-      `${SCOPE.USER_READ} ${SCOPE.USER_WRITE}`,
+      `${user.role !== UserRole.ADMIN ? `${SCOPE.USER_READ} ${SCOPE.USER_WRITE}` : `${SCOPE.ADMIN_READ} ${SCOPE.ADMIN_WRITE} ${SCOPE.USER_READ}`}`,
     );
     const accessToken =
       await this._tokenService.generateAccessToken(accessTokenPayload);

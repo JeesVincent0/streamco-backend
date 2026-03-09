@@ -69,6 +69,7 @@ export class SigninUseCase {
     );
     const refreshTokenPayload = TokenPayload.generateRefreshPayload(
       existingUser.id,
+      existingUser.role,
     );
 
     const { accessToken, refreshToken } = await this._tokenGenerator.execute(

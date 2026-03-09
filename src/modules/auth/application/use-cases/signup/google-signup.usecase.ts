@@ -36,7 +36,10 @@ export class GoogleAuthUseCase {
       user.role,
       `${SCOPE.USER_READ} ${SCOPE.USER_WRITE}`,
     );
-    const refreshPayload = TokenPayload.generateRefreshPayload(user.id);
+    const refreshPayload = TokenPayload.generateRefreshPayload(
+      user.id,
+      user.role,
+    );
 
     const { accessToken, refreshToken } =
       await this._generateTokenUseCase.execute(accessPayload, refreshPayload);

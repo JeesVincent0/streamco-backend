@@ -38,7 +38,10 @@ export class TokenPayload {
     };
   }
 
-  static generateRefreshPayload(id: string): RefreshTokenPayload {
+  static generateRefreshPayload(
+    id: string,
+    role: UserRole,
+  ): RefreshTokenPayload {
     const { issuer, audience } = this.getJwtConfig();
 
     return {
@@ -47,6 +50,7 @@ export class TokenPayload {
       aud: audience,
       jti: UniqueIdService.generate(),
       iat: Math.floor(Date.now() / 1000),
+      role,
     };
   }
 }
