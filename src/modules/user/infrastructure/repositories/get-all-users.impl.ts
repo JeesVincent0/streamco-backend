@@ -17,7 +17,7 @@ export class GetAllUsersRepository implements UserQueryPort {
       page = 1,
       limit = 10,
       sortBy = 'createdAt',
-      order = 'asc',
+      order = 'desc',
       role,
       isVerified,
       status,
@@ -41,7 +41,7 @@ export class GetAllUsersRepository implements UserQueryPort {
     }
 
     const sort: Record<string, 1 | -1> = {
-      [sortBy]: order === 'asc' ? 1 : -1,
+      [sortBy]: order === 'desc' ? -1 : 1,
     };
 
     const users = await this._userModel

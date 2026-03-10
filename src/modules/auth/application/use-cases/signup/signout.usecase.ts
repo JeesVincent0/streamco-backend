@@ -10,7 +10,6 @@ export class SignoutUseCase {
     private readonly _logger: FileLogger,
   ) {}
   async execute(payload: AccessTokenPayload) {
-    console.log('userId: ', payload.sub);
     await this._refreshTokenUseCase.execute(
       payload.sub,
       RefreshTokenPurpose.REVOKE,

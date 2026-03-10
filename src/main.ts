@@ -24,7 +24,6 @@ async function bootstrap() {
 
   app.use((req: Request, res: Response, next: NextFunction) => {
     logger.log(`${req.method} ${req.originalUrl}`);
-    console.log(`${req.method} ${req.originalUrl}`);
     next();
   });
 
