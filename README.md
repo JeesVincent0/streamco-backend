@@ -1,98 +1,206 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Streamco Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Overview
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Streamco is a **live streaming platform** where creators can create channels and broadcast live content.
+The platform also includes a **unique advertisement auction system**, allowing advertisers to bid for banner placements on creator streams.
 
-## Description
+This repository contains the **backend API built with NestJS** that powers the Streamco platform.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+The backend handles:
 
-## Project setup
+* User authentication and authorization
+* Channel and live stream management
+* Advertisement auction system
+* Admin analytics and platform management
+* Communication with the frontend application
 
-```bash
-$ npm install
+---
+
+## Architecture
+
+The backend follows a **Modular Monolith architecture** with **Clean Architecture principles**.
+
+Key design principles:
+
+* SOLID principles
+* Clear separation of concerns
+* Scalable module-based structure
+* Testable and maintainable codebase
+
+Layers used in the architecture:
+
+* **Domain Layer** – business entities and rules
+* **Application Layer** – use cases and business logic
+* **Infrastructure Layer** – database, external services, repositories
+* **Interface Layer** – controllers and API endpoints
+
+---
+
+## Tech Stack
+
+* NestJS
+* Node.js
+* TypeScript
+* MongoDB
+* Mongoose
+* JWT Authentication
+* Passport
+* Google OAuth
+* Docker (optional)
+
+---
+
+## User Roles
+
+The platform supports multiple roles.
+
+### Viewer
+
+* Watch live streams
+* Discover channels
+* Interact with creators
+
+### Content Creator
+
+* Create and manage channels
+* Schedule and start live streams
+* Display advertisement banners during streams
+
+### Advertiser
+
+* Create advertisement campaigns
+* Participate in banner auctions
+* Bid for advertisement slots on creator streams
+* Manage purchased advertisement placements
+
+### Admin
+
+* Manage platform users
+* Manage creators and advertisers
+* Monitor platform statistics
+* View analytics and reports
+
+---
+
+## Advertisement Auction System
+
+One of the core features of Streamco is the **advertisement auction system**.
+
+How it works:
+
+1. A creator schedules a live stream.
+2. Advertisement banner slots become available for that stream.
+3. Advertisers place bids to display their ads on the creator's stream.
+4. Multiple advertisers can participate in the auction.
+5. The advertiser with the **highest bid wins the banner placement**.
+
+This allows creators to monetize their streams and advertisers to reach targeted audiences.
+
+---
+
+## Project Structure
+
+```text
+src
+ ┣ modules
+ ┃ ┣ auth
+ ┃ ┣ user
+ ┃ ┣ channel
+ ┃ ┣ livestream
+ ┃ ┣ advertisement
+ ┃ ┣ auction
+ ┃ ┗ admin
+ ┣ shared
+ ┣ config
+ ┗ main.ts
 ```
 
-## Compile and run the project
+---
+
+## Installation
+
+Clone the repository
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+git clone https://github.com/JeesVincent0/streamco-backend
 ```
 
-## Run tests
+Navigate to the project folder
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cd streamco-backend
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Install dependencies
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm install
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+---
 
-## Resources
+## Running the Application
 
-Check out a few resources that may come in handy when working with NestJS:
+Run the development server
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+```bash
+npm run start:dev
+```
 
-## Support
+The API will be available at:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```text
+http://localhost:3001
+```
 
-## Stay in touch
+---
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Environment Variables
 
-## License
+Create a `.env` file in the root directory.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Example:
+
+```env
+PORT=3000
+MONGODB_URI=mongodb://localhost:27017/streamco
+JWT_SECRET=your_secret_key
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+---
+
+## API Documentation
+
+API endpoints can be tested using:
+
+* Postman
+* Swagger (if enabled)
+
+Example API modules:
+
+* Authentication
+* User Management
+* Channel Management
+* Live Streaming
+* Advertisement Management
+* Auction System
+* Admin Analytics
+
+---
+
+## Future Improvements
+
+* Real-time chat during streams
+* WebRTC-based streaming improvements
+* Advanced analytics for creators
+* AI-based ad targeting
+* Real-time auction updates using WebSockets
+
+---
+
+## Author
+
+Jees Vincent
