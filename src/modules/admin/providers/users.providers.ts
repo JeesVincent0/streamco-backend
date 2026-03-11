@@ -3,15 +3,19 @@ import {
   GET_ALL_USERS_PORT,
   UPDATE_USER_STATUS_PORT,
   UpdateUserStatusPort,
+  USER_REPOSITORY_PORT,
   UserQueryPort,
+  UserRepositoryPort,
 } from '@/modules/user/application';
 import { UpdateUserStatusUseCase } from '../application/usecase/user-usecase/update-user-status.usecase';
 import { FileLogger } from '@/shared/logger/file-logger';
+import { GetUserByIdUseCase } from '../application/usecase/user-usecase/get-user.usecase';
 
 /*
  * AdminUsersProviders defines the providers for administrative user management use cases.
  * 1. GetAllUsersUseCase - Retrieves a paginated list of users with optional filtering and sorting.
  * 2. UpdateUserStatusUseCase - Updates the status of a specific user (ACTIVE, SUSPENDED, DELETED).
+ * 3. GetUserByIdUseCase - Fetches detailed information about a user by their unique ID.
  */
 
 export const AdminUsersProviders = [
@@ -32,5 +36,13 @@ export const AdminUsersProviders = [
       return new UpdateUserStatusUseCase(updateUserStatusPort, logger);
     },
     inject: [UPDATE_USER_STATUS_PORT, FileLogger],
+  },
+
+  {
+    provide: GetUserByIdUseCase,
+    useFactory: (userRepo: UserRepositoryPort, logger: FileLogger) => {
+      return new GetUserByIdUseCase(userRepo, logger);
+    },
+    inject: [USER_REPOSITORY_PORT, FileLogger],
   },
 ];

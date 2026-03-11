@@ -17,7 +17,7 @@ export class MongoRepository implements UserRepositoryPort {
     private readonly _logger: FileLogger,
   ) {}
 
-  async findById(id: string): Promise<BaseUser | null> {
+  async findById(id: string): Promise<BaseUser | null | User | Advertiser> {
     const userDoc = await this._userModel.findOne({
       id,
       deletedAt: null,
@@ -28,7 +28,9 @@ export class MongoRepository implements UserRepositoryPort {
     return BaseUserMapper.toDomain(userDoc);
   }
 
-  async findByEmail(email: Email): Promise<BaseUser | null> {
+  async findByEmail(
+    email: Email,
+  ): Promise<BaseUser | null | User | Advertiser> {
     const userDoc = await this._userModel.findOne({
       email: email.getValue(),
       deletedAt: null,
