@@ -88,7 +88,7 @@ export class RegistrationController {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: false,
       sameSite: 'lax',
-      path: '/api/auth/refresh-token',
+      path: '/',
     });
 
     return {
@@ -120,7 +120,7 @@ export class RegistrationController {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: false,
       sameSite: 'lax',
-      path: '/api/auth/refresh-token',
+      path: '/',
     });
 
     return {
@@ -152,7 +152,7 @@ export class RegistrationController {
       maxAge: 1000 * 60 * 60 * 24 * 7,
       secure: false,
       sameSite: 'lax',
-      path: '/api/auth/refresh-token',
+      path: '/',
     });
 
     return {
@@ -180,7 +180,7 @@ export class RegistrationController {
       httpOnly: true,
       secure: false,
       sameSite: 'lax',
-      path: '/api/refresh-token',
+      path: '/',
     });
     return data;
   }

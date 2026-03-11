@@ -64,7 +64,10 @@ export class ConfirmSignupUserUseCase {
       user.role,
       `${SCOPE.USER_READ} ${SCOPE.USER_WRITE}`,
     );
-    const refreshTokenPayload = TokenPayload.generateRefreshPayload(user.id);
+    const refreshTokenPayload = TokenPayload.generateRefreshPayload(
+      user.id,
+      user.role,
+    );
 
     const { accessToken, refreshToken } =
       await this._generateTokenUseCase.execute(

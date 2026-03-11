@@ -1,4 +1,6 @@
 export const ERROR_MESSAGES = {
+  UNSUPPORTED_USER_TYPE: 'Unsupported user type',
+  YOUR_ACCOUNT_SUSPENDED: 'Your account is suspended.',
   // Token error messages
   INVALID_TOKEN: 'Invalid token',
   MISSING_TOKEN: 'Missing Token',

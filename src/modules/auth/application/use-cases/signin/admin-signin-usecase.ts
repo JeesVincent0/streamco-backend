@@ -60,7 +60,10 @@ export class AdminSigninUseCase {
       UserRole.ADMIN,
       `${SCOPE.ADMIN_WRITE} ${SCOPE.ADMIN_READ} ${SCOPE.USER_READ} ${SCOPE.USER_WRITE}`,
     );
-    const refreshPayload = TokenPayload.generateRefreshPayload(user.id);
+    const refreshPayload = TokenPayload.generateRefreshPayload(
+      user.id,
+      UserRole.ADMIN,
+    );
 
     const { accessToken, refreshToken } =
       await this._generateTokenUseCase.execute(accessPayload, refreshPayload);

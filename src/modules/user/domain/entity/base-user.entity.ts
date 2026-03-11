@@ -179,6 +179,14 @@ export abstract class BaseUser {
     if (this.role === UserRole.ADMIN) {
       throw new BadRequestError(ERROR_MESSAGES.INCORRECT_CREDENTIALS);
     }
+
+    if (this.status === UserStatus.SUSPENDED) {
+      throw new BadRequestError(ERROR_MESSAGES.YOUR_ACCOUNT_SUSPENDED);
+    }
+
+    if (this.status === UserStatus.DELETED) {
+      throw new BadRequestError(ERROR_MESSAGES.USER_NOT_FOUND);
+    }
   }
 
   assertIsAdmin(): void {

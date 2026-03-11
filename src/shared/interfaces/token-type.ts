@@ -17,6 +17,7 @@ export interface RefreshTokenPayload {
   aud: string;
   jti: string;
   iat: number;
+  role: UserRole;
 }
 
 export interface ResetPasswordPayload {
