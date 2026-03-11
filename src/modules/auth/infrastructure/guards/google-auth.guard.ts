@@ -9,6 +9,7 @@ export class GoogleAuthGuard extends AuthGuard('google') {
 
     return {
       state: request.query.state,
+      prompt: 'select_account',
     };
   }
 }

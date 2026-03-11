@@ -1,8 +1,11 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Patch,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -15,12 +18,24 @@ import {
 } from '@/modules/auth-security/presentation';
 import { SCOPE } from '@/modules/auth-security/domain';
 import type { GetAllUsersDto } from '@/shared/dto';
+import { UpdateUserStatusDto } from '../dto';
+import { UpdateUserStatusUseCase } from '../../application/usecase/user-usecase/update-user-status.usecase';
+
+/*
+ * AdminUsersController handles administrative actions related to user management.
+ * 1. GET /admin/users - Retrieves a paginated list of users with optional filtering and sorting.
+ * 2. PATCH /admin/users/:id/status - Updates the status of a specific user (ACTIVE, SUSPENDED, DELETED).
+ */
 
 @Controller('admin/users')
 @UseGuards(AccessTokenGuard, ScopeGuard)
 export class AdminUsersController {
-  constructor(private readonly _getAllUsersUseCase: GetAllUsersUseCase) {}
+  constructor(
+    private readonly _getAllUsersUseCase: GetAllUsersUseCase,
+    private readonly _updateUserStatusUseCase: UpdateUserStatusUseCase,
+  ) {}
 
+  // Endpoint to get all users with pagination, filtering, and sorting options
   @Get()
   @HttpCode(HttpStatus.OK)
   @Scopes(SCOPE.ADMIN_READ)
@@ -35,5 +50,16 @@ export class AdminUsersController {
       sortBy: query.sortBy,
       order: query.order,
     });
+  }
+
+  // Endpoint to update the status of a user ( ACTIVE, SUSPENDED, DELETED)
+  @Patch(':id/status')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Scopes(SCOPE.ADMIN_WRITE)
+  async updateUserStatus(
+    @Param('id') id: string,
+    @Body() body: UpdateUserStatusDto,
+  ) {
+    return await this._updateUserStatusUseCase.execute(id, body.status);
   }
 }
