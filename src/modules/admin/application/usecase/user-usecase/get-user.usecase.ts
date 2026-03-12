@@ -3,7 +3,7 @@ import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { BadRequestError } from '@/shared/errors';
 import { FileLogger } from '@/shared/logger/file-logger';
-import { UserResponse } from '../../types';
+import { UserResponse } from '@/shared/types';
 import { GetUserDetailsMapper } from '../../mappers';
 
 /*

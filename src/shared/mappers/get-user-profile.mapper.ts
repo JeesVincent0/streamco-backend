@@ -7,7 +7,7 @@ import { UserResponse } from '@/shared/types';
  *
  */
 
-export class GetUserDetailsMapper {
+export class GetUserProfileMapper {
   static toResponse(user: BaseUser): UserResponse | void {
     if (user.role === UserRole.USER && user instanceof User) {
       return {
