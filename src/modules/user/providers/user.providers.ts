@@ -15,6 +15,8 @@ import {
   GetUserProfileUseCase,
   UPDATE_USER_EMAIL_USE_CASE,
   UPDATE_USER_BASIC_USE_CASE,
+  UPDATE_USER_BASIC_PORT,
+  UPDATE_USER_EMAIL_PORT,
 } from '../application';
 import { CreateUserWithGoogleAuthUseCase } from '../application';
 import { GetBaseUserUseCase } from '../application/use-cases/get-user/get-base-user.usecase';
@@ -26,6 +28,11 @@ import {
   UpdateUserBasicUseCase,
   UpdateUserEmailUseCase,
 } from '../application/use-cases/update-user';
+import {
+  UpdateUserBasicImplMonogoRepository,
+  UpdateUserEmailImplMonogoRepository,
+} from '../infrastructure';
+import { UpdateUserBasicPort } from '../application/ports/repository/update-user-basic.port';
 
 /*
  * UserProviders defines the providers for user-related use cases and repositories.
@@ -37,6 +44,7 @@ import {
  * 6. GetAllUsersRepository - Repository for retrieving all users with pagination and filtering.
  * 7. UpdateUserStatusMongoRepository - Repository for updating user status in MongoDB.
  * 8. GetUserProfileUseCase - Use case for retrieving user profile information, implemented with a logger.
+ * 9. UpdateUserBasicUseCase - Use case for updating basic user information.
  */
 
 export const userProviders = [
@@ -101,9 +109,19 @@ export const userProviders = [
 
   {
     provide: UPDATE_USER_BASIC_USE_CASE,
-    useFactory: () => {
-      return new UpdateUserBasicUseCase();
+    useFactory: (updateUserBasicPort: UpdateUserBasicPort) => {
+      return new UpdateUserBasicUseCase(updateUserBasicPort);
     },
-    inject: [],
+    inject: [UPDATE_USER_BASIC_PORT],
+  },
+
+  {
+    provide: UPDATE_USER_BASIC_PORT,
+    useClass: UpdateUserBasicImplMonogoRepository,
+  },
+
+  {
+    provide: UPDATE_USER_EMAIL_PORT,
+    useClass: UpdateUserEmailImplMonogoRepository,
   },
 ];
