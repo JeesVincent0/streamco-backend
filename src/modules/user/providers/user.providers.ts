@@ -13,6 +13,8 @@ import {
   UPDATE_USER_STATUS_PORT,
   GET_USER_PROFILE_INTERFACE_PORT,
   GetUserProfileUseCase,
+  UPDATE_USER_EMAIL_USE_CASE,
+  UPDATE_USER_BASIC_USE_CASE,
 } from '../application';
 import { CreateUserWithGoogleAuthUseCase } from '../application';
 import { GetBaseUserUseCase } from '../application/use-cases/get-user/get-base-user.usecase';
@@ -20,6 +22,10 @@ import { MongoRepository } from '../infrastructure/repositories/user-repository.
 import { GetAllUsersRepository } from '../infrastructure/repositories/get-all-users.impl';
 import { UpdateUserStatusMongoRepository } from '../infrastructure/repositories/update-user-status.impl';
 import { FileLogger } from '@/shared/logger/file-logger';
+import {
+  UpdateUserBasicUseCase,
+  UpdateUserEmailUseCase,
+} from '../application/use-cases/update-user';
 
 /*
  * UserProviders defines the providers for user-related use cases and repositories.
@@ -83,5 +89,21 @@ export const userProviders = [
       return new GetUserProfileUseCase(userRepo, logger);
     },
     inject: [USER_REPOSITORY_PORT, FileLogger],
+  },
+
+  {
+    provide: UPDATE_USER_EMAIL_USE_CASE,
+    useFactory: () => {
+      return new UpdateUserEmailUseCase();
+    },
+    inject: [],
+  },
+
+  {
+    provide: UPDATE_USER_BASIC_USE_CASE,
+    useFactory: () => {
+      return new UpdateUserBasicUseCase();
+    },
+    inject: [],
   },
 ];
