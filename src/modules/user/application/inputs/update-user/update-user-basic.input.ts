@@ -5,5 +5,5 @@ export type UpdateUserBasicInput = {
   displayName: string;
   bio?: string;
   gender: UserGender;
-  dob: Date;
+  dob: string;
 };

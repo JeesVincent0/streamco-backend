@@ -1,4 +1,5 @@
 export const ERROR_MESSAGES = {
+  USE_ANOTHER_EMAIL_ID: 'User another email ID',
   UNSUPPORTED_USER_TYPE: 'Unsupported user type',
   YOUR_ACCOUNT_SUSPENDED: 'Your account is suspended.',
   // Token error messages

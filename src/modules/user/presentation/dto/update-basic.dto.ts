@@ -14,5 +14,5 @@ export class UpdateBasicDto {
   gender: UserGender;
 
   @IsDateString()
-  dob: Date;
+  dob: string;
 }

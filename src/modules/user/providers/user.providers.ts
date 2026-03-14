@@ -17,6 +17,8 @@ import {
   UPDATE_USER_BASIC_USE_CASE,
   UPDATE_USER_BASIC_PORT,
   UPDATE_USER_EMAIL_PORT,
+  CHECK_USER_EXISTS_PORT,
+  CheckUserExistsPort,
 } from '../application';
 import { CreateUserWithGoogleAuthUseCase } from '../application';
 import { GetBaseUserUseCase } from '../application/use-cases/get-user/get-base-user.usecase';
@@ -29,10 +31,13 @@ import {
   UpdateUserEmailUseCase,
 } from '../application/use-cases/update-user';
 import {
+  CheckUserExistsImplMongoRepository,
   UpdateUserBasicImplMonogoRepository,
   UpdateUserEmailImplMonogoRepository,
 } from '../infrastructure';
-import { UpdateUserBasicPort } from '../application/ports/repository/update-user-basic.port';
+import type { UpdateUserBasicPort } from '../application/ports/repository/update-user-basic.port';
+import { CACHE_BASE_REPO_PORT } from '@/shared/application/tokens';
+import { CacheBaseRepoPort } from '@/shared/application/ports';
 
 /*
  * UserProviders defines the providers for user-related use cases and repositories.
@@ -101,10 +106,13 @@ export const userProviders = [
 
   {
     provide: UPDATE_USER_EMAIL_USE_CASE,
-    useFactory: () => {
-      return new UpdateUserEmailUseCase();
+    useFactory: (
+      checkUserExists: CheckUserExistsPort,
+      cacheBaseRepo: CacheBaseRepoPort,
+    ) => {
+      return new UpdateUserEmailUseCase(checkUserExists, cacheBaseRepo);
     },
-    inject: [],
+    inject: [CHECK_USER_EXISTS_PORT, CACHE_BASE_REPO_PORT],
   },
 
   {
@@ -123,5 +131,10 @@ export const userProviders = [
   {
     provide: UPDATE_USER_EMAIL_PORT,
     useClass: UpdateUserEmailImplMonogoRepository,
+  },
+
+  {
+    provide: CHECK_USER_EXISTS_PORT,
+    useClass: CheckUserExistsImplMongoRepository,
   },
 ];

@@ -1,7 +1,6 @@
 import { Email } from '@/modules/user/domain/';
 import { UserRepositoryPort } from '@/modules/user/application';
 import {
-  BaseCachedUserRepositoryPort,
   type MailServicePort,
   OtpServicePort,
   PasswordHasherPort,
@@ -11,6 +10,7 @@ import { GenerateOtpInput } from '../../inputs';
 import { UniqueIdService } from '@/shared/domain';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { CacheBaseRepoPort } from '@/shared/application/ports';
 
 /*
  *
@@ -29,7 +29,7 @@ export class GenerateOtpUseCase {
     private readonly _otpRepository: OtpServicePort,
     private readonly _userRepository: UserRepositoryPort,
     private readonly _passwordHasher: PasswordHasherPort,
-    private readonly _cacheRepository: BaseCachedUserRepositoryPort,
+    private readonly _cacheRepository: CacheBaseRepoPort,
     private readonly _mailService: MailServicePort,
     private readonly _logger: FileLogger,
   ) {}

@@ -27,7 +27,6 @@ import {
 } from '../infrastructure';
 import {
   AUTH_CACHED_USER_REPOSITORY_PORT,
-  BaseCachedUserRepositoryPort,
   MAIL_SERVICE,
   MailServicePort,
   OTP_SERVICE,
@@ -51,6 +50,7 @@ import { GenerateTokenUseCase } from '../application/use-cases/token/generate-to
 import { MonogodbRefreshTokenRepository } from '../infrastructure/repository';
 import { RefreshTokenPort } from '../application/ports/token';
 import { RefreshAccessTokenUseCase } from '../application/use-cases/token/refresh-accessp-token.usecase';
+import { CacheBaseRepoPort } from '@/shared/application/ports';
 
 export const signupProvider = [
   {
@@ -156,7 +156,7 @@ export const signupProvider = [
   {
     provide: TokenBlackListUseCase,
     useFactory: (
-      tokenBlacklistRepo: BaseCachedUserRepositoryPort,
+      tokenBlacklistRepo: CacheBaseRepoPort,
       tokenService: TokenServicePort,
       logger: FileLogger,
     ) => {
@@ -245,7 +245,7 @@ export const signupProvider = [
   {
     provide: ResendOtpUseCase,
     useFactory: (
-      cachedRepo: BaseCachedUserRepositoryPort,
+      cachedRepo: CacheBaseRepoPort,
       otpService: OtpServicePort,
       otpHasher: PasswordHasherPort,
       mailService: MailServicePort,
@@ -274,7 +274,7 @@ export const signupProvider = [
       otpService: OtpServicePort,
       userRepo: UserRepositoryPort,
       passwordHasher: PasswordHasherPort,
-      cacheRepo: BaseCachedUserRepositoryPort,
+      cacheRepo: CacheBaseRepoPort,
       mailService: MailServicePort,
       logger: FileLogger,
     ) => {
@@ -323,7 +323,7 @@ export const signupProvider = [
   {
     provide: VerifyOtpUseCase,
     useFactory: (
-      cacheRepo: BaseCachedUserRepositoryPort,
+      cacheRepo: CacheBaseRepoPort,
       otpHasher: PasswordHasherPort,
     ) => {
       return new VerifyOtpUseCase(cacheRepo, otpHasher);

@@ -18,6 +18,7 @@ import {
   USER_REPOSITORY_PORT,
 } from './application';
 import { AuthSecurityModule } from '../auth-security/auth-security.module';
+import { SharedModule } from '@/shared/shared.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { AuthSecurityModule } from '../auth-security/auth-security.module';
       },
     ]),
     AuthSecurityModule,
+    SharedModule,
   ],
   controllers: [UserController],
   providers: [...userProviders],
