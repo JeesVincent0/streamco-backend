@@ -9,17 +9,19 @@ import {
   GENERATE_OTP_INTERFACE,
   MAIL_SERVICE_PORT,
   PASSWORD_HASHER_PORT,
+  RESEND_OTP_USE_CASE,
   SEND_OTP_USE_CASE,
   VERIFY_OTP_USE_CASE,
 } from '../application/tokens';
 import { SendOtpUseCase } from '../application/usecase/send-otp.usecase';
-import { VerifyOtpUseCase } from '../application/usecase';
+import { VerifyOtpUseCase, ResendOtpUsecae } from '../application/usecase';
 import {
   BcryptPasswordHasherImpl,
   GenerateOtpImplCrypto,
   NodemailerService,
 } from '../infrastructure';
 import { RedisAuthCachedUserRepository } from '../infrastructure/cache/repositories/redis-auth-cached-user.repository';
+import { FileLogger } from '../logger/file-logger';
 
 export const sharedProvider = [
   {
@@ -48,6 +50,32 @@ export const sharedProvider = [
       PASSWORD_HASHER_PORT,
       CACHE_BASE_REPO_PORT,
       MAIL_SERVICE_PORT,
+    ],
+  },
+
+  {
+    provide: RESEND_OTP_USE_CASE,
+    useFactory: (
+      cacheRepo: CacheBaseRepoPort,
+      generateOtpPort: GenerateOtpPort,
+      otpHasher: passwordHasherPort,
+      mailService: MailServicePort,
+      logger: FileLogger,
+    ) => {
+      return new ResendOtpUsecae(
+        cacheRepo,
+        generateOtpPort,
+        otpHasher,
+        mailService,
+        logger,
+      );
+    },
+    inject: [
+      CACHE_BASE_REPO_PORT,
+      GENERATE_OTP_INTERFACE,
+      PASSWORD_HASHER_PORT,
+      MAIL_SERVICE_PORT,
+      FileLogger,
     ],
   },
 

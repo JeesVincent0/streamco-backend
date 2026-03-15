@@ -108,20 +108,4 @@ export class UserController {
       otp: body.otp,
     });
   }
-
-  @Post('/profile/resend-otp')
-  @Scopes(SCOPE.USER_WRITE)
-  @HttpCode(HttpStatus.OK)
-  resendOtp(@Body() body: { id: string }) {
-    console.log('This is resend otp body: ', body);
-    const date = new Date();
-
-    return {
-      status: 'success',
-      message: 'Resend OTP',
-      data: {
-        otpResendAt: date.setSeconds(date.getSeconds() + 30),
-      },
-    };
-  }
 }
