@@ -7,6 +7,7 @@ import {
   GenerateOtpPort,
 } from '../ports';
 import { OtpPurpose } from '@/modules/auth/domain';
+import { OtpPolicy } from '@/shared/domain';
 
 export class SendOtpUseCase implements SendOtpInterface {
   constructor(
@@ -19,15 +20,17 @@ export class SendOtpUseCase implements SendOtpInterface {
     id: string,
     email: Email,
     purpose: OtpPurpose,
-  ): Promise<{ id: string; purpose: OtpPurpose }> {
+  ): Promise<{ id: string; purpose: OtpPurpose; otpResendAt: Date }> {
     const otp = this._generateOtp.execute();
     const hashedOtp = await this._otpHasher.hash(otp);
-    await this._cacheRepo.save(
+    const otpState = OtpPolicy.createInitialState(
       id,
-      { email: email.getValue(), hashedOtp, purpose },
-      300,
+      email.getValue(),
+      hashedOtp,
+      purpose,
     );
+    await this._cacheRepo.save(id, otpState, 300);
     await this._sendOtp.execute(email, otp);
-    return { id, purpose };
+    return { id, purpose, otpResendAt: otpState.otpResendAt };
   }
 }

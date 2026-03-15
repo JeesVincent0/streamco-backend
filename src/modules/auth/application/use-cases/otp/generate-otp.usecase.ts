@@ -5,7 +5,7 @@ import {
   OtpServicePort,
   PasswordHasherPort,
 } from '../../ports';
-import { OtpPolicy } from '../../../domain/';
+import { OtpPolicy } from '@/shared/domain';
 import { GenerateOtpInput } from '../../inputs';
 import { UniqueIdService } from '@/shared/domain';
 import { FileLogger } from '@/shared/logger/file-logger';

@@ -6,5 +6,5 @@ export interface SendOtpInterface {
     id: string,
     email: Email,
     purpose: OtpPurpose,
-  ): Promise<{ id: string; purpose: OtpPurpose }>;
+  ): Promise<{ id: string; purpose: OtpPurpose; otpResendAt: Date }>;
 }

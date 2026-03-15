@@ -1,5 +1,5 @@
 import { BadRequestError } from '@/shared/errors';
-import { OtpPolicy, OtpState } from '../../../domain';
+import { OtpPolicy, OtpState } from '@/shared/domain';
 import {
   MailServicePort,
   OtpServicePort,

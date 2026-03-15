@@ -1,6 +1,6 @@
 import { BadRequestError } from '@/shared/errors';
 import { PasswordHasherPort } from '../../ports';
-import { OtpPolicy, OtpState } from '@/modules/auth/domain/';
+import { OtpPolicy, OtpState } from '@/shared/domain';
 import { VerifyOtpInput } from '../../inputs';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { CacheBaseRepoPort } from '@/shared/application/ports';

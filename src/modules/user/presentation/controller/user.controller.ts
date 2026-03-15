@@ -9,6 +9,7 @@ import {
   Controller,
   Get,
   Inject,
+  Post,
   Put,
   Req,
   UseGuards,
@@ -82,5 +83,26 @@ export class UserController {
       gender: body.gender,
       dob: body.dob,
     });
+  }
+
+  @Post('/profile/verify-otp')
+  @Scopes(SCOPE.USER_WRITE)
+  verifyOtp(@Body() body: { id: string; purpose: string; otp: number }) {
+    console.log('This is verify otp body: ', body);
+  }
+
+  @Post('/profile/resend-otp')
+  @Scopes(SCOPE.USER_WRITE)
+  resendOtp(@Body() body: { id: string }) {
+    console.log('This is resend otp body: ', body);
+    const date = new Date();
+
+    return {
+      status: 'success',
+      message: 'Resend OTP',
+      data: {
+        otpResendAt: date.setSeconds(date.getSeconds() + 30),
+      },
+    };
   }
 }
