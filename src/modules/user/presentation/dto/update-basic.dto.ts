@@ -3,7 +3,7 @@ import { UserGender } from '../../domain';
 
 export class UpdateBasicDto {
   @IsString()
-  @MaxLength(10)
+  @MaxLength(30)
   displayName: string;
 
   @IsString()

@@ -36,8 +36,8 @@ import {
   UpdateUserEmailImplMonogoRepository,
 } from '../infrastructure';
 import type { UpdateUserBasicPort } from '../application/ports/repository/update-user-basic.port';
-import { CACHE_BASE_REPO_PORT } from '@/shared/application/tokens';
-import { CacheBaseRepoPort } from '@/shared/application/ports';
+import { SEND_OTP_USE_CASE } from '@/shared/application/tokens';
+import { SendOtpInterface } from '@/shared/application/ports';
 
 /*
  * UserProviders defines the providers for user-related use cases and repositories.
@@ -108,11 +108,12 @@ export const userProviders = [
     provide: UPDATE_USER_EMAIL_USE_CASE,
     useFactory: (
       checkUserExists: CheckUserExistsPort,
-      cacheBaseRepo: CacheBaseRepoPort,
+      sendOtp: SendOtpInterface,
+      logger: FileLogger,
     ) => {
-      return new UpdateUserEmailUseCase(checkUserExists, cacheBaseRepo);
+      return new UpdateUserEmailUseCase(checkUserExists, sendOtp, logger);
     },
-    inject: [CHECK_USER_EXISTS_PORT, CACHE_BASE_REPO_PORT],
+    inject: [CHECK_USER_EXISTS_PORT, SEND_OTP_USE_CASE, FileLogger],
   },
 
   {
