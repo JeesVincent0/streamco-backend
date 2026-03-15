@@ -8,6 +8,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Inject,
   Post,
   Put,
@@ -20,13 +22,16 @@ import type {
   GetUserProfileInterface,
   UpdateUserBasicInterface,
   UpdateUserEmailInterface,
+  VerifyOtpEmailUpdateInterface,
 } from '../../application/interfaces';
 import {
   GET_USER_PROFILE_INTERFACE_PORT,
   UPDATE_USER_BASIC_USE_CASE,
   UPDATE_USER_EMAIL_USE_CASE,
+  VERIFY_OTP_EMAIL_UPDATE_USE_CASE,
 } from '../../application';
 import { UpdateBasicDto, UpdateEmailDto } from '../dto';
+import { OtpVerificationDto } from '@/shared/presentation';
 
 @Controller('user')
 @UseGuards(AccessTokenGuard, ScopeGuard)
@@ -41,9 +46,14 @@ export class UserController {
 
     @Inject(UPDATE_USER_BASIC_USE_CASE)
     private readonly _updateUserBasicUseCase: UpdateUserBasicInterface,
+
+    @Inject(VERIFY_OTP_EMAIL_UPDATE_USE_CASE)
+    private readonly _verifyOtpEmailUpdate: VerifyOtpEmailUpdateInterface,
   ) {}
+
   @Get('base')
   @Scopes(SCOPE.USER_READ)
+  @HttpCode(HttpStatus.OK)
   getBaseUser(@Req() req: RequestWithUserInterface) {
     return this._getBaseUserUseCase.execute({
       id: req.user.sub,
@@ -52,6 +62,7 @@ export class UserController {
 
   @Get('profile')
   @Scopes(SCOPE.USER_READ)
+  @HttpCode(HttpStatus.OK)
   getProfile(@Req() req: RequestWithUserInterface) {
     return this._getUserProfileUseCase.execute({
       id: req.user.sub,
@@ -60,6 +71,7 @@ export class UserController {
 
   @Put('profile/update-email')
   @Scopes(SCOPE.USER_WRITE)
+  @HttpCode(HttpStatus.OK)
   updateEmail(
     @Body() body: UpdateEmailDto,
     @Req() req: RequestWithUserInterface,
@@ -72,6 +84,7 @@ export class UserController {
 
   @Put('profile/update-basic')
   @Scopes(SCOPE.USER_WRITE)
+  @HttpCode(HttpStatus.OK)
   updateBasic(
     @Body() body: UpdateBasicDto,
     @Req() req: RequestWithUserInterface,
@@ -87,12 +100,18 @@ export class UserController {
 
   @Post('/profile/verify-otp')
   @Scopes(SCOPE.USER_WRITE)
-  verifyOtp(@Body() body: { id: string; purpose: string; otp: number }) {
-    console.log('This is verify otp body: ', body);
+  @HttpCode(HttpStatus.OK)
+  verifyOtp(@Body() body: OtpVerificationDto) {
+    return this._verifyOtpEmailUpdate.execute({
+      id: body.id,
+      purpose: body.purpose,
+      otp: body.otp,
+    });
   }
 
   @Post('/profile/resend-otp')
   @Scopes(SCOPE.USER_WRITE)
+  @HttpCode(HttpStatus.OK)
   resendOtp(@Body() body: { id: string }) {
     console.log('This is resend otp body: ', body);
     const date = new Date();

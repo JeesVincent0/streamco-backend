@@ -1,8 +1,9 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { GenerateOtpDto, otpVerificationDto } from '../dto';
+import { GenerateOtpDto } from '../dto';
 import { ResendOtpUseCase, VerifyOtpUseCase } from '../../application';
 import { GenerateOtpUseCase } from '../../application';
 import { ResendOtpDto } from '../dto/otp';
+import { OtpVerificationDto } from '@/shared/presentation';
 
 @Controller('auth/otp')
 export class OtpController {
@@ -31,7 +32,7 @@ export class OtpController {
   // OTP verification
   @Post('verify')
   @HttpCode(HttpStatus.OK)
-  verify(@Body() dto: otpVerificationDto) {
+  verify(@Body() dto: OtpVerificationDto) {
     return this._verifyOtpUseCase.execute({
       id: dto.id,
       otp: dto.otp,

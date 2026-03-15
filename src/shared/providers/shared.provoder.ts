@@ -10,8 +10,10 @@ import {
   MAIL_SERVICE_PORT,
   PASSWORD_HASHER_PORT,
   SEND_OTP_USE_CASE,
+  VERIFY_OTP_USE_CASE,
 } from '../application/tokens';
 import { SendOtpUseCase } from '../application/usecase/send-otp.usecase';
+import { VerifyOtpUseCase } from '../application/usecase';
 import {
   BcryptPasswordHasherImpl,
   GenerateOtpImplCrypto,
@@ -20,6 +22,17 @@ import {
 import { RedisAuthCachedUserRepository } from '../infrastructure/cache/repositories/redis-auth-cached-user.repository';
 
 export const sharedProvider = [
+  {
+    provide: VERIFY_OTP_USE_CASE,
+    useFactory: (
+      cacheRepo: CacheBaseRepoPort,
+      otpHasher: passwordHasherPort,
+    ) => {
+      return new VerifyOtpUseCase(cacheRepo, otpHasher);
+    },
+    inject: [CACHE_BASE_REPO_PORT, PASSWORD_HASHER_PORT],
+  },
+
   {
     provide: SEND_OTP_USE_CASE,
     useFactory: (

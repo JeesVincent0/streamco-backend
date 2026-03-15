@@ -11,6 +11,6 @@ export class UpdateUserEmailImplMonogoRepository implements UpdateUserEmailPort 
   ) {}
   async execute(input: UpdateUserEmailInput): Promise<void> {
     const email = UpdateUserEmailMapper.toPersistence(input);
-    await this._userModel.updateOne({ _id: input.userId }, { $set: email });
+    await this._userModel.updateOne({ id: input.userId }, { $set: email });
   }
 }

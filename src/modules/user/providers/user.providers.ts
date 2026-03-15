@@ -19,6 +19,7 @@ import {
   UPDATE_USER_EMAIL_PORT,
   CHECK_USER_EXISTS_PORT,
   CheckUserExistsPort,
+  VERIFY_OTP_EMAIL_UPDATE_USE_CASE,
 } from '../application';
 import { CreateUserWithGoogleAuthUseCase } from '../application';
 import { GetBaseUserUseCase } from '../application/use-cases/get-user/get-base-user.usecase';
@@ -29,6 +30,7 @@ import { FileLogger } from '@/shared/logger/file-logger';
 import {
   UpdateUserBasicUseCase,
   UpdateUserEmailUseCase,
+  VerifyOtpEmailUpdateUseCase,
 } from '../application/use-cases/update-user';
 import {
   CheckUserExistsImplMongoRepository,
@@ -36,23 +38,32 @@ import {
   UpdateUserEmailImplMonogoRepository,
 } from '../infrastructure';
 import type { UpdateUserBasicPort } from '../application/ports/repository/update-user-basic.port';
-import { SEND_OTP_USE_CASE } from '@/shared/application/tokens';
-import { SendOtpInterface } from '@/shared/application/ports';
+import {
+  SEND_OTP_USE_CASE,
+  VERIFY_OTP_USE_CASE,
+} from '@/shared/application/tokens';
+import {
+  SendOtpInterface,
+  VerifyOtpInterface,
+} from '@/shared/application/ports';
+import { UpdateUserEmailInterface } from '../application/interfaces';
 
 /*
  * UserProviders defines the providers for user-related use cases and repositories.
- * 1. GetBaseUserUseCase - Retrieves basic user information based on user ID.
- * 2. CreateUserWithGoogleAuthUseCase - Creates a new user using Google authentication.
- * 3. CreateAdvertiserUserUseCase - Creates a new advertiser user.
- * 4. CreateNormalUserUseCase - Creates a new normal user.
- * 5. UserRepositoryPort - Interface for user repository operations, implemented by MongoRepository.
- * 6. GetAllUsersRepository - Repository for retrieving all users with pagination and filtering.
- * 7. UpdateUserStatusMongoRepository - Repository for updating user status in MongoDB.
- * 8. GetUserProfileUseCase - Use case for retrieving user profile information, implemented with a logger.
- * 9. UpdateUserBasicUseCase - Use case for updating basic user information.
  */
 
 export const userProviders = [
+  {
+    provide: VERIFY_OTP_EMAIL_UPDATE_USE_CASE,
+    useFactory: (
+      verifyOtp: VerifyOtpInterface,
+      updateUserEmail: UpdateUserEmailInterface,
+    ) => {
+      return new VerifyOtpEmailUpdateUseCase(verifyOtp, updateUserEmail);
+    },
+    inject: [VERIFY_OTP_USE_CASE, UPDATE_USER_EMAIL_PORT],
+  },
+
   {
     provide: GetBaseUserUseCase,
     useFactory: (userRepo: UserRepositoryPort) => {

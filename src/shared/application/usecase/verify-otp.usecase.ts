@@ -1,24 +1,22 @@
-import { BadRequestError } from '@/shared/errors';
-import { PasswordHasherPort } from '../../ports';
+import { OtpPurpose } from '@/modules/auth/domain';
+import { VerifyOtpInput } from '../input';
+import {
+  CacheBaseRepoPort,
+  passwordHasherPort,
+  VerifyOtpInterface,
+} from '../ports';
 import { OtpPolicy, OtpState } from '@/shared/domain';
+import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-import { CacheBaseRepoPort } from '@/shared/application/ports';
-import { VerifyOtpInput } from '@/shared/application/input';
 
-/*
- * Use case for OTP verification.
- * It checks if the OTP is valid or not, if not valid consume one attempt and check if attempts are exhausted or not,
- * if exhausted that means user need to resend OTP again, so delete the cache and throw error, if not exhausted save the updated attempt in cache and throw error.
- * If OTP valid delete the cache and return email and purpose for next step in registration or forgot password process.
- */
-
-export class VerifyOtpUseCase {
+export class VerifyOtpUseCase implements VerifyOtpInterface {
   constructor(
     private readonly _cacheRepository: CacheBaseRepoPort,
-    private readonly _otpHasher: PasswordHasherPort,
+    private readonly _otpHasher: passwordHasherPort,
   ) {}
-
-  async execute(input: VerifyOtpInput) {
+  async execute(
+    input: VerifyOtpInput,
+  ): Promise<{ email: string; purpose: OtpPurpose }> {
     // Checking user from cache DB, if not found that means session expired.
     const cachedUser = await this._cacheRepository.get<OtpState>(input.id);
     if (!cachedUser) {
