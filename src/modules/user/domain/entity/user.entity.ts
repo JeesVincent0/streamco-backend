@@ -173,29 +173,26 @@ export class User extends BaseUser {
 
   /* ==================== Social Links ==================== */
 
-  addSocialLink(link: SocialLink): void {
-    this.ensureNotDeleted();
-
-    const exists = this.socialLinks.some((l) => l.getType() === link.getType());
-
-    if (exists) {
-      throw new BadRequestError(`${link.getType()} already exists`);
-    }
-
-    this.socialLinks.push(link);
-    this.touch();
-  }
-
+  /**
+   * Adds a new social link or updates an existing one of the same type.
+   */
   updateSocialLink(type: UserSocialMediaType, url: string): void {
     this.ensureNotDeleted();
 
-    const index = this.socialLinks.findIndex((l) => l.getType() === type);
+    // 1. Find the index of the link type in the private array
+    const index = this._socialLinks.findIndex((l) => l.getType() === type);
 
+    // 2. Create the new Value Object
+    const newSocialLink = SocialLink.create(type, url);
+
+    // 3. Update if exists, otherwise Insert
     if (index === -1) {
-      throw new BadRequestError(`Social link ${type} not found`);
+      this._socialLinks.push(newSocialLink); // Insert
+    } else {
+      this._socialLinks[index] = newSocialLink; // Update
     }
 
-    this.socialLinks[index] = SocialLink.create(type, url);
+    // 4. Update the modified timestamp
     this.touch();
   }
 

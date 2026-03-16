@@ -69,9 +69,7 @@ export class MongoRepository implements UserRepositoryPort {
         {
           $set: persistence,
         },
-        {
-          upsert: true,
-        },
+        { strict: false },
       );
     }
   }

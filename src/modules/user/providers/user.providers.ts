@@ -20,6 +20,7 @@ import {
   CHECK_USER_EXISTS_PORT,
   CheckUserExistsPort,
   VERIFY_OTP_EMAIL_UPDATE_USE_CASE,
+  UPDATE_USER_SOCIAL_LINKS_USE_CASE,
 } from '../application';
 import { CreateUserWithGoogleAuthUseCase } from '../application';
 import { GetBaseUserUseCase } from '../application/use-cases/get-user/get-base-user.usecase';
@@ -30,6 +31,7 @@ import { FileLogger } from '@/shared/logger/file-logger';
 import {
   UpdateUserBasicUseCase,
   UpdateUserEmailUseCase,
+  UpdateUserSocialLinksUseCase,
   VerifyOtpEmailUpdateUseCase,
 } from '../application/use-cases/update-user';
 import {
@@ -53,6 +55,14 @@ import { UpdateUserEmailInterface } from '../application/interfaces';
  */
 
 export const userProviders = [
+  {
+    provide: UPDATE_USER_SOCIAL_LINKS_USE_CASE,
+    useFactory: (userRepo: UserRepositoryPort) => {
+      return new UpdateUserSocialLinksUseCase(userRepo);
+    },
+    inject: [USER_REPOSITORY_PORT],
+  },
+
   {
     provide: VERIFY_OTP_EMAIL_UPDATE_USE_CASE,
     useFactory: (
