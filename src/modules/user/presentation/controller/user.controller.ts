@@ -14,7 +14,9 @@ import {
   Post,
   Put,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { GetBaseUserUseCase } from '../../application/use-cases/get-user/get-base-user.usecase';
 import { SCOPE } from '@/modules/auth-security/domain/enums';
@@ -34,6 +36,8 @@ import {
 } from '../../application';
 import { SocialLinksDto, UpdateBasicDto, UpdateEmailDto } from '../dto';
 import { OtpVerificationDto } from '@/shared/presentation';
+import { FileInterceptor } from '@nestjs/platform-express';
+import type { Express } from 'express';
 
 @Controller('user')
 @UseGuards(AccessTokenGuard, ScopeGuard)
@@ -128,5 +132,11 @@ export class UserController {
       x: body.x,
       youtube: body.youtube,
     });
+  }
+
+  @Post('profile/avatar')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadAvatar(@UploadedFile() file: Express.MulterS3.File) {
+    console.log('file: ', file);
   }
 }
