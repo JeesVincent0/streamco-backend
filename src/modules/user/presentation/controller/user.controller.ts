@@ -22,6 +22,7 @@ import { GetBaseUserUseCase } from '../../application/use-cases/get-user/get-bas
 import { SCOPE } from '@/modules/auth-security/domain/enums';
 import type {
   GetUserProfileInterface,
+  UpdateUserAvatarInterface,
   UpdateUserBasicInterface,
   UpdateUserEmailInterface,
   UpdateUserSocialLinksInterface,
@@ -29,6 +30,7 @@ import type {
 } from '../../application/interfaces';
 import {
   GET_USER_PROFILE_INTERFACE_PORT,
+  UPDATE_USER_AVATARURL_USE_CASE,
   UPDATE_USER_BASIC_USE_CASE,
   UPDATE_USER_EMAIL_USE_CASE,
   UPDATE_USER_SOCIAL_LINKS_USE_CASE,
@@ -58,6 +60,9 @@ export class UserController {
 
     @Inject(UPDATE_USER_SOCIAL_LINKS_USE_CASE)
     private readonly _updateSocialLinks: UpdateUserSocialLinksInterface,
+
+    @Inject(UPDATE_USER_AVATARURL_USE_CASE)
+    private readonly _updateUserAvatarUrl: UpdateUserAvatarInterface,
   ) {}
 
   @Get('base')
@@ -136,7 +141,13 @@ export class UserController {
 
   @Post('profile/avatar')
   @UseInterceptors(FileInterceptor('file'))
-  uploadAvatar(@UploadedFile() file: Express.MulterS3.File) {
-    console.log('file: ', file);
+  uploadAvatar(
+    @UploadedFile() file: Express.MulterS3.File,
+    @Req() req: RequestWithUserInterface,
+  ) {
+    return this._updateUserAvatarUrl.execute({
+      userId: req.user.sub,
+      avatarUrl: file.location,
+    });
   }
 }

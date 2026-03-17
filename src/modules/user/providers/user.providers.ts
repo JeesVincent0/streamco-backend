@@ -21,6 +21,7 @@ import {
   CheckUserExistsPort,
   VERIFY_OTP_EMAIL_UPDATE_USE_CASE,
   UPDATE_USER_SOCIAL_LINKS_USE_CASE,
+  UPDATE_USER_AVATARURL_USE_CASE,
 } from '../application';
 import { CreateUserWithGoogleAuthUseCase } from '../application';
 import { GetBaseUserUseCase } from '../application/use-cases/get-user/get-base-user.usecase';
@@ -49,12 +50,21 @@ import {
   VerifyOtpInterface,
 } from '@/shared/application/ports';
 import { UpdateUserEmailInterface } from '../application/interfaces';
+import { UpdateUserAvatarUlrUsecase } from '../application/use-cases/update-user/update-user-avatarurl.usecase';
 
 /*
  * UserProviders defines the providers for user-related use cases and repositories.
  */
 
 export const userProviders = [
+  {
+    provide: UPDATE_USER_AVATARURL_USE_CASE,
+    useFactory: (userRepo: UserRepositoryPort, logger: FileLogger) => {
+      return new UpdateUserAvatarUlrUsecase(userRepo, logger);
+    },
+    inject: [USER_REPOSITORY_PORT, FileLogger],
+  },
+
   {
     provide: UPDATE_USER_SOCIAL_LINKS_USE_CASE,
     useFactory: (userRepo: UserRepositoryPort) => {
