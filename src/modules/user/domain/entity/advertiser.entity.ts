@@ -87,6 +87,7 @@ export class Advertiser extends BaseUser {
       props.googleId,
       HashedPassword.restore(props.password),
       props.companyName,
+      props.avatarUrl,
     );
   }
 }

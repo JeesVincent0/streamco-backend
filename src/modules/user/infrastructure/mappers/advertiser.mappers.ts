@@ -19,6 +19,7 @@ export class AdvertiserMapper {
       isVerified: doc.isVerified,
       companyName: doc.companyName,
       createdAt: doc.createdAt,
+      avatarUrl: doc.avatarUrl,
     };
 
     return Advertiser.restore(props);
@@ -38,6 +39,7 @@ export class AdvertiserMapper {
       isVerified: user.isVerified,
       companyName: user.companyName,
       createdAt: user.createdAt,
+      avatarUrl: user.avatarUrl,
     };
   }
 }
