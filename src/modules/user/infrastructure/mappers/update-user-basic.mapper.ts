@@ -5,8 +5,9 @@ export class UpdateUserBasicMapper {
     return {
       displayName: input.displayName,
       bio: input.bio || undefined,
-      dateOfBirth: new Date(input.dob),
-      gender: input.gender,
+      dateOfBirth: input.dob ? new Date(input.dob) : undefined,
+      gender: input.gender || undefined,
+      companyName: input.companyName || undefined,
     };
   }
 }

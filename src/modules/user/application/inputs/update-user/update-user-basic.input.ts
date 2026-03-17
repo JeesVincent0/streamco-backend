@@ -4,6 +4,7 @@ export type UpdateUserBasicInput = {
   userId: string;
   displayName: string;
   bio?: string;
-  gender: UserGender;
-  dob: string;
+  gender?: UserGender;
+  dob?: string;
+  companyName?: string;
 };

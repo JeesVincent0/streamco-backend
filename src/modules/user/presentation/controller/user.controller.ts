@@ -109,6 +109,7 @@ export class UserController {
       bio: body.bio,
       gender: body.gender,
       dob: body.dob,
+      companyName: body.companyName,
     });
   }
 
