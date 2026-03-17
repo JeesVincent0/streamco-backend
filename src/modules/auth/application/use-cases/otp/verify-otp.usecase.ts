@@ -1,8 +1,9 @@
 import { BadRequestError } from '@/shared/errors';
-import { BaseCachedUserRepositoryPort, PasswordHasherPort } from '../../ports';
-import { OtpPolicy, OtpState } from '@/modules/auth/domain/';
-import { VerifyOtpInput } from '../../inputs';
+import { PasswordHasherPort } from '../../ports';
+import { OtpPolicy, OtpState } from '@/shared/domain';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { CacheBaseRepoPort } from '@/shared/application/ports';
+import { VerifyOtpInput } from '@/shared/application/input';
 
 /*
  * Use case for OTP verification.
@@ -13,7 +14,7 @@ import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 export class VerifyOtpUseCase {
   constructor(
-    private readonly _cacheRepository: BaseCachedUserRepositoryPort,
+    private readonly _cacheRepository: CacheBaseRepoPort,
     private readonly _otpHasher: PasswordHasherPort,
   ) {}
 

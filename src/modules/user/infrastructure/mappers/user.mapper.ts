@@ -1,5 +1,5 @@
 import { User } from '../../domain/entity';
-import { UserStatus } from '../../domain/enums';
+import { UserSocialMediaType, UserStatus } from '../../domain/enums';
 import { UserRestoreProps } from '../../domain/types/user.restore';
 import { UserDiscriminatorUserDocument } from '../schemas';
 import { UserMongoDocument } from '../types/user-document.type';
@@ -25,9 +25,14 @@ export class UserMappers {
       bio: doc.bio,
       location: doc.location,
       socialLinks:
-        doc.socialLinks?.map((link) => ({
-          type: link.getType(),
-          url: link.getUrl(),
+        (
+          doc.socialLinks as unknown as {
+            type: UserSocialMediaType;
+            url: string;
+          }[]
+        )?.map((link) => ({
+          type: link.type,
+          url: link.url,
         })) ?? [],
     };
 
@@ -54,6 +59,10 @@ export class UserMappers {
       location: user.location,
       gender: user.gender,
       contentType: user.contentType,
+      socialLinks: user.socialLinks.map((link) => ({
+        type: link.getType(),
+        url: link.getUrl(),
+      })),
     };
   }
 }

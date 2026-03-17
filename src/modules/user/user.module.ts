@@ -18,9 +18,12 @@ import {
   USER_REPOSITORY_PORT,
 } from './application';
 import { AuthSecurityModule } from '../auth-security/auth-security.module';
+import { SharedModule } from '@/shared/shared.module';
+import { StorageModule } from '@/shared/infrastructure/storage/storage.module';
 
 @Module({
   imports: [
+    StorageModule,
     MongooseModule.forFeatureAsync([
       {
         name: 'User',
@@ -35,6 +38,7 @@ import { AuthSecurityModule } from '../auth-security/auth-security.module';
       },
     ]),
     AuthSecurityModule,
+    SharedModule,
   ],
   controllers: [UserController],
   providers: [...userProviders],

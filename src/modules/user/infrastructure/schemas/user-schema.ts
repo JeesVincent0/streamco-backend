@@ -4,7 +4,6 @@ import {
   UserGender,
   UserSocialMediaType,
 } from '@/modules/user/domain/enums';
-import { SocialLink } from '../../domain/value-objects';
 
 @Schema()
 export class UserDocument {
@@ -31,7 +30,10 @@ export class UserDocument {
       },
     ],
   })
-  socialLinks?: SocialLink[];
+  socialLinks?: {
+    type: UserSocialMediaType;
+    url: string;
+  }[];
 
   @Prop({
     required: true,

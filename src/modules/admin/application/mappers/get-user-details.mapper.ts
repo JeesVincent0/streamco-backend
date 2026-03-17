@@ -1,5 +1,5 @@
 import { Advertiser, BaseUser, User, UserRole } from '@/modules/user/domain';
-import { UserResponse } from '../types';
+import { UserResponse } from '@/shared/types';
 
 /*
  * Mapper to convert User domain entity to UserResponse DTO.

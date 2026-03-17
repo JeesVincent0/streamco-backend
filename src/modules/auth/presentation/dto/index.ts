@@ -1,4 +1,3 @@
-export * from './otp-verification.dot';
 export * from './user-register.dot';
 export * from './signin.dto';
 export * from './id.dto';

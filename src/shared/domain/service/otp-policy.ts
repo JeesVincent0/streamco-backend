@@ -1,5 +1,5 @@
 import { BadRequestError } from '@/shared/errors';
-import { OtpPurpose } from '../enums';
+import { OtpPurpose } from '@/modules/auth/domain';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 export interface OtpState {

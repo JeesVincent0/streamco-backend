@@ -1,0 +1,7 @@
+export const CACHE_BASE_REPO_PORT = Symbol('CACHE_BASE_REPO_PORT');
+export const SEND_OTP_USE_CASE = Symbol('SEND_OTP_USE_CASE');
+export const GENERATE_OTP_INTERFACE = Symbol('GENERATE_OTP_INTERFACE');
+export const PASSWORD_HASHER_PORT = Symbol('PASSWORD_HASHER_PORT');
+export const MAIL_SERVICE_PORT = Symbol('MAIL_SERVICE_PORT');
+export const VERIFY_OTP_USE_CASE = Symbol('VERIFY_OTP_USE_CASE');
+export const RESEND_OTP_USE_CASE = Symbol('RESEND_OTP_USE_CASE');
