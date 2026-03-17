@@ -8,6 +8,7 @@ export class UserResponseMapper {
         id: user.id,
         email: user.email.getValue(),
         displayName: user.displayName,
+        avatarUrl: user.avatarUrl,
       },
       role: user.role,
     };

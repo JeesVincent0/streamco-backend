@@ -5,6 +5,7 @@ export interface IGetBaseUserOutput {
     id: string;
     displayName: string;
     email: string;
+    avatarUrl?: string;
   };
   role: UserRole;
 }
