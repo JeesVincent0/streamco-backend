@@ -20,7 +20,7 @@ export class CreateCategoryUasecase implements CreateCategoryPort {
     const categoryEntity = Category.create({
       name: input.name,
       slug,
-      description: input.description,
+      description: input.description || '',
       status: input.status as CATEGORY_STATUS,
     });
 

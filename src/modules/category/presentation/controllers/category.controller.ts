@@ -15,9 +15,15 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CreateCategoryDto } from '../dto';
-import type { CreateCategoryPort } from '../../application/ports';
-import { CREATE_CATEGORY_USE_CASE } from '../../application/token';
+import { CreateCategoryDto, type GetCategoriesDto } from '../dto';
+import type {
+  CreateCategoryPort,
+  GetCategoriesInterface,
+} from '../../application/ports';
+import {
+  CREATE_CATEGORY_USE_CASE,
+  GET_CATEGORIES_USE_CASE,
+} from '../../application/token';
 
 @Controller('admin/categories')
 @UseGuards(AccessTokenGuard, ScopeGuard)
@@ -25,6 +31,9 @@ export class CategoryController {
   constructor(
     @Inject(CREATE_CATEGORY_USE_CASE)
     private readonly _createCategory: CreateCategoryPort,
+
+    @Inject(GET_CATEGORIES_USE_CASE)
+    private readonly _getAllCategories: GetCategoriesInterface,
   ) {}
 
   @Post('create')
@@ -42,7 +51,7 @@ export class CategoryController {
   @Get()
   @Scopes(SCOPE.ADMIN_READ)
   @HttpCode(HttpStatus.OK)
-  getCategories(@Query() params) {
-    console.log('THis is get all categories controller params: ', params);
+  getCategories(@Query() params: GetCategoriesDto) {
+    return this._getAllCategories.execute(params);
   }
 }

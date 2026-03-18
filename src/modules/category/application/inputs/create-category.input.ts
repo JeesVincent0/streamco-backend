@@ -1,6 +1,6 @@
 export type CreateCategoryInput = {
   name: string;
   slug: string;
-  description: string;
+  description?: string;
   status: string;
 };
