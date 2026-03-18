@@ -1,12 +1,13 @@
 // domain/entities/channel.entity.ts
+import { UniqueIdService } from '@/shared/domain';
 import { CHANNEL_STATUS } from '../enums';
 
 export interface ChannelProps {
   channelName: string;
-  channelId: string; // The unique @handle
-  userId: string; // The ID of the user who owns this channel
+  channelId: string;
+  userId: string;
   bio?: string;
-  profileImageUrl: string;
+  profileImageUrl?: string;
   backgroundBannerUrl?: string;
   status?: CHANNEL_STATUS;
   createdAt?: Date;
@@ -19,31 +20,29 @@ export class Channel {
   private _channelId: string;
   private _userId: string;
   private _bio: string;
-  private _profileImageUrl: string;
-  private _backgroundBannerUrl: string;
+  private _profileImageUrl?: string;
+  private _backgroundBannerUrl?: string;
   private _status: CHANNEL_STATUS;
   private _createdAt: Date;
   private _updatedAt: Date;
 
   // Private constructor forces the use of the static create() method
-  private constructor(props: ChannelProps, id?: string) {
+  private constructor(props: ChannelProps, id: string) {
     this._id = id;
     this._channelName = props.channelName;
     this._channelId = props.channelId;
     this._userId = props.userId;
     this._bio = props.bio || '';
     this._profileImageUrl = props.profileImageUrl;
-    this._backgroundBannerUrl = props.backgroundBannerUrl || '';
+    this._backgroundBannerUrl = props.backgroundBannerUrl;
     this._status = props.status || CHANNEL_STATUS.ACTIVE;
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();
   }
 
   // ─── Static Factory Method ───────────────────────────────────────────────
-  public static create(props: ChannelProps, id?: string): Channel {
-    // You can add domain validation here before instantiation if needed
-    // e.g., if (!props.channelName) throw new Error("Channel name required");
-
+  public static create(props: ChannelProps): Channel {
+    const id = UniqueIdService.generate();
     return new Channel(props, id);
   }
 
@@ -68,11 +67,12 @@ export class Channel {
     return this._bio;
   }
 
-  get profileImageUrl(): string {
+  // 3. FIX: Updated return types to allow undefined
+  get profileImageUrl(): string | undefined {
     return this._profileImageUrl;
   }
 
-  get backgroundBannerUrl(): string {
+  get backgroundBannerUrl(): string | undefined {
     return this._backgroundBannerUrl;
   }
 
@@ -89,9 +89,6 @@ export class Channel {
   }
 
   // ─── Setters (Domain Methods) ────────────────────────────────────────────
-  // In DDD, it is often better to use descriptive method names rather than
-  // generic setters to express the *intent* of the change.
-
   public updateChannelDetails(channelName: string, bio: string): void {
     this._channelName = channelName;
     this._bio = bio;

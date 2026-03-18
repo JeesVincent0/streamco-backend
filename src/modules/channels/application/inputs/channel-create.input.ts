@@ -3,6 +3,6 @@ export interface CreateChannelInput {
   channelId: string;
   userId: string;
   bio?: string;
-  profileImageUrl: string;
+  profileImageUrl?: string;
   backgroundBannerUrl?: string;
 }

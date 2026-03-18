@@ -26,7 +26,6 @@ export class CreateChannelDto {
   @MaxLength(500)
   bio?: string;
 
-  // 👇 ADD THESE TWO FIELDS TO WHITELIST THE IMAGES 👇
   @IsString()
   @IsOptional()
   profileImage?: string;

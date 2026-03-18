@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ChannelController } from './presentation/controller/channel.controller';
+import { AuthSecurityModule } from '../auth-security/auth-security.module';
+import { channelProviders } from './provider/channel.provider';
 
 @Module({
-  imports: [],
+  imports: [AuthSecurityModule],
   controllers: [ChannelController],
-  providers: [],
+  providers: [...channelProviders],
 })
 export class ChannelModule {}
