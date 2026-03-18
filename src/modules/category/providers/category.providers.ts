@@ -5,10 +5,12 @@ import {
   CREATE_CATEGORY_USE_CASE,
   GET_CATEGORIES_QUERY_PORT,
   GET_CATEGORIES_USE_CASE,
+  UPDATE_CATEGORY_STATUS_USE_CASE,
 } from '../application/token';
 import {
   CreateCategoryUasecase,
   GetCategoriesUsecase,
+  UpdateCategoryStatusUsecase,
 } from '../application/usecase';
 import {
   CategoryRepositoryImplMonogoDB,
@@ -30,6 +32,14 @@ export const categoryProviders = [
       return new GetCategoriesUsecase(categoryRepo);
     },
     inject: [GET_CATEGORIES_QUERY_PORT],
+  },
+
+  {
+    provide: UPDATE_CATEGORY_STATUS_USE_CASE,
+    useFactory: (categoryRepo: CategoryRepoPort) => {
+      return new UpdateCategoryStatusUsecase(categoryRepo);
+    },
+    inject: [CATEGORY_REPO_PORT],
   },
 
   {

@@ -6,4 +6,5 @@ export interface GetCategoriesInput {
   sortBy?: 'name' | 'slug' | 'liveCount' | 'scheduledLiveCount' | '' | 'all';
   order?: 'asc' | 'desc';
   status: CATEGORY_STATUS | string;
+  search?: string;
 }

@@ -11,18 +11,25 @@ import {
   HttpCode,
   HttpStatus,
   Inject,
+  Param,
   Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { CreateCategoryDto, type GetCategoriesDto } from '../dto';
+import {
+  CreateCategoryDto,
+  UpdateCategoryStatusDto,
+  type GetCategoriesDto,
+} from '../dto';
 import type {
   CreateCategoryPort,
   GetCategoriesInterface,
+  UpdateCategoryStatusPort,
 } from '../../application/ports';
 import {
   CREATE_CATEGORY_USE_CASE,
   GET_CATEGORIES_USE_CASE,
+  UPDATE_CATEGORY_STATUS_USE_CASE,
 } from '../../application/token';
 
 @Controller('admin/categories')
@@ -34,6 +41,9 @@ export class CategoryController {
 
     @Inject(GET_CATEGORIES_USE_CASE)
     private readonly _getAllCategories: GetCategoriesInterface,
+
+    @Inject(UPDATE_CATEGORY_STATUS_USE_CASE)
+    private readonly _updateCategory: UpdateCategoryStatusPort,
   ) {}
 
   @Post('create')
@@ -53,5 +63,18 @@ export class CategoryController {
   @HttpCode(HttpStatus.OK)
   getCategories(@Query() params: GetCategoriesDto) {
     return this._getAllCategories.execute(params);
+  }
+
+  @Post(':id/status')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Scopes(SCOPE.ADMIN_WRITE)
+  updateUserStatus(
+    @Param('id') id: string,
+    @Body() body: UpdateCategoryStatusDto,
+  ) {
+    return this._updateCategory.execute({
+      id,
+      status: body.status,
+    });
   }
 }
