@@ -1,4 +1,6 @@
 export const ERROR_MESSAGES = {
+  CATEGORY_NOT_FOUND: 'Category not found',
+  USE_ANOTHER_SLUG: 'User another slug',
   USE_ANOTHER_EMAIL_ID: 'Use another email ID',
   UNSUPPORTED_USER_TYPE: 'Unsupported user type',
   YOUR_ACCOUNT_SUSPENDED: 'Your account is suspended.',

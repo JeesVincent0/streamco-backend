@@ -6,6 +6,7 @@ import { AuthModule } from '@/modules/auth/auth.module';
 import { MongoDatabaseModule } from '@/shared/infrastructure/database/mongo/mongo.module';
 import { HealthController } from './shared/health/health.controller';
 import { AdminModule } from './modules/admin/admin.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AdminModule } from './modules/admin/admin.module';
     UserModule,
     LoggerModule,
     MongoDatabaseModule,
+    CategoryModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
