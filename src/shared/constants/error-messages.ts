@@ -1,4 +1,5 @@
 export const ERROR_MESSAGES = {
+  USE_ANOTHER_CHANNEL_ID: 'Use another channel ID',
   CATEGORY_NOT_FOUND: 'Category not found',
   USE_ANOTHER_SLUG: 'User another slug',
   USE_ANOTHER_EMAIL_ID: 'Use another email ID',

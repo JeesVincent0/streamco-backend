@@ -41,8 +41,8 @@ export class Channel {
   }
 
   // ─── Static Factory Method ───────────────────────────────────────────────
-  public static create(props: ChannelProps): Channel {
-    const id = UniqueIdService.generate();
+  public static create(props: ChannelProps, id?: string): Channel {
+    id = id || UniqueIdService.generate();
     return new Channel(props, id);
   }
 
