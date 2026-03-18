@@ -7,9 +7,11 @@ import { MongoDatabaseModule } from '@/shared/infrastructure/database/mongo/mong
 import { HealthController } from './shared/health/health.controller';
 import { AdminModule } from './modules/admin/admin.module';
 import { CategoryModule } from './modules/category/category.module';
+import { ChannelModule } from './modules/channels/channel.module';
 
 @Module({
   imports: [
+    ChannelModule,
     AdminModule,
     AuthModule,
     UserModule,

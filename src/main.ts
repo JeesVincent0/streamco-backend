@@ -4,13 +4,15 @@ import { ValidationPipe } from '@nestjs/common';
 import 'reflect-metadata';
 import { AppExceptionFilter } from './shared/filters/app-exception.filter';
 import cookieParser from 'cookie-parser';
-import { NextFunction, Request, Response } from 'express';
+import { json, NextFunction, Request, Response, urlencoded } from 'express';
 import { FileLogger } from './shared/logger/file-logger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['error', 'warn', 'debug'],
   });
+  app.use(json({ limit: '50mb' }));
+  app.use(urlencoded({ extended: true, limit: '50mb' }));
 
   const logger = app.get(FileLogger);
 
