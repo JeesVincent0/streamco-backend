@@ -6,6 +6,7 @@ import type { CategoryRepoPort } from '../../application/ports/category-reposito
 import { Category } from '../../domain/entity';
 import { CategoryDocument } from '../schema';
 import { CategoryMapper } from '../mappers';
+import { Slug } from '../../domain/value-objects';
 
 @Injectable()
 export class CategoryRepositoryImplMonogoDB implements CategoryRepoPort {
@@ -21,8 +22,11 @@ export class CategoryRepositoryImplMonogoDB implements CategoryRepoPort {
     return CategoryMapper.toDomain(document);
   }
 
-  async findBySlug(slug: string): Promise<Category | null> {
-    const document = await this._categoryModel.findOne({ slug }).lean().exec();
+  async findBySlug(slug: Slug): Promise<Category | null> {
+    const document = await this._categoryModel
+      .findOne({ slug: slug.getValue() })
+      .lean()
+      .exec();
     if (!document) return null;
 
     return CategoryMapper.toDomain(document);

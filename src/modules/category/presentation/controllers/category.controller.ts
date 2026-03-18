@@ -31,7 +31,6 @@ export class CategoryController {
   @Scopes(SCOPE.ADMIN_WRITE)
   @HttpCode(HttpStatus.OK)
   create(@Body() body: CreateCategoryDto) {
-    console.log('reached');
     return this._createCategory.execute({
       name: body.name,
       slug: body.slug,

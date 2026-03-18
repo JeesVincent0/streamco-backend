@@ -1,11 +1,12 @@
 import { UniqueIdService } from '@/shared/domain';
 import { CATEGORY_STATUS } from '../enums/category-status.enum';
+import { Slug } from '../value-objects';
 
 export class Category {
   constructor(
     private readonly _id: string,
     private _name: string,
-    private _slug: string,
+    private _slug: Slug,
     private _description: string,
     private _status: CATEGORY_STATUS,
     private readonly _createdAt: Date,
@@ -23,7 +24,7 @@ export class Category {
     return this._name;
   }
 
-  get slug(): string {
+  get slug(): Slug {
     return this._slug;
   }
 
@@ -45,7 +46,7 @@ export class Category {
     return this._scheduledLiveCount;
   }
 
-  get updateAt(): Date | undefined {
+  get updatedAt(): Date | undefined {
     if (!this._updatedAt) return undefined;
     return this._updatedAt;
   }
@@ -63,7 +64,7 @@ export class Category {
     this.touch();
   }
 
-  setSlug(slug: string): void {
+  setSlug(slug: Slug): void {
     this._slug = slug;
     this.touch();
   }
@@ -95,7 +96,7 @@ export class Category {
     status,
   }: {
     name: string;
-    slug: string;
+    slug: Slug;
     description: string;
     status: CATEGORY_STATUS;
   }) {
@@ -116,7 +117,7 @@ export class Category {
   }: {
     id: string;
     name: string;
-    slug: string;
+    slug: Slug;
     description: string;
     status: CATEGORY_STATUS;
     createdAt: Date;
