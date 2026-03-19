@@ -3,3 +3,5 @@ export const CHANNEL_REPO_PORT = Symbol('CHANNEL_REPO_PORT');
 export const UPDATE_CHANNEL_IMAGES_USE_CASE = Symbol(
   'UPDATE_CHANNEL_IMAGES_USE_CASE',
 );
+
+export const GET_CHANNELS_PORT = Symbol('GET_CHANNELS_PORT');
