@@ -30,6 +30,17 @@ export class ChannelModel {
 
   @Prop({ type: String, enum: CHANNEL_STATUS, default: CHANNEL_STATUS.ACTIVE })
   status: CHANNEL_STATUS;
+  @Prop({ default: false })
+  isLive: boolean;
+
+  @Prop({ default: 0 })
+  subscribersCount: number;
+
+  @Prop({ default: 0 })
+  totalViews: number;
+
+  @Prop({ default: 0 })
+  totalVideos: number;
 
   createdAt?: Date;
   updatedAt?: Date;

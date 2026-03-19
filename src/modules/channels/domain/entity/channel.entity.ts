@@ -10,6 +10,13 @@ export interface ChannelProps {
   profileImageUrl?: string;
   backgroundBannerUrl?: string;
   status?: CHANNEL_STATUS;
+
+  // ─── NEW FIELDS ───
+  isLive?: boolean;
+  subscribersCount?: number;
+  totalViews?: number;
+  totalVideos?: number;
+
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -23,6 +30,13 @@ export class Channel {
   private _profileImageUrl?: string;
   private _backgroundBannerUrl?: string;
   private _status: CHANNEL_STATUS;
+
+  // ─── NEW FIELDS ───
+  private _isLive: boolean;
+  private _subscribersCount: number;
+  private _totalViews: number;
+  private _totalVideos: number;
+
   private _createdAt: Date;
   private _updatedAt: Date;
 
@@ -36,59 +50,71 @@ export class Channel {
     this._profileImageUrl = props.profileImageUrl;
     this._backgroundBannerUrl = props.backgroundBannerUrl;
     this._status = props.status || CHANNEL_STATUS.ACTIVE;
+
+    // Initialize new fields (Default to 0 / false for brand new channels)
+    this._isLive = props.isLive || false;
+    this._subscribersCount = props.subscribersCount || 0;
+    this._totalViews = props.totalViews || 0;
+    this._totalVideos = props.totalVideos || 0;
+
     this._createdAt = props.createdAt || new Date();
     this._updatedAt = props.updatedAt || new Date();
   }
 
   // ─── Static Factory Method ───────────────────────────────────────────────
   public static create(props: ChannelProps, id?: string): Channel {
-    id = id || UniqueIdService.generate();
-    return new Channel(props, id);
+    const finalId = id || UniqueIdService.generate();
+    return new Channel(props, finalId);
   }
 
   // ─── Getters ─────────────────────────────────────────────────────────────
   get id(): string | undefined {
     return this._id;
   }
-
   get channelName(): string {
     return this._channelName;
   }
-
   get channelId(): string {
     return this._channelId;
   }
-
   get userId(): string {
     return this._userId;
   }
-
   get bio(): string {
     return this._bio;
   }
-
-  // 3. FIX: Updated return types to allow undefined
   get profileImageUrl(): string | undefined {
     return this._profileImageUrl;
   }
-
   get backgroundBannerUrl(): string | undefined {
     return this._backgroundBannerUrl;
   }
-
   get status(): CHANNEL_STATUS {
     return this._status;
+  }
+
+  // New Getters
+  get isLive(): boolean {
+    return this._isLive;
+  }
+  get subscribersCount(): number {
+    return this._subscribersCount;
+  }
+  get totalViews(): number {
+    return this._totalViews;
+  }
+  get totalVideos(): number {
+    return this._totalVideos;
   }
 
   get createdAt(): Date {
     return this._createdAt;
   }
-
   get updatedAt(): Date {
     return this._updatedAt;
   }
 
-  // ─── Setters (Domain Methods) ────────────────────────────────────────────
+  // ─── Core Setters (Domain Methods) ───────────────────────────────────────
   public updateChannelDetails(channelName: string, bio: string): void {
     this._channelName = channelName;
     this._bio = bio;
@@ -115,7 +141,50 @@ export class Channel {
     this.markAsUpdated();
   }
 
-  // Internal helper to update the timestamp whenever a setter is called
+  // ─── NEW Domain Methods for Metrics & Status ─────────────────────────────
+
+  public startStream(): void {
+    this._isLive = true;
+    this.markAsUpdated();
+  }
+
+  public endStream(): void {
+    this._isLive = false;
+    this.markAsUpdated();
+  }
+
+  public addSubscriber(): void {
+    this._subscribersCount += 1;
+    this.markAsUpdated();
+  }
+
+  public removeSubscriber(): void {
+    if (this._subscribersCount > 0) {
+      this._subscribersCount -= 1;
+      this.markAsUpdated();
+    }
+  }
+
+  public incrementTotalViews(viewsToAdd: number = 1): void {
+    if (viewsToAdd > 0) {
+      this._totalViews += viewsToAdd;
+      this.markAsUpdated();
+    }
+  }
+
+  public incrementVideoCount(): void {
+    this._totalVideos += 1;
+    this.markAsUpdated();
+  }
+
+  public decrementVideoCount(): void {
+    if (this._totalVideos > 0) {
+      this._totalVideos -= 1;
+      this.markAsUpdated();
+    }
+  }
+
+  // Internal helper
   private markAsUpdated(): void {
     this._updatedAt = new Date();
   }

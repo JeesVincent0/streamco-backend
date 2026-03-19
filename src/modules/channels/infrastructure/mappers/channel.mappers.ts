@@ -1,3 +1,4 @@
+// infrastructure/mappers/channel.mapper.ts
 import { Channel } from '../../domain/entity';
 import { ChannelDocument } from '../schema';
 
@@ -13,6 +14,13 @@ export class ChannelMapper {
         profileImageUrl: raw.profileImageUrl || undefined,
         backgroundBannerUrl: raw.backgroundBannerUrl || undefined,
         status: raw.status,
+
+        // ─── MAP NEW FIELDS ───
+        isLive: raw.isLive,
+        subscribersCount: raw.subscribersCount,
+        totalViews: raw.totalViews,
+        totalVideos: raw.totalVideos,
+
         createdAt: raw.createdAt as Date,
         updatedAt: raw.updatedAt as Date,
       },
@@ -21,7 +29,7 @@ export class ChannelMapper {
   }
 
   // Domain -> DB
-  public static toPersistence(entity: Channel) {
+  public static toPersistence(entity: Channel): Record<string, unknown> {
     return {
       id: entity.id,
       channelName: entity.channelName,
@@ -31,6 +39,13 @@ export class ChannelMapper {
       profileImageUrl: entity.profileImageUrl || null,
       backgroundBannerUrl: entity.backgroundBannerUrl || null,
       status: entity.status,
+
+      // ─── MAP NEW FIELDS ───
+      isLive: entity.isLive,
+      subscribersCount: entity.subscribersCount,
+      totalViews: entity.totalViews,
+      totalVideos: entity.totalVideos,
+
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     };
