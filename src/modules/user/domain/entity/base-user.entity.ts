@@ -156,8 +156,13 @@ export abstract class BaseUser {
   }
 
   suspend(): void {
-    this.ensureNotDeleted();
     this._status = UserStatus.SUSPENDED;
+    this.touch();
+  }
+
+  activate(): void {
+    this._status = UserStatus.ACTIVE;
+    this._deletedAt = undefined;
     this.touch();
   }
 

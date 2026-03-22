@@ -7,7 +7,6 @@ import {
   CreateAdvertiserUserUseCase,
   UserRepositoryPort,
   GET_ALL_USERS_PORT,
-  UPDATE_USER_STATUS_PORT,
   GetUserProfileUseCase,
   UPDATE_USER_BASIC_PORT,
   UPDATE_USER_EMAIL_PORT,
@@ -19,7 +18,6 @@ import { CreateUserWithGoogleAuthUseCase } from '../application';
 import { GetBaseUserUseCase } from '../application/use-cases/get-user/get-base-user.usecase';
 import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
 import { GetAllUsersRepository } from '../infrastructure/repositories/get-all-users.impl';
-import { UpdateUserStatusMongoRepository } from '../infrastructure/repositories/update-user-status.impl';
 import { FileLogger } from '@/shared/logger/file-logger';
 import {
   UpdateUserBasicUseCase,
@@ -128,10 +126,6 @@ export const userProviders = [
     useClass: GetAllUsersRepository,
   },
 
-  {
-    provide: UPDATE_USER_STATUS_PORT,
-    useClass: UpdateUserStatusMongoRepository,
-  },
   {
     provide: GET_USER_PROFILE_USE_CASE_TOKEN,
     useFactory: (userRepo: UserRepositoryPort, logger: FileLogger) => {

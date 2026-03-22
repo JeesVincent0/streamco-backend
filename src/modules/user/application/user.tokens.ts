@@ -8,10 +8,15 @@ export const CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN = Symbol(
 );
 
 // user get tokens
+export const GET_ALL_USERS_QUERY_IMPL_TOKEN = Symbol('IUserQuery');
+export const GET_ALL_USERS_USE_CASE_TOKEN = Symbol('IGetAllUsersUseCase');
 export const GET_BASE_USER_USE_CASE_TOKEN = Symbol('IGetBaseUserUseCase');
 export const GET_USER_PROFILE_USE_CASE_TOKEN = Symbol('IGetUserProfileUseCase');
 
 // user update tokens
+export const UPDATE_USER_STATUS_USE_CASE_TOKEN = Symbol(
+  'IUpdateUserStatusUseCase',
+);
 export const UPDATE_USER_EMAIL_USE_CASE_TOKEN = Symbol(
   'IUpdateUserEmailUseCase',
 );
@@ -29,6 +34,3 @@ export const UPDATE_USER_SOCIAL_LINKS_USE_CASE_TOKEN = Symbol(
 export const VERIFY_OTP_EMAIL_UPDATE_USE_CASE_TOKEN = Symbol(
   'IVerifyOtpEmailUpdateUseCase',
 );
-
-export const GET_ALL_USERS_USE_CASE_TOKEN = Symbol('IGetAllUsersUseCase');
-export const GET_ALL_USERS_QUERY_IMPL_TOKEN = Symbol('IUserQuery');

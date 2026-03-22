@@ -18,8 +18,14 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UpdateUserStatusDto } from '../dto';
-import { type IGetAllUsersUseCase } from '../../application/ports/get-user/get-all-users.usecase.port';
-import { GET_ALL_USERS_USE_CASE_TOKEN } from '../../application/user.tokens';
+import {
+  GET_ALL_USERS_USE_CASE_TOKEN,
+  UPDATE_USER_STATUS_USE_CASE_TOKEN,
+} from '../../application/user.tokens';
+import type {
+  IGetAllUsersUseCase,
+  IUpdateUserStatusUseCase,
+} from '../../application';
 
 @Controller('admin/users')
 @UseGuards(AccessTokenGuard, ScopeGuard)
@@ -27,7 +33,9 @@ export class AdminController {
   constructor(
     @Inject(GET_ALL_USERS_USE_CASE_TOKEN)
     private readonly _getAllUsersUseCase: IGetAllUsersUseCase,
-    // private readonly _updateUserStatusUseCase: UpdateUserStatusUseCase,
+
+    @Inject(UPDATE_USER_STATUS_USE_CASE_TOKEN)
+    private readonly _updateUserStatusUseCase: IUpdateUserStatusUseCase,
     // private readonly _getUserByIdUseCase: GetUserByIdUseCase,
   ) {}
 
@@ -48,16 +56,16 @@ export class AdminController {
     });
   }
 
-  //   // Endpoint to update the status of a user ( ACTIVE, SUSPENDED, DELETED)
-  //   @Patch(':id/status')
-  //   @HttpCode(HttpStatus.NO_CONTENT)
-  //   @Scopes(SCOPE.ADMIN_WRITE)
-  //   async updateUserStatus(
-  //     @Param('id') id: string,
-  //     @Body() body: UpdateUserStatusDto,
-  //   ) {
-  //     return await this._updateUserStatusUseCase.execute(id, body.status);
-  //   }
+  // Endpoint to update the status of a user ( ACTIVE, SUSPENDED, DELETED)
+  @Patch(':id/status')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Scopes(SCOPE.ADMIN_WRITE)
+  async updateUserStatus(
+    @Param('id') id: string,
+    @Body() body: UpdateUserStatusDto,
+  ) {
+    return await this._updateUserStatusUseCase.execute(id, body.status);
+  }
 
   //   @Get(':id')
   //   @HttpCode(HttpStatus.OK)

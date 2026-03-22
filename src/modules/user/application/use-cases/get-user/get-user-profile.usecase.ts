@@ -11,8 +11,15 @@ export class GetUserProfileUseCase implements IGetUserProfileUseCase {
     private readonly _userRepo: UserRepositoryPort,
     private readonly _logger: FileLogger,
   ) {}
-  async execute(input: { id: string }): Promise<UserResponse> {
-    const user = await this._userRepo.findById(input.id);
+  async execute(input: {
+    id: string;
+    paramsId: string;
+  }): Promise<UserResponse> {
+    let user;
+    user = await this._userRepo.findById(input.paramsId);
+    if (!user) {
+      user = await this._userRepo.findById(input.id);
+    }
     if (!user) {
       this._logger.error({
         event: LOG_EVENTS.USER_NOT_FOUND,

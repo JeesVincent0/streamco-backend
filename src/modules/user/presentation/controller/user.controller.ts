@@ -17,6 +17,7 @@ import {
   HttpStatus,
   UploadedFile,
   UseInterceptors,
+  Param,
 } from '@nestjs/common';
 
 import type { Express } from 'express';
@@ -83,12 +84,13 @@ export class UserController {
     });
   }
 
-  @Get('profile')
+  @Get('profile/:id')
   @Scopes(SCOPE.USER_READ)
   @HttpCode(HttpStatus.OK)
-  getProfile(@Req() req: RequestWithUserInterface) {
+  getProfile(@Req() req: RequestWithUserInterface, @Param('id') id: string) {
     return this._getUserProfileUseCase.execute({
       id: req.user.sub,
+      paramsId: id,
     });
   }
 
