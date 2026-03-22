@@ -1,4 +1,4 @@
-import { CreateAdvertiserUserPort } from '@/modules/user/application';
+import { ICreateAdvertiserUserUseCase } from '@/modules/user/application';
 import { SignupAdvertiserInput } from '../../inputs';
 import { PasswordHasherPort } from '../../ports';
 import { GenerateOtpUseCase } from '../otp';
@@ -6,7 +6,7 @@ import { OtpPurpose } from '@/modules/auth/domain/enums';
 
 export class SignupAdvertiserUseCase {
   constructor(
-    private readonly _createAdvertiserUser: CreateAdvertiserUserPort,
+    private readonly _createAdvertiserUser: ICreateAdvertiserUserUseCase,
     private readonly _passwordHasher: PasswordHasherPort,
     private readonly _generateOtpUseCase: GenerateOtpUseCase,
   ) {}

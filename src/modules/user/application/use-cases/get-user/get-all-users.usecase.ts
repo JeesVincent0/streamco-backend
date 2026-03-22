@@ -1,10 +1,13 @@
 import { GetAllUsersInput } from '../../inputs';
-import { UserQueryPort } from '@/modules/user/application';
 import { Mappers } from '../../mappers';
+import { IUserQuery } from '../../ports';
+import { IGetAllUsersUseCase } from '../../ports/get-user/get-all-users.usecase.port';
 import { normalizeGetUsersQuery } from '../../utility';
+import { GetAllUsersOutput } from '../../output/get-all-users.output';
 
-export class GetAllUsersUseCase {
-  constructor(private readonly _getAllUsersPort: UserQueryPort) {}
+export class GetAllUsersUseCase implements IGetAllUsersUseCase {
+  constructor(private readonly _getAllUsersPort: IUserQuery) {}
+
   async execute({
     page,
     limit,
@@ -14,7 +17,14 @@ export class GetAllUsersUseCase {
     isVerified,
     sortBy,
     order,
-  }: GetAllUsersInput) {
+  }: GetAllUsersInput): Promise<{
+    status: string;
+    message: string;
+    data: {
+      users: GetAllUsersOutput[];
+      pagination: { page: number; limit: number; totalPages: number };
+    };
+  }> {
     const normalizedQuery = normalizeGetUsersQuery({
       page,
       limit,
@@ -33,8 +43,8 @@ export class GetAllUsersUseCase {
       status: 'success',
       message: 'Users retrieved successfully',
       data: {
-        pagination,
         users: userData,
+        pagination,
       },
     };
   }

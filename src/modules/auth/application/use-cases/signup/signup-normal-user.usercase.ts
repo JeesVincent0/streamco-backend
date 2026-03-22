@@ -1,4 +1,4 @@
-import { CreateNormalUserPort } from '@/modules/user/application';
+import { ICreateNormalUserUseCase } from '@/modules/user/application';
 import { SignupNormalUserInput } from '../../inputs';
 import { PasswordHasherPort } from '../../ports';
 import { GenerateOtpUseCase } from '../otp';
@@ -6,7 +6,7 @@ import { OtpPurpose } from '@/modules/auth/domain/enums';
 
 export class SignupNormalUserUseCase {
   constructor(
-    private readonly _createNormalUser: CreateNormalUserPort,
+    private readonly _createNormalUser: ICreateNormalUserUseCase,
     private readonly _passwordHasher: PasswordHasherPort,
     private readonly _generateOtpUseCase: GenerateOtpUseCase,
   ) {}

@@ -1,68 +1,77 @@
 import {
-  AccessTokenGuard,
-  ScopeGuard,
   Scopes,
+  ScopeGuard,
+  AccessTokenGuard,
 } from '@/modules/auth-security/presentation';
-import type { RequestWithUserInterface } from '@/shared/interfaces';
+
 import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Inject,
-  Post,
   Put,
   Req,
-  UploadedFile,
+  Get,
+  Post,
+  Body,
+  Inject,
+  HttpCode,
   UseGuards,
+  Controller,
+  HttpStatus,
+  UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { GetBaseUserUseCase } from '../../application/use-cases/get-user/get-base-user.usecase';
-import { SCOPE } from '@/modules/auth-security/domain/enums';
-import type {
-  GetUserProfileInterface,
-  UpdateUserAvatarInterface,
-  UpdateUserBasicInterface,
-  UpdateUserEmailInterface,
-  UpdateUserSocialLinksInterface,
-  VerifyOtpEmailUpdateInterface,
-} from '../../application/interfaces';
-import {
-  GET_USER_PROFILE_INTERFACE_PORT,
-  UPDATE_USER_AVATARURL_USE_CASE,
-  UPDATE_USER_BASIC_USE_CASE,
-  UPDATE_USER_EMAIL_USE_CASE,
-  UPDATE_USER_SOCIAL_LINKS_USE_CASE,
-  VERIFY_OTP_EMAIL_UPDATE_USE_CASE,
-} from '../../application';
-import { SocialLinksDto, UpdateBasicDto, UpdateEmailDto } from '../dto';
+
+import type { Express } from 'express';
 import { OtpVerificationDto } from '@/shared/presentation';
 import { FileInterceptor } from '@nestjs/platform-express';
-import type { Express } from 'express';
+import { SCOPE } from '@/modules/auth-security/domain/enums';
+import type { RequestWithUserInterface } from '@/shared/interfaces';
+import { SocialLinksDto, UpdateBasicDto, UpdateEmailDto } from '../dto';
+
+// interfaces
+import type {
+  IGetBaseUserUseCase,
+  IGetUserProfileUseCase,
+  IUpdateUserEmailUseCase,
+  IUpdateUserBasicUseCase,
+  IUpdateUserAvatarUlrUsecase,
+  IVerifyOtpEmailUpdateUseCase,
+  IUpdateUserSocialLinksUseCase,
+} from '../../application/ports';
+
+// TOKENS
+import {
+  GET_BASE_USER_USE_CASE_TOKEN,
+  GET_USER_PROFILE_USE_CASE_TOKEN,
+  UPDATE_USER_EMAIL_USE_CASE_TOKEN,
+  UPDATE_USER_BASIC_USE_CASE_TOKEN,
+  UPDATE_USER_AVATAR_URL_USE_CASE_TOKEN,
+  VERIFY_OTP_EMAIL_UPDATE_USE_CASE_TOKEN,
+  UPDATE_USER_SOCIAL_LINKS_USE_CASE_TOKEN,
+} from '../../application/user.tokens';
 
 @Controller('user')
 @UseGuards(AccessTokenGuard, ScopeGuard)
 export class UserController {
   constructor(
-    private readonly _getBaseUserUseCase: GetBaseUserUseCase,
-    @Inject(GET_USER_PROFILE_INTERFACE_PORT)
-    private readonly _getUserProfileUseCase: GetUserProfileInterface,
+    @Inject(GET_BASE_USER_USE_CASE_TOKEN)
+    private readonly _getBaseUserUseCase: IGetBaseUserUseCase,
 
-    @Inject(UPDATE_USER_EMAIL_USE_CASE)
-    private readonly _updateUserEmailUseCase: UpdateUserEmailInterface,
+    @Inject(GET_USER_PROFILE_USE_CASE_TOKEN)
+    private readonly _getUserProfileUseCase: IGetUserProfileUseCase,
 
-    @Inject(UPDATE_USER_BASIC_USE_CASE)
-    private readonly _updateUserBasicUseCase: UpdateUserBasicInterface,
+    @Inject(UPDATE_USER_EMAIL_USE_CASE_TOKEN)
+    private readonly _updateUserEmailUseCase: IUpdateUserEmailUseCase,
 
-    @Inject(VERIFY_OTP_EMAIL_UPDATE_USE_CASE)
-    private readonly _verifyOtpEmailUpdate: VerifyOtpEmailUpdateInterface,
+    @Inject(UPDATE_USER_BASIC_USE_CASE_TOKEN)
+    private readonly _updateUserBasicUseCase: IUpdateUserBasicUseCase,
 
-    @Inject(UPDATE_USER_SOCIAL_LINKS_USE_CASE)
-    private readonly _updateSocialLinks: UpdateUserSocialLinksInterface,
+    @Inject(VERIFY_OTP_EMAIL_UPDATE_USE_CASE_TOKEN)
+    private readonly _verifyOtpEmailUpdate: IVerifyOtpEmailUpdateUseCase,
 
-    @Inject(UPDATE_USER_AVATARURL_USE_CASE)
-    private readonly _updateUserAvatarUrl: UpdateUserAvatarInterface,
+    @Inject(UPDATE_USER_SOCIAL_LINKS_USE_CASE_TOKEN)
+    private readonly _updateSocialLinks: IUpdateUserSocialLinksUseCase,
+
+    @Inject(UPDATE_USER_AVATAR_URL_USE_CASE_TOKEN)
+    private readonly _updateUserAvatarUrl: IUpdateUserAvatarUlrUsecase,
   ) {}
 
   @Get('base')

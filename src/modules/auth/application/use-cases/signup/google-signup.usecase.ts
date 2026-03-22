@@ -1,5 +1,5 @@
 import {
-  CreateUserWIthGoogleAuthPort,
+  ICreateUserWithGoogleAuthUseCase,
   UserRepositoryPort,
 } from '@/modules/user/application';
 import { Email, UserRole, UserStatus } from '@/modules/user/domain';
@@ -15,7 +15,7 @@ import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 export class GoogleAuthUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
-    private readonly _createUserWithGoogleAuth: CreateUserWIthGoogleAuthPort,
+    private readonly _createUserWithGoogleAuth: ICreateUserWithGoogleAuthUseCase,
     private readonly _generateTokenUseCase: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}

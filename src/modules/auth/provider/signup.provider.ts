@@ -1,12 +1,9 @@
 import {
-  CREATE_ADVERTISER_USER_PORT,
-  CREATE_NORMAL_USER_PORT,
-  CREATE_USER_WITH_GOOGLE_AUTH_PORT,
-  CreateAdvertiserUserPort,
-  CreateNormalUserPort,
-  CreateUserWIthGoogleAuthPort,
+  ICreateAdvertiserUserUseCase,
   USER_REPOSITORY_PORT,
   UserRepositoryPort,
+  ICreateNormalUserUseCase,
+  ICreateUserWithGoogleAuthUseCase,
 } from '@/modules/user/application';
 import {
   ConfirmSignupUserUseCase,
@@ -51,6 +48,13 @@ import { MonogodbRefreshTokenRepository } from '../infrastructure/repository';
 import { RefreshTokenPort } from '../application/ports/token';
 import { RefreshAccessTokenUseCase } from '../application/use-cases/token/refresh-accessp-token.usecase';
 import { CacheBaseRepoPort } from '@/shared/application/ports';
+
+// user module tokens
+import {
+  CREATE_ADVERTISER_USE_CASE_TOKEN,
+  CREATE_USER_USE_CASE_TOKEN,
+  CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
+} from '@/modules/user/application/user.tokens';
 
 export const signupProvider = [
   {
@@ -111,7 +115,7 @@ export const signupProvider = [
     provide: GoogleAuthUseCase,
     useFactory: (
       userRepo: UserRepositoryPort,
-      createUserWithGoogleAuth: CreateUserWIthGoogleAuthPort,
+      createUserWithGoogleAuth: ICreateUserWithGoogleAuthUseCase,
       generateTokenUseCase: GenerateTokenUseCase,
       logger: FileLogger,
     ) => {
@@ -124,7 +128,7 @@ export const signupProvider = [
     },
     inject: [
       USER_REPOSITORY_PORT,
-      CREATE_USER_WITH_GOOGLE_AUTH_PORT,
+      CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
       GenerateTokenUseCase,
       FileLogger,
     ],
@@ -229,7 +233,7 @@ export const signupProvider = [
   {
     provide: SignupNormalUserUseCase,
     useFactory: (
-      createNormalUser: CreateNormalUserPort,
+      createNormalUser: ICreateNormalUserUseCase,
       passwordHasher: PasswordHasherPort,
       generateOtpUseCase: GenerateOtpUseCase,
     ) => {
@@ -239,7 +243,11 @@ export const signupProvider = [
         generateOtpUseCase,
       );
     },
-    inject: [CREATE_NORMAL_USER_PORT, PASSWORD_HASHER_PORT, GenerateOtpUseCase],
+    inject: [
+      CREATE_USER_USE_CASE_TOKEN,
+      PASSWORD_HASHER_PORT,
+      GenerateOtpUseCase,
+    ],
   },
 
   {
@@ -334,7 +342,7 @@ export const signupProvider = [
   {
     provide: SignupAdvertiserUseCase,
     useFactory: (
-      createAdvertiserUser: CreateAdvertiserUserPort,
+      createAdvertiserUser: ICreateAdvertiserUserUseCase,
       passwordHasher: PasswordHasherPort,
       generateOtp: GenerateOtpUseCase,
     ) => {
@@ -345,7 +353,7 @@ export const signupProvider = [
       );
     },
     inject: [
-      CREATE_ADVERTISER_USER_PORT,
+      CREATE_ADVERTISER_USE_CASE_TOKEN,
       PASSWORD_HASHER_PORT,
       GenerateOtpUseCase,
     ],
