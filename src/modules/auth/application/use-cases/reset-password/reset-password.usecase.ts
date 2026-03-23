@@ -2,21 +2,24 @@ import { TOKEN_TYPE, VerifyPassword } from '@/modules/auth/domain';
 import { UserRepositoryPort } from '@/modules/user/application';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-import { IPasswordHasher } from '../../ports';
+import { IPasswordHasher, IResetPasswordUseCase } from '../../ports';
 import { HashedPassword } from '@/modules/user/domain';
 import { TokenBlackListUseCase } from '../token';
 import { ResetPasswordInput } from '../../inputs';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { ResetPasswordUseCaseOutPut } from '../../output';
 
-export class ResetPasswordUseCase {
+export class ResetPasswordUseCase implements IResetPasswordUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _passwordHasher: IPasswordHasher,
     private readonly _tokenBlacklistUseCase: TokenBlackListUseCase,
     private readonly _logger: FileLogger,
   ) {}
-  async execute(input: ResetPasswordInput) {
+  async execute(
+    input: ResetPasswordInput,
+  ): Promise<ResetPasswordUseCaseOutPut> {
     const { password } = VerifyPassword.verify({
       password: input.password,
       confirmPassword: input.confirmPassword,

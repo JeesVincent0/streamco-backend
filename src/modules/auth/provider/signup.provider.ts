@@ -13,7 +13,6 @@ import {
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
   TokenBlackListUseCase,
-  VerifyResetPasswordOtpUseCase,
 } from '../application/use-cases';
 
 import {
@@ -24,7 +23,6 @@ import {
   VERIFY_OTP_USE_CASE_TOKEN,
   IVerifyOtpUseCase,
 } from '../application';
-import { ResetPasswordUseCase } from '../application/use-cases/reset-password/reset-password.usecase';
 import { SigninUseCase } from '../application/use-cases/signin';
 import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
 import { SignoutUseCase } from '../application/use-cases/signup/signout.usecase';
@@ -184,40 +182,6 @@ export const signupProvider = [
       GenerateTokenUseCase,
       FileLogger,
     ],
-  },
-
-  {
-    provide: ResetPasswordUseCase,
-    useFactory: (
-      userRepo: UserRepositoryPort,
-      passwordHasher: IPasswordHasher,
-      tokenBlacklist: TokenBlackListUseCase,
-      logger: FileLogger,
-    ) => {
-      return new ResetPasswordUseCase(
-        userRepo,
-        passwordHasher,
-        tokenBlacklist,
-        logger,
-      );
-    },
-    inject: [
-      USER_REPOSITORY_PORT,
-      PASSWORD_HASHER_PORT_TOKEN,
-      TokenBlackListUseCase,
-      FileLogger,
-    ],
-  },
-
-  {
-    provide: VerifyResetPasswordOtpUseCase,
-    useFactory: (
-      verifyOtp: IVerifyOtpUseCase,
-      tokenService: TokenServicePort,
-    ) => {
-      return new VerifyResetPasswordOtpUseCase(verifyOtp, tokenService);
-    },
-    inject: [VERIFY_OTP_USE_CASE_TOKEN, TOKEN_SERVICE],
   },
 
   {
