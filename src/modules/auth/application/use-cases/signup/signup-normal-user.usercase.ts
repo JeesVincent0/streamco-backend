@@ -1,13 +1,13 @@
 import { ICreateNormalUserUseCase } from '@/modules/user/application';
 import { SignupNormalUserInput } from '../../inputs';
-import { PasswordHasherPort } from '../../ports';
+import { IPasswordHasher } from '../../ports';
 import { GenerateOtpUseCase } from '../otp';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
 
 export class SignupNormalUserUseCase {
   constructor(
     private readonly _createNormalUser: ICreateNormalUserUseCase,
-    private readonly _passwordHasher: PasswordHasherPort,
+    private readonly _passwordHasher: IPasswordHasher,
     private readonly _generateOtpUseCase: GenerateOtpUseCase,
   ) {}
   async execute(input: SignupNormalUserInput) {

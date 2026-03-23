@@ -1,7 +1,7 @@
 import { OtpPurpose } from '@/modules/auth/domain';
 import { VerifyOtpInput } from '../input';
 import {
-  CacheBaseRepoPort,
+  ICacheBaseRepo,
   passwordHasherPort,
   VerifyOtpInterface,
 } from '../ports';
@@ -11,7 +11,7 @@ import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 export class VerifyOtpUseCase implements VerifyOtpInterface {
   constructor(
-    private readonly _cacheRepository: CacheBaseRepoPort,
+    private readonly _cacheRepository: ICacheBaseRepo,
     private readonly _otpHasher: passwordHasherPort,
   ) {}
   async execute(

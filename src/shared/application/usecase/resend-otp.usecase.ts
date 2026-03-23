@@ -1,9 +1,9 @@
 import { OtpPolicy, OtpState } from '@/shared/domain';
 import { ResendOtpInterface } from '../ports/resend-otp.port';
 import {
-  CacheBaseRepoPort,
+  ICacheBaseRepo,
   GenerateOtpPort,
-  MailServicePort,
+  IMailService,
   passwordHasherPort,
 } from '../ports';
 import { FileLogger } from '@/shared/logger/file-logger';
@@ -14,10 +14,10 @@ import { Email } from '@/modules/user/domain';
 
 export class ResendOtpUsecae implements ResendOtpInterface {
   constructor(
-    private readonly _cachedRepository: CacheBaseRepoPort,
+    private readonly _cachedRepository: ICacheBaseRepo,
     private readonly _generateOtp: GenerateOtpPort,
     private readonly _otpHasher: passwordHasherPort,
-    private readonly _mailService: MailServicePort,
+    private readonly _mailService: IMailService,
     private readonly _logger: FileLogger,
   ) {}
   async execute(input: { id: string }): Promise<{ otpResendAt: Date }> {

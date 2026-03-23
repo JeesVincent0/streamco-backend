@@ -1,16 +1,14 @@
 import { Email } from '@/modules/user/domain/';
 import { UserRepositoryPort } from '@/modules/user/application';
-import {
-  type MailServicePort,
-  OtpServicePort,
-  PasswordHasherPort,
-} from '../../ports';
+import { type IMailService, IOtpService, IPasswordHasher } from '../../ports';
 import { OtpPolicy } from '@/shared/domain';
 import { GenerateOtpInput } from '../../inputs';
 import { UniqueIdService } from '@/shared/domain';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
-import { CacheBaseRepoPort } from '@/shared/application/ports';
+import { ICacheBaseRepo } from '@/shared/application/ports';
+import { IGenerateOtpUseCase } from '../../ports/usecase/generate-otp-usecase.port';
+import { GenerateOtpUsecaseOutPut } from '../../output/generate-otp.usecase.output';
 
 /*
  *
@@ -24,17 +22,17 @@ import { CacheBaseRepoPort } from '@/shared/application/ports';
  *
  */
 
-export class GenerateOtpUseCase {
+export class GenerateOtpUseCase implements IGenerateOtpUseCase {
   constructor(
-    private readonly _otpRepository: OtpServicePort,
+    private readonly _otpRepository: IOtpService,
     private readonly _userRepository: UserRepositoryPort,
-    private readonly _passwordHasher: PasswordHasherPort,
-    private readonly _cacheRepository: CacheBaseRepoPort,
-    private readonly _mailService: MailServicePort,
+    private readonly _passwordHasher: IPasswordHasher,
+    private readonly _cacheRepository: ICacheBaseRepo,
+    private readonly _mailService: IMailService,
     private readonly _logger: FileLogger,
   ) {}
 
-  async execute(input: GenerateOtpInput) {
+  async execute(input: GenerateOtpInput): Promise<GenerateOtpUsecaseOutPut> {
     const email = Email.create(input.email);
 
     // Checking if user existing with the email and if not existing throw error

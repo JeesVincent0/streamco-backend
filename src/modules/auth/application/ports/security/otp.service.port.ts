@@ -1,3 +1,3 @@
-export interface OtpServicePort {
+export interface IOtpService {
   generate(): number;
 }

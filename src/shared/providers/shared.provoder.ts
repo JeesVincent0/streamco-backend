@@ -1,13 +1,13 @@
 import {
-  CacheBaseRepoPort,
+  ICacheBaseRepo,
   GenerateOtpPort,
-  MailServicePort,
+  IMailService,
   passwordHasherPort,
 } from '../application/ports';
 import {
   CACHE_BASE_REPO_PORT,
   GENERATE_OTP_INTERFACE,
-  MAIL_SERVICE_PORT,
+  MAIL_SERVICE_PORT_TOKEN,
   PASSWORD_HASHER_PORT,
   RESEND_OTP_USE_CASE,
   SEND_OTP_USE_CASE,
@@ -26,10 +26,7 @@ import { FileLogger } from '../logger/file-logger';
 export const sharedProvider = [
   {
     provide: VERIFY_OTP_USE_CASE,
-    useFactory: (
-      cacheRepo: CacheBaseRepoPort,
-      otpHasher: passwordHasherPort,
-    ) => {
+    useFactory: (cacheRepo: ICacheBaseRepo, otpHasher: passwordHasherPort) => {
       return new VerifyOtpUseCase(cacheRepo, otpHasher);
     },
     inject: [CACHE_BASE_REPO_PORT, PASSWORD_HASHER_PORT],
@@ -40,8 +37,8 @@ export const sharedProvider = [
     useFactory: (
       generateOtp: GenerateOtpPort,
       otpHasher: passwordHasherPort,
-      cacheRepo: CacheBaseRepoPort,
-      sendOtp: MailServicePort,
+      cacheRepo: ICacheBaseRepo,
+      sendOtp: IMailService,
     ) => {
       return new SendOtpUseCase(generateOtp, otpHasher, cacheRepo, sendOtp);
     },
@@ -49,17 +46,17 @@ export const sharedProvider = [
       GENERATE_OTP_INTERFACE,
       PASSWORD_HASHER_PORT,
       CACHE_BASE_REPO_PORT,
-      MAIL_SERVICE_PORT,
+      MAIL_SERVICE_PORT_TOKEN,
     ],
   },
 
   {
     provide: RESEND_OTP_USE_CASE,
     useFactory: (
-      cacheRepo: CacheBaseRepoPort,
+      cacheRepo: ICacheBaseRepo,
       generateOtpPort: GenerateOtpPort,
       otpHasher: passwordHasherPort,
-      mailService: MailServicePort,
+      mailService: IMailService,
       logger: FileLogger,
     ) => {
       return new ResendOtpUsecae(
@@ -74,7 +71,7 @@ export const sharedProvider = [
       CACHE_BASE_REPO_PORT,
       GENERATE_OTP_INTERFACE,
       PASSWORD_HASHER_PORT,
-      MAIL_SERVICE_PORT,
+      MAIL_SERVICE_PORT_TOKEN,
       FileLogger,
     ],
   },
@@ -95,7 +92,7 @@ export const sharedProvider = [
   },
 
   {
-    provide: MAIL_SERVICE_PORT,
+    provide: MAIL_SERVICE_PORT_TOKEN,
     useClass: NodemailerService,
   },
 ];

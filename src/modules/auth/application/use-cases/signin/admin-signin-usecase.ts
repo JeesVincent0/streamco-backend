@@ -3,7 +3,7 @@ import { SigninInput } from '../../inputs';
 import { Email, Password, UserRole } from '@/modules/user/domain';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-import { PasswordHasherPort } from '../../ports';
+import { IPasswordHasher } from '../../ports';
 import { ResponseData, TokenPayload } from '@/modules/auth/domain';
 import { SCOPE } from '@/modules/auth-security/domain';
 import { FileLogger } from '@/shared/logger/file-logger';
@@ -13,7 +13,7 @@ import { GenerateTokenUseCase } from '../token/generate-token.usecase';
 export class AdminSigninUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
-    private readonly _passwordHashser: PasswordHasherPort,
+    private readonly _passwordHashser: IPasswordHasher,
     private readonly _generateTokenUseCase: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}

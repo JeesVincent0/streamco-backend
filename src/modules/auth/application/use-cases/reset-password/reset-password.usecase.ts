@@ -2,7 +2,7 @@ import { TOKEN_TYPE, VerifyPassword } from '@/modules/auth/domain';
 import { UserRepositoryPort } from '@/modules/user/application';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-import { PasswordHasherPort } from '../../ports';
+import { IPasswordHasher } from '../../ports';
 import { HashedPassword } from '@/modules/user/domain';
 import { TokenBlackListUseCase } from '../token';
 import { ResetPasswordInput } from '../../inputs';
@@ -12,7 +12,7 @@ import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 export class ResetPasswordUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
-    private readonly _passwordHasher: PasswordHasherPort,
+    private readonly _passwordHasher: IPasswordHasher,
     private readonly _tokenBlacklistUseCase: TokenBlackListUseCase,
     private readonly _logger: FileLogger,
   ) {}

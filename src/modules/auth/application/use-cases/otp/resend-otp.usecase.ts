@@ -1,26 +1,24 @@
 import { BadRequestError } from '@/shared/errors';
 import { OtpPolicy, OtpState } from '@/shared/domain';
-import {
-  MailServicePort,
-  OtpServicePort,
-  PasswordHasherPort,
-} from '../../ports';
+import { IMailService, IOtpService, IPasswordHasher } from '../../ports';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { Email } from '@/modules/user/domain';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
-import { CacheBaseRepoPort } from '@/shared/application/ports';
+import { ICacheBaseRepo } from '@/shared/application/ports';
+import { IResendOtpUseCase } from '../../ports/usecase/resend-otp-usecase.port';
+import { ResendOtpUseCaseOutPut } from '../../output';
 
-export class ResendOtpUseCase {
+export class ResendOtpUseCase implements IResendOtpUseCase {
   constructor(
-    private readonly _cachedRepository: CacheBaseRepoPort,
-    private readonly _otpService: OtpServicePort,
-    private readonly _otpHasher: PasswordHasherPort,
-    private readonly _mailService: MailServicePort,
+    private readonly _cachedRepository: ICacheBaseRepo,
+    private readonly _otpService: IOtpService,
+    private readonly _otpHasher: IPasswordHasher,
+    private readonly _mailService: IMailService,
     private readonly _logger: FileLogger,
   ) {}
 
-  async execute(input: { id: string }) {
+  async execute(input: { id: string }): Promise<ResendOtpUseCaseOutPut> {
     const cachedUser = await this._cachedRepository.get<OtpState>(input.id);
 
     if (!cachedUser) {

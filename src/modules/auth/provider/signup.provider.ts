@@ -10,29 +10,20 @@ import {
   GenerateOtpUseCase,
   GoogleAuthUseCase,
   RefreshTokenUseCase,
-  ResendOtpUseCase,
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
   TokenBlackListUseCase,
-  VerifyOtpUseCase,
   VerifyResetPasswordOtpUseCase,
 } from '../application/use-cases';
+
 import {
-  BcryptPasswordHasherImpl,
-  NodemailerService,
-  OtpGenerator,
-} from '../infrastructure';
-import {
-  AUTH_CACHED_USER_REPOSITORY_PORT,
-  MAIL_SERVICE,
-  MailServicePort,
-  OTP_SERVICE,
-  OtpServicePort,
-  PASSWORD_HASHER_PORT,
-  PasswordHasherPort,
+  PASSWORD_HASHER_PORT_TOKEN,
+  IPasswordHasher,
   REFRESH_TOKEN_REPOSITORY_PORT,
+  GENERATE_OTP_USE_CASE_TOKEN,
+  VERIFY_OTP_USE_CASE_TOKEN,
+  IVerifyOtpUseCase,
 } from '../application';
-import { RedisAuthCachedUserRepository } from '@/shared/infrastructure/cache/repositories/redis-auth-cached-user.repository';
 import { ResetPasswordUseCase } from '../application/use-cases/reset-password/reset-password.usecase';
 import { SigninUseCase } from '../application/use-cases/signin';
 import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
@@ -44,10 +35,9 @@ import {
 import { TokenServicePort } from '@/modules/auth-security/application/ports';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { GenerateTokenUseCase } from '../application/use-cases/token/generate-token.usecase';
-import { MonogodbRefreshTokenRepository } from '../infrastructure/repository';
 import { RefreshTokenPort } from '../application/ports/token';
 import { RefreshAccessTokenUseCase } from '../application/use-cases/token/refresh-accessp-token.usecase';
-import { CacheBaseRepoPort } from '@/shared/application/ports';
+import { ICacheBaseRepo } from '@/shared/application/ports';
 
 // user module tokens
 import {
@@ -138,7 +128,7 @@ export const signupProvider = [
     provide: AdminSigninUseCase,
     useFactory: (
       userRepo: UserRepositoryPort,
-      passwordHasher: PasswordHasherPort,
+      passwordHasher: IPasswordHasher,
       generateTokenUseCase: GenerateTokenUseCase,
       logger: FileLogger,
     ) => {
@@ -151,7 +141,7 @@ export const signupProvider = [
     },
     inject: [
       USER_REPOSITORY_PORT,
-      PASSWORD_HASHER_PORT,
+      PASSWORD_HASHER_PORT_TOKEN,
       GenerateTokenUseCase,
       FileLogger,
     ],
@@ -160,7 +150,7 @@ export const signupProvider = [
   {
     provide: TokenBlackListUseCase,
     useFactory: (
-      tokenBlacklistRepo: CacheBaseRepoPort,
+      tokenBlacklistRepo: ICacheBaseRepo,
       tokenService: TokenServicePort,
       logger: FileLogger,
     ) => {
@@ -177,7 +167,7 @@ export const signupProvider = [
     provide: SigninUseCase,
     useFactory: (
       userRepo: UserRepositoryPort,
-      passwordHasher: PasswordHasherPort,
+      passwordHasher: IPasswordHasher,
       generateTokenUseCase: GenerateTokenUseCase,
       logger: FileLogger,
     ) => {
@@ -190,7 +180,7 @@ export const signupProvider = [
     },
     inject: [
       USER_REPOSITORY_PORT,
-      PASSWORD_HASHER_PORT,
+      PASSWORD_HASHER_PORT_TOKEN,
       GenerateTokenUseCase,
       FileLogger,
     ],
@@ -200,7 +190,7 @@ export const signupProvider = [
     provide: ResetPasswordUseCase,
     useFactory: (
       userRepo: UserRepositoryPort,
-      passwordHasher: PasswordHasherPort,
+      passwordHasher: IPasswordHasher,
       tokenBlacklist: TokenBlackListUseCase,
       logger: FileLogger,
     ) => {
@@ -213,7 +203,7 @@ export const signupProvider = [
     },
     inject: [
       USER_REPOSITORY_PORT,
-      PASSWORD_HASHER_PORT,
+      PASSWORD_HASHER_PORT_TOKEN,
       TokenBlackListUseCase,
       FileLogger,
     ],
@@ -222,19 +212,19 @@ export const signupProvider = [
   {
     provide: VerifyResetPasswordOtpUseCase,
     useFactory: (
-      verifyOtp: VerifyOtpUseCase,
+      verifyOtp: IVerifyOtpUseCase,
       tokenService: TokenServicePort,
     ) => {
       return new VerifyResetPasswordOtpUseCase(verifyOtp, tokenService);
     },
-    inject: [VerifyOtpUseCase, TOKEN_SERVICE],
+    inject: [VERIFY_OTP_USE_CASE_TOKEN, TOKEN_SERVICE],
   },
 
   {
     provide: SignupNormalUserUseCase,
     useFactory: (
       createNormalUser: ICreateNormalUserUseCase,
-      passwordHasher: PasswordHasherPort,
+      passwordHasher: IPasswordHasher,
       generateOtpUseCase: GenerateOtpUseCase,
     ) => {
       return new SignupNormalUserUseCase(
@@ -245,63 +235,8 @@ export const signupProvider = [
     },
     inject: [
       CREATE_USER_USE_CASE_TOKEN,
-      PASSWORD_HASHER_PORT,
-      GenerateOtpUseCase,
-    ],
-  },
-
-  {
-    provide: ResendOtpUseCase,
-    useFactory: (
-      cachedRepo: CacheBaseRepoPort,
-      otpService: OtpServicePort,
-      otpHasher: PasswordHasherPort,
-      mailService: MailServicePort,
-      logger: FileLogger,
-    ) => {
-      return new ResendOtpUseCase(
-        cachedRepo,
-        otpService,
-        otpHasher,
-        mailService,
-        logger,
-      );
-    },
-    inject: [
-      AUTH_CACHED_USER_REPOSITORY_PORT,
-      OTP_SERVICE,
-      PASSWORD_HASHER_PORT,
-      MAIL_SERVICE,
-      FileLogger,
-    ],
-  },
-
-  {
-    provide: GenerateOtpUseCase,
-    useFactory: (
-      otpService: OtpServicePort,
-      userRepo: UserRepositoryPort,
-      passwordHasher: PasswordHasherPort,
-      cacheRepo: CacheBaseRepoPort,
-      mailService: MailServicePort,
-      logger: FileLogger,
-    ) => {
-      return new GenerateOtpUseCase(
-        otpService,
-        userRepo,
-        passwordHasher,
-        cacheRepo,
-        mailService,
-        logger,
-      );
-    },
-    inject: [
-      OTP_SERVICE,
-      USER_REPOSITORY_PORT,
-      PASSWORD_HASHER_PORT,
-      AUTH_CACHED_USER_REPOSITORY_PORT,
-      MAIL_SERVICE,
-      FileLogger,
+      PASSWORD_HASHER_PORT_TOKEN,
+      GENERATE_OTP_USE_CASE_TOKEN,
     ],
   },
 
@@ -309,7 +244,7 @@ export const signupProvider = [
     provide: ConfirmSignupUserUseCase,
     useFactory: (
       userRepo: UserRepositoryPort,
-      verifyOtpUseCase: VerifyOtpUseCase,
+      verifyOtpUseCase: IVerifyOtpUseCase,
       generateTokenUseCase: GenerateTokenUseCase,
       logger: FileLogger,
     ) => {
@@ -322,28 +257,17 @@ export const signupProvider = [
     },
     inject: [
       USER_REPOSITORY_PORT,
-      VerifyOtpUseCase,
+      VERIFY_OTP_USE_CASE_TOKEN,
       GenerateTokenUseCase,
       FileLogger,
     ],
   },
 
   {
-    provide: VerifyOtpUseCase,
-    useFactory: (
-      cacheRepo: CacheBaseRepoPort,
-      otpHasher: PasswordHasherPort,
-    ) => {
-      return new VerifyOtpUseCase(cacheRepo, otpHasher);
-    },
-    inject: [AUTH_CACHED_USER_REPOSITORY_PORT, PASSWORD_HASHER_PORT],
-  },
-
-  {
     provide: SignupAdvertiserUseCase,
     useFactory: (
       createAdvertiserUser: ICreateAdvertiserUserUseCase,
-      passwordHasher: PasswordHasherPort,
+      passwordHasher: IPasswordHasher,
       generateOtp: GenerateOtpUseCase,
     ) => {
       return new SignupAdvertiserUseCase(
@@ -354,33 +278,8 @@ export const signupProvider = [
     },
     inject: [
       CREATE_ADVERTISER_USE_CASE_TOKEN,
-      PASSWORD_HASHER_PORT,
-      GenerateOtpUseCase,
+      PASSWORD_HASHER_PORT_TOKEN,
+      GENERATE_OTP_USE_CASE_TOKEN,
     ],
-  },
-
-  {
-    provide: PASSWORD_HASHER_PORT,
-    useClass: BcryptPasswordHasherImpl,
-  },
-
-  {
-    provide: OTP_SERVICE,
-    useClass: OtpGenerator,
-  },
-
-  {
-    provide: AUTH_CACHED_USER_REPOSITORY_PORT,
-    useClass: RedisAuthCachedUserRepository,
-  },
-
-  {
-    provide: MAIL_SERVICE,
-    useClass: NodemailerService,
-  },
-
-  {
-    provide: REFRESH_TOKEN_REPOSITORY_PORT,
-    useClass: MonogodbRefreshTokenRepository,
   },
 ];

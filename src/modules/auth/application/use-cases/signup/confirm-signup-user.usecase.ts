@@ -1,6 +1,5 @@
 import { UserRepositoryPort } from '@/modules/user/application/ports';
 import { ConfirmRegistrationInput } from '../../inputs';
-import { VerifyOtpUseCase } from '../otp/verify-otp.usecase';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
 import { Email } from '@/modules/user/domain/value-objects';
 import { ResponseData, TokenPayload } from '@/modules/auth/domain';
@@ -9,6 +8,7 @@ import { FileLogger } from '@/shared/logger/file-logger';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { GenerateTokenUseCase } from '../token/generate-token.usecase';
+import { IVerifyOtpUseCase } from '../../ports';
 
 /*
  *
@@ -24,7 +24,7 @@ import { GenerateTokenUseCase } from '../token/generate-token.usecase';
 export class ConfirmSignupUserUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
-    private readonly _verifyOtpUseCase: VerifyOtpUseCase,
+    private readonly _verifyOtpUseCase: IVerifyOtpUseCase,
     private readonly _generateTokenUseCase: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}

@@ -18,6 +18,8 @@ import { AuthSecurityModule } from '../auth-security/auth-security.module';
 import { RefreshTokenSchema } from './infrastructure/schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RefreshTokenController } from './presentation/controller/refresh-token.controller';
+import { infraProviders } from './provider/infra.providers';
+import { otpProviders } from './provider/otp.providers';
 
 @Module({
   imports: [
@@ -40,6 +42,12 @@ import { RefreshTokenController } from './presentation/controller/refresh-token.
     GoogleAuthController,
     RefreshTokenController,
   ],
-  providers: [...signupProvider, GoogleStrategy, GoogleAuthGuard],
+  providers: [
+    ...infraProviders,
+    ...otpProviders,
+    ...signupProvider,
+    GoogleStrategy,
+    GoogleAuthGuard,
+  ],
 })
 export class AuthModule {}

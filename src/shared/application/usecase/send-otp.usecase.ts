@@ -1,7 +1,7 @@
 import { Email } from '@/modules/user/domain';
 import {
-  CacheBaseRepoPort,
-  MailServicePort,
+  ICacheBaseRepo,
+  IMailService,
   passwordHasherPort,
   SendOtpInterface,
   GenerateOtpPort,
@@ -13,8 +13,8 @@ export class SendOtpUseCase implements SendOtpInterface {
   constructor(
     private readonly _generateOtp: GenerateOtpPort,
     private readonly _otpHasher: passwordHasherPort,
-    private readonly _cacheRepo: CacheBaseRepoPort,
-    private readonly _sendOtp: MailServicePort,
+    private readonly _cacheRepo: ICacheBaseRepo,
+    private readonly _sendOtp: IMailService,
   ) {}
   async execute(
     id: string,

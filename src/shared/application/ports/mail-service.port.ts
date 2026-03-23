@@ -1,5 +1,5 @@
 import { Email } from '@/modules/user/domain';
 
-export interface MailServicePort {
+export interface IMailService {
   execute(email: Email, otp: number): Promise<void>;
 }

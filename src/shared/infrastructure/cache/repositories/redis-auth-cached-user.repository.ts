@@ -1,11 +1,11 @@
 import { Global, Injectable } from '@nestjs/common';
 import { RedisService } from '../redis.service';
 import { FileLogger } from '@/shared/logger/file-logger';
-import { CacheBaseRepoPort } from '@/shared/application/ports';
+import { ICacheBaseRepo } from '@/shared/application/ports';
 
 @Global()
 @Injectable()
-export class RedisAuthCachedUserRepository implements CacheBaseRepoPort {
+export class RedisAuthCachedUserRepository implements ICacheBaseRepo {
   constructor(
     private readonly redisService: RedisService,
     private readonly _logger: FileLogger,

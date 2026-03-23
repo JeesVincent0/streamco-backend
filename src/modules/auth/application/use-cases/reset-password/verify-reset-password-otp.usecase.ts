@@ -1,12 +1,12 @@
 import { OtpPurpose } from '@/modules/auth/domain';
-import { VerifyOtpUseCase } from '../otp';
 import { UniqueIdService } from '@/shared/domain';
 import { TokenServicePort } from '@/modules/auth-security/application';
 import { VerifyResetPasswordOtpInput } from '../../inputs';
+import { IVerifyOtpUseCase } from '../../ports';
 
 export class VerifyResetPasswordOtpUseCase {
   constructor(
-    private readonly _verifyOtpUseCase: VerifyOtpUseCase,
+    private readonly _verifyOtpUseCase: IVerifyOtpUseCase,
     private readonly _tokenService: TokenServicePort,
   ) {}
 

@@ -7,7 +7,7 @@ import {
 import { TokenServicePort } from '@/modules/auth-security/application';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
-import { CacheBaseRepoPort } from '@/shared/application/ports';
+import { ICacheBaseRepo } from '@/shared/application/ports';
 
 /*
   This use case is responsible for blacklisting tokens. 
@@ -22,7 +22,7 @@ import { CacheBaseRepoPort } from '@/shared/application/ports';
 
 export class TokenBlackListUseCase {
   constructor(
-    private readonly _tokenBlacklistRepo: CacheBaseRepoPort,
+    private readonly _tokenBlacklistRepo: ICacheBaseRepo,
     private readonly _tokenService: TokenServicePort,
     private readonly _logger: FileLogger,
   ) {}

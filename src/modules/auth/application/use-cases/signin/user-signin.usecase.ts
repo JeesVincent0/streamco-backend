@@ -2,7 +2,7 @@ import { Email, HashedPassword } from '@/modules/user/domain/value-objects';
 import { SigninInput } from '../../inputs';
 import { UserRepositoryPort } from '@/modules/user/application';
 import { BadRequestError } from '@/shared/errors';
-import { PasswordHasherPort } from '../../ports';
+import { IPasswordHasher } from '../../ports';
 import { ResponseData } from '../../../domain/service/signin-reposnse';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { TokenPayload } from '@/modules/auth/domain';
@@ -14,7 +14,7 @@ import { GenerateTokenUseCase } from '../token/generate-token.usecase';
 export class SigninUseCase {
   constructor(
     private _userRepository: UserRepositoryPort,
-    private readonly _passwordHasher: PasswordHasherPort,
+    private readonly _passwordHasher: IPasswordHasher,
     private readonly _tokenGenerator: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
