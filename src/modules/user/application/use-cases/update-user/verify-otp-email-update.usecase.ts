@@ -2,14 +2,14 @@ import { VerifyOtpInput } from '@/shared/application/input';
 import { VerifyOtpInterface } from '@/shared/application/ports';
 import { SucceessResType } from '@/shared/types/success-res.type';
 import {
-  IUpdateUserEmailUseCase,
+  IUpdateUserEmailRepo,
   IVerifyOtpEmailUpdateUseCase,
 } from '../../ports';
 
 export class VerifyOtpEmailUpdateUseCase implements IVerifyOtpEmailUpdateUseCase {
   constructor(
     private readonly _verifyOtp: VerifyOtpInterface,
-    private readonly _updateEmailRepo: IUpdateUserEmailUseCase,
+    private readonly _updateEmailRepo: IUpdateUserEmailRepo,
   ) {}
   async execute(input: VerifyOtpInput): Promise<SucceessResType> {
     const { email } = await this._verifyOtp.execute({

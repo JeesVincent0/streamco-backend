@@ -1,5 +1,5 @@
 import { UpdateUserEmailInput } from '../../inputs/update-user';
 
-export interface UpdateUserEmailPort {
+export interface IUpdateUserEmailRepo {
   execute(input: UpdateUserEmailInput): Promise<void>;
 }

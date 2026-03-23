@@ -6,18 +6,15 @@ import {
   CreateNormalUserUseCase,
   CreateAdvertiserUserUseCase,
   UserRepositoryPort,
-  GET_ALL_USERS_PORT,
   GetUserProfileUseCase,
-  UPDATE_USER_BASIC_PORT,
   UPDATE_USER_EMAIL_PORT,
-  CHECK_USER_EXISTS_PORT,
-  CheckUserExistsPort,
-  IUpdateUserEmailUseCase,
+  ICheckUserExists,
+  IUpdateUserBasicRepo,
+  IUpdateUserEmailRepo,
 } from '../application';
 import { CreateUserWithGoogleAuthUseCase } from '../application';
 import { GetBaseUserUseCase } from '../application/use-cases/get-user/get-base-user.usecase';
 import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
-import { GetAllUsersRepository } from '../infrastructure/repositories/get-all-users.impl';
 import { FileLogger } from '@/shared/logger/file-logger';
 import {
   UpdateUserBasicUseCase,
@@ -30,7 +27,6 @@ import {
   UpdateUserBasicImplMonogoRepository,
   UpdateUserEmailImplMonogoRepository,
 } from '../infrastructure';
-import type { UpdateUserBasicPort } from '../application/ports/repository/update-user-basic.port';
 import {
   SEND_OTP_USE_CASE,
   VERIFY_OTP_USE_CASE,
@@ -44,6 +40,7 @@ import { UpdateUserAvatarUlrUsecase } from '../application/use-cases/update-user
 // tokens
 import {
   CREATE_USER_USE_CASE_TOKEN,
+  CHECK_USER_EXISTS_REPO_TOKEN,
   GET_BASE_USER_USE_CASE_TOKEN,
   GET_USER_PROFILE_USE_CASE_TOKEN,
   CREATE_ADVERTISER_USE_CASE_TOKEN,
@@ -53,6 +50,7 @@ import {
   VERIFY_OTP_EMAIL_UPDATE_USE_CASE_TOKEN,
   UPDATE_USER_SOCIAL_LINKS_USE_CASE_TOKEN,
   CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
+  UPDATE_USER_BASIC_REPO_TOKEN,
 } from '../application/user.tokens';
 
 /*
@@ -80,7 +78,7 @@ export const userProviders = [
     provide: VERIFY_OTP_EMAIL_UPDATE_USE_CASE_TOKEN,
     useFactory: (
       verifyOtp: VerifyOtpInterface,
-      updateUserEmail: IUpdateUserEmailUseCase,
+      updateUserEmail: IUpdateUserEmailRepo,
     ) => {
       return new VerifyOtpEmailUpdateUseCase(verifyOtp, updateUserEmail);
     },
@@ -122,11 +120,6 @@ export const userProviders = [
   },
 
   {
-    provide: GET_ALL_USERS_PORT,
-    useClass: GetAllUsersRepository,
-  },
-
-  {
     provide: GET_USER_PROFILE_USE_CASE_TOKEN,
     useFactory: (userRepo: UserRepositoryPort, logger: FileLogger) => {
       return new GetUserProfileUseCase(userRepo, logger);
@@ -137,25 +130,25 @@ export const userProviders = [
   {
     provide: UPDATE_USER_EMAIL_USE_CASE_TOKEN,
     useFactory: (
-      checkUserExists: CheckUserExistsPort,
+      checkUserExists: ICheckUserExists,
       sendOtp: SendOtpInterface,
       logger: FileLogger,
     ) => {
       return new UpdateUserEmailUseCase(checkUserExists, sendOtp, logger);
     },
-    inject: [CHECK_USER_EXISTS_PORT, SEND_OTP_USE_CASE, FileLogger],
+    inject: [CHECK_USER_EXISTS_REPO_TOKEN, SEND_OTP_USE_CASE, FileLogger],
   },
 
   {
     provide: UPDATE_USER_BASIC_USE_CASE_TOKEN,
-    useFactory: (updateUserBasicPort: UpdateUserBasicPort) => {
+    useFactory: (updateUserBasicPort: IUpdateUserBasicRepo) => {
       return new UpdateUserBasicUseCase(updateUserBasicPort);
     },
-    inject: [UPDATE_USER_BASIC_PORT],
+    inject: [UPDATE_USER_BASIC_REPO_TOKEN],
   },
 
   {
-    provide: UPDATE_USER_BASIC_PORT,
+    provide: UPDATE_USER_BASIC_REPO_TOKEN,
     useClass: UpdateUserBasicImplMonogoRepository,
   },
 
@@ -165,7 +158,7 @@ export const userProviders = [
   },
 
   {
-    provide: CHECK_USER_EXISTS_PORT,
+    provide: CHECK_USER_EXISTS_REPO_TOKEN,
     useClass: CheckUserExistsImplMongoRepository,
   },
 ];

@@ -1,6 +1,6 @@
 import { GetChannelsInput } from '../inputs/get-channels.input';
 import { GetChannelsOutput } from '../output';
 
-export interface GetChannelsPort {
+export interface IGetChannelsUseCase {
   execute(input: GetChannelsInput): Promise<GetChannelsOutput>;
 }

@@ -1,10 +1,10 @@
-import { CheckUserExistsPort } from '../../application';
+import { ICheckUserExists } from '../../application';
 import { Email } from '../../domain';
 import { Model } from 'mongoose';
 import { BaseUserDocument } from '../schemas';
 import { InjectModel } from '@nestjs/mongoose';
 
-export class CheckUserExistsImplMongoRepository implements CheckUserExistsPort {
+export class CheckUserExistsImplMongoRepository implements ICheckUserExists {
   constructor(
     @InjectModel('User') private readonly _userRepo: Model<BaseUserDocument>,
   ) {}

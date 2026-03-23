@@ -1,5 +1,5 @@
 import { UpdateUserBasicInput } from '../../application/inputs/update-user';
-import { UpdateUserBasicPort } from '../../application/ports/repository/update-user-basic.port';
+import { IUpdateUserBasicRepo } from '../../application/ports/repository/';
 import { Model } from 'mongoose';
 import { UserDocument } from '../schemas';
 import { UpdateUserBasicMapper } from '../mappers';
@@ -10,7 +10,7 @@ import { InjectModel } from '@nestjs/mongoose';
  * This class is responsible for updating basic user information in the database.
  */
 
-export class UpdateUserBasicImplMonogoRepository implements UpdateUserBasicPort {
+export class UpdateUserBasicImplMonogoRepository implements IUpdateUserBasicRepo {
   constructor(
     @InjectModel('User')
     private readonly _userModel: Model<UserDocument>,

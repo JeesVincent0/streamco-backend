@@ -1,18 +1,18 @@
 import { SucceessResType } from '@/shared/types/success-res.type';
 import { CreateChannelInput } from '../inputs';
 import type {
-  ChannelRepoPort,
-  CreateChannelPort,
-  UpdateChannelImagesPort,
+  IChannelRepo,
+  ICreateChannelUseCase,
+  IUpdateChannelImageUsecase,
 } from '../ports';
 import { Channel } from '../../domain/entity';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
-export class CreateChannelUsecase implements CreateChannelPort {
+export class CreateChannelUsecase implements ICreateChannelUseCase {
   constructor(
-    private readonly _updateImages: UpdateChannelImagesPort,
-    private readonly _channelRepo: ChannelRepoPort,
+    private readonly _updateImages: IUpdateChannelImageUsecase,
+    private readonly _channelRepo: IChannelRepo,
   ) {}
   async execute(input: CreateChannelInput): Promise<SucceessResType> {
     const channel = await this._channelRepo.findByChannelId(input.channelId);

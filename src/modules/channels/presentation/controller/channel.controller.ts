@@ -12,8 +12,8 @@ import {
 } from '@nestjs/common';
 import { CreateChannelDto, GetChannelsQueryDto } from '../dto';
 import type {
-  CreateChannelPort,
-  GetChannelsPort,
+  ICreateChannelUseCase,
+  IGetChannelsUseCase,
 } from '../../application/ports';
 import {
   AccessTokenGuard,
@@ -22,8 +22,8 @@ import {
 } from '@/modules/auth-security/presentation';
 import { SCOPE } from '@/modules/auth-security/domain';
 import {
-  CREATE_CHANNEL_USE_CASE,
-  GET_CHANNELS_PORT,
+  CREATE_CHANNEL_USE_CASE_TOKEN,
+  GET_CHANNELS_USE_CASE_TOKEN,
 } from '../../application/token';
 import { type RequestWithUserInterface } from '@/shared/interfaces';
 
@@ -31,11 +31,11 @@ import { type RequestWithUserInterface } from '@/shared/interfaces';
 @UseGuards(AccessTokenGuard, ScopeGuard)
 export class ChannelController {
   constructor(
-    @Inject(CREATE_CHANNEL_USE_CASE)
-    private readonly _createChannelUseCase: CreateChannelPort,
+    @Inject(CREATE_CHANNEL_USE_CASE_TOKEN)
+    private readonly _createChannelUseCase: ICreateChannelUseCase,
 
-    @Inject(GET_CHANNELS_PORT)
-    private readonly _getChannelsUseCase: GetChannelsPort,
+    @Inject(GET_CHANNELS_USE_CASE_TOKEN)
+    private readonly _getChannelsUseCase: IGetChannelsUseCase,
   ) {}
 
   @Post('create')

@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import { Channel } from '../../domain/entity';
 import {
   ChannelFilterParams,
-  ChannelRepoPort,
+  IChannelRepo,
   PaginatedChannelsResult,
 } from '../../application/ports';
 import { ChannelDocument } from '../schema';
@@ -11,7 +11,7 @@ import { ChannelMapper } from '../mappers/channel.mappers';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ChannelRepository implements ChannelRepoPort {
+export class ChannelRepository implements IChannelRepo {
   constructor(
     @InjectModel('Channel')
     private readonly _channelModel: Model<ChannelDocument>,

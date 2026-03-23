@@ -1,11 +1,11 @@
 // application/usecase/get-channels.usecase.ts
 import { GetChannelsInput } from '../inputs/get-channels.input';
 import { GetChannelsOutput } from '../output';
-import { ChannelRepoPort, GetChannelsPort } from '../ports';
+import { IChannelRepo, IGetChannelsUseCase } from '../ports';
 import { ChannelMapper } from '../../infrastructure/mappers/channel.mappers';
 
-export class GetChannelsUsecase implements GetChannelsPort {
-  constructor(private readonly _channelRepo: ChannelRepoPort) {}
+export class GetChannelsUsecase implements IGetChannelsUseCase {
+  constructor(private readonly _channelRepo: IChannelRepo) {}
 
   async execute(input: GetChannelsInput): Promise<GetChannelsOutput> {
     const { page, limit, search, userId } = input;

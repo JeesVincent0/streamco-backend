@@ -34,3 +34,6 @@ export const UPDATE_USER_SOCIAL_LINKS_USE_CASE_TOKEN = Symbol(
 export const VERIFY_OTP_EMAIL_UPDATE_USE_CASE_TOKEN = Symbol(
   'IVerifyOtpEmailUpdateUseCase',
 );
+
+export const CHECK_USER_EXISTS_REPO_TOKEN = Symbol('ICheckUserExits');
+export const UPDATE_USER_BASIC_REPO_TOKEN = Symbol('IUpdateUserBasicRepo');

@@ -1,10 +1,10 @@
-import { S3Service } from '@/shared/infrastructure/storage';
 import { UpdateChannelImagesInput } from '../inputs';
-import { UpdateChannelImagesPort } from '../ports';
+import { IUpdateChannelImageUsecase } from '../ports';
 import { UpdateChannelImagesOutput } from '../output';
+import { IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
 
-export class UpdateChannelImageUsecase implements UpdateChannelImagesPort {
-  constructor(private readonly _s3Service: S3Service) {}
+export class UpdateChannelImageUsecase implements IUpdateChannelImageUsecase {
+  constructor(private readonly _s3Service: IStorageService) {}
 
   async execute(
     input: UpdateChannelImagesInput,

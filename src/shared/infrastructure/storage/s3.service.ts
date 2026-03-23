@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { IStorageService } from './storage-service.port';
 
 @Injectable()
-export class S3Service {
+export class S3Service implements IStorageService {
   private readonly client: S3Client;
 
   constructor() {

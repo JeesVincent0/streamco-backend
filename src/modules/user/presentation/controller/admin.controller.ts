@@ -36,7 +36,6 @@ export class AdminController {
 
     @Inject(UPDATE_USER_STATUS_USE_CASE_TOKEN)
     private readonly _updateUserStatusUseCase: IUpdateUserStatusUseCase,
-    // private readonly _getUserByIdUseCase: GetUserByIdUseCase,
   ) {}
 
   // Endpoint to get all users with pagination, filtering, and sorting options
@@ -66,11 +65,4 @@ export class AdminController {
   ) {
     return await this._updateUserStatusUseCase.execute(id, body.status);
   }
-
-  //   @Get(':id')
-  //   @HttpCode(HttpStatus.OK)
-  //   @Scopes(SCOPE.ADMIN_READ)
-  //   getUserById(@Param('id') id: string) {
-  //     return this._getUserByIdUseCase.execute(id);
-  //   }
 }

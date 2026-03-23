@@ -1,5 +1,5 @@
 import { Email } from '@/modules/user/domain';
 
-export interface CheckUserExistsPort {
+export interface ICheckUserExists {
   execute(email: Email, excludeUserId: string): Promise<boolean>;
 }
