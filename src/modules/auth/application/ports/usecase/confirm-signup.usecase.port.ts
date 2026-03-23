@@ -1,6 +1,6 @@
 import { ConfirmRegistrationInput } from '../../inputs';
-import { ConfirmSignupUseCaseOutPut } from '../../output';
+import { SigninUseCaseOutPut } from '../../output';
 
 export interface IConfirmSignupUserUseCase {
-  execute(input: ConfirmRegistrationInput): Promise<ConfirmSignupUseCaseOutPut>;
+  execute(input: ConfirmRegistrationInput): Promise<SigninUseCaseOutPut>;
 }

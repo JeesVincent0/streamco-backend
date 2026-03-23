@@ -27,6 +27,8 @@ import {
   SIGNOUT_USE_CASE_TOKEN,
   SIGNUP_ADVERTISER_USE_CASE_TOKEN,
   SIGNUP_NORMAL_USER_USE_CASE_TOKEN,
+  ADMIN_SIGNIN_USE_CASE_TOKEN,
+  SIGNIN_USE_CASE_TOKEN,
 } from '../application';
 import { SigninUseCase } from '../application/use-cases/signin';
 import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
@@ -128,7 +130,7 @@ export const signupProvider = [
   },
 
   {
-    provide: AdminSigninUseCase,
+    provide: ADMIN_SIGNIN_USE_CASE_TOKEN,
     useFactory: (
       userRepo: UserRepositoryPort,
       passwordHasher: IPasswordHasher,
@@ -167,7 +169,7 @@ export const signupProvider = [
   },
 
   {
-    provide: SigninUseCase,
+    provide: SIGNIN_USE_CASE_TOKEN,
     useFactory: (
       userRepo: UserRepositoryPort,
       passwordHasher: IPasswordHasher,

@@ -1,6 +1,6 @@
 import { UserRole } from '@/modules/user/domain';
 
-export interface ConfirmSignupUseCaseOutPut {
+export interface SigninUseCaseOutPut {
   accessToken: string;
   refreshToken: string;
   responseData: {

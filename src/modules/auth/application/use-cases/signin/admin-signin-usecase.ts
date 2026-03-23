@@ -3,21 +3,22 @@ import { SigninInput } from '../../inputs';
 import { Email, Password, UserRole } from '@/modules/user/domain';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-import { IPasswordHasher } from '../../ports';
+import { IAdminSigninUseCase, IPasswordHasher } from '../../ports';
 import { ResponseData, TokenPayload } from '@/modules/auth/domain';
 import { SCOPE } from '@/modules/auth-security/domain';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { GenerateTokenUseCase } from '../token/generate-token.usecase';
+import { SigninUseCaseOutPut } from '../../output';
 
-export class AdminSigninUseCase {
+export class AdminSigninUseCase implements IAdminSigninUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _passwordHashser: IPasswordHasher,
     private readonly _generateTokenUseCase: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
-  async execute(input: SigninInput) {
+  async execute(input: SigninInput): Promise<SigninUseCaseOutPut> {
     const email = Email.create(input.email);
     const password = Password.create(input.password);
 

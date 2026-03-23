@@ -9,7 +9,7 @@ import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { GenerateTokenUseCase } from '../token/generate-token.usecase';
 import { IConfirmSignupUserUseCase, IVerifyOtpUseCase } from '../../ports';
-import { ConfirmSignupUseCaseOutPut } from '../../output';
+import { SigninUseCaseOutPut } from '../../output';
 
 /*
  *
@@ -29,9 +29,7 @@ export class ConfirmSignupUserUseCase implements IConfirmSignupUserUseCase {
     private readonly _generateTokenUseCase: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
-  async execute(
-    input: ConfirmRegistrationInput,
-  ): Promise<ConfirmSignupUseCaseOutPut> {
+  async execute(input: ConfirmRegistrationInput): Promise<SigninUseCaseOutPut> {
     // Verifying the OTP provided by the user
     const result = await this._verifyOtpUseCase.execute({
       id: input.id,

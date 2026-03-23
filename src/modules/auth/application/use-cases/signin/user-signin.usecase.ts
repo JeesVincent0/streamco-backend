@@ -2,7 +2,7 @@ import { Email, HashedPassword } from '@/modules/user/domain/value-objects';
 import { SigninInput } from '../../inputs';
 import { UserRepositoryPort } from '@/modules/user/application';
 import { BadRequestError } from '@/shared/errors';
-import { IPasswordHasher } from '../../ports';
+import { IPasswordHasher, ISigninUseCase } from '../../ports';
 import { ResponseData } from '../../../domain/service/signin-reposnse';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { TokenPayload } from '@/modules/auth/domain';
@@ -10,8 +10,9 @@ import { SCOPE } from '@/modules/auth-security/domain';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { GenerateTokenUseCase } from '../token/generate-token.usecase';
+import { SigninUseCaseOutPut } from '../../output';
 
-export class SigninUseCase {
+export class SigninUseCase implements ISigninUseCase {
   constructor(
     private _userRepository: UserRepositoryPort,
     private readonly _passwordHasher: IPasswordHasher,
@@ -19,7 +20,7 @@ export class SigninUseCase {
     private readonly _logger: FileLogger,
   ) {}
 
-  async execute(input: SigninInput) {
+  async execute(input: SigninInput): Promise<SigninUseCaseOutPut> {
     const email = Email.create(input.email);
 
     const existingUser = await this._userRepository.findByEmail(email);

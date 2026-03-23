@@ -18,13 +18,13 @@ import {
 
 import { type Response } from 'express';
 import { type RequestWithUserInterface } from '../interfaces';
-import { SigninUseCase } from '../../application/use-cases/signin';
 import { AccessTokenGuard } from '@/modules/auth-security/presentation';
 import { AccessTokenPayload } from '@/modules/auth-security/application/types';
-import { AdminSigninUseCase } from '../../application/use-cases/signin/admin-signin-usecase';
 
 import {
+  SIGNIN_USE_CASE_TOKEN,
   SIGNOUT_USE_CASE_TOKEN,
+  ADMIN_SIGNIN_USE_CASE_TOKEN,
   CONFIRM_SIGNUP_USE_CASE_TOKEN,
   SIGNUP_ADVERTISER_USE_CASE_TOKEN,
   SIGNUP_NORMAL_USER_USE_CASE_TOKEN,
@@ -32,6 +32,8 @@ import {
   type IConfirmSignupUserUseCase,
   type ISignupAdvertiserUseCase,
   type ISignupNormalUserUseCase,
+  type IAdminSigninUseCase,
+  type ISigninUseCase,
 } from '../../application';
 
 // Controller for handling registration
@@ -44,7 +46,8 @@ import {
 @Controller('auth')
 export class RegistrationController {
   constructor(
-    private readonly _signinUseCase: SigninUseCase,
+    @Inject(SIGNIN_USE_CASE_TOKEN)
+    private readonly _signinUseCase: ISigninUseCase,
 
     @Inject(SIGNUP_NORMAL_USER_USE_CASE_TOKEN)
     private readonly _signupNormalUserUseCase: ISignupNormalUserUseCase,
@@ -54,7 +57,9 @@ export class RegistrationController {
 
     @Inject(CONFIRM_SIGNUP_USE_CASE_TOKEN)
     private readonly _confirmSignupUserUseCase: IConfirmSignupUserUseCase,
-    private readonly _adminSigninUseCase: AdminSigninUseCase,
+
+    @Inject(ADMIN_SIGNIN_USE_CASE_TOKEN)
+    private readonly _adminSigninUseCase: IAdminSigninUseCase,
 
     @Inject(SIGNOUT_USE_CASE_TOKEN)
     private readonly _signoutUseCase: ISignoutUseCase,
