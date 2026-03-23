@@ -3,12 +3,12 @@ import { InjectModel } from '@nestjs/mongoose';
 
 // Adjust these imports based on your exact file structure
 import { GetCategoriesDto } from '@/modules/category/presentation/dto';
-import { CategoriesQueryPort } from '@/modules/category/application/ports';
+import { ICategoriesQuery } from '@/modules/category/application/ports';
 import { Category } from '@/modules/category/domain/entity';
 import { CategoryDocument } from '@/modules/category/infrastructure/schema';
 import { CategoriesOuput } from '@/modules/category/application/output';
 
-export class GetAllCategoriesRepository implements CategoriesQueryPort {
+export class GetAllCategoriesRepository implements ICategoriesQuery {
   constructor(
     @InjectModel('Categories')
     private readonly _categoryModel: Model<CategoryDocument>,

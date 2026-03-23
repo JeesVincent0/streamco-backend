@@ -1,7 +1,7 @@
-export const CREATE_CATEGORY_USE_CASE = Symbol('CREATE_CATEGORY_USE_CASE');
-export const CATEGORY_REPO_PORT = Symbol('CATEGORY_REPO_PORT');
-export const GET_CATEGORIES_USE_CASE = Symbol('GET_CATEGORIES_USE_CASE');
-export const GET_CATEGORIES_QUERY_PORT = Symbol('GET_CATEGORIES_QUERY_PORT');
-export const UPDATE_CATEGORY_STATUS_USE_CASE = Symbol(
-  'UPDATE_CATEGORY_STATUS_USE_CASE',
+export const GET_CATEGORIES_QUERY_TOKEN = Symbol('ICategoriesQuery');
+export const CATEGORY_REPO_TOKEN = Symbol('ICategoryRepo');
+export const CREATE_CATEGORY_USE_CASE_TOKEN = Symbol('ICreateCategoryUasecase');
+export const GET_CATEGORIES_USE_CASE_TOKEN = Symbol('IGetCategoriesUsecase');
+export const UPDATE_CATEGORY_STATUS_USE_CASE_TOKEN = Symbol(
+  'IUpdateCategoryStatusUsecase',
 );

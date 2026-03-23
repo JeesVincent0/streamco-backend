@@ -1,12 +1,12 @@
 import { SucceessResType } from '@/shared/types/success-res.type';
 import { UpdateCategoryStatusInput } from '../inputs/update-category.input';
-import { UpdateCategoryStatusPort } from '../ports';
-import type { CategoryRepoPort } from '../ports/category-repository.port';
+import { IUpdateCategoryStatusUsecase } from '../ports';
+import type { ICategoryRepo } from '../ports/category-repository.port';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
-export class UpdateCategoryStatusUsecase implements UpdateCategoryStatusPort {
-  constructor(private readonly _categoryRepo: CategoryRepoPort) {}
+export class UpdateCategoryStatusUsecase implements IUpdateCategoryStatusUsecase {
+  constructor(private readonly _categoryRepo: ICategoryRepo) {}
   async execute(input: UpdateCategoryStatusInput): Promise<SucceessResType> {
     const categry = await this._categoryRepo.findById(input.id);
     if (!categry) {

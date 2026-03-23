@@ -1,15 +1,15 @@
 import { SucceessResType } from '@/shared/types/success-res.type';
 import { CreateCategoryInput } from '../inputs';
-import { CreateCategoryPort } from '../ports';
-import type { CategoryRepoPort } from '../ports/category-repository.port';
+import { ICreateCategoryUasecase } from '../ports';
+import type { ICategoryRepo } from '../ports/category-repository.port';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { Category } from '../../domain/entity';
 import { Slug } from '../../domain/value-objects';
 import { CATEGORY_STATUS } from '../../domain/enums/category-status.enum';
 
-export class CreateCategoryUasecase implements CreateCategoryPort {
-  constructor(private readonly _categoryRepo: CategoryRepoPort) {}
+export class CreateCategoryUasecase implements ICreateCategoryUasecase {
+  constructor(private readonly _categoryRepo: ICategoryRepo) {}
   async execute(input: CreateCategoryInput): Promise<SucceessResType> {
     const slug = Slug.create(input.slug);
     const category = await this._categoryRepo.findBySlug(slug);

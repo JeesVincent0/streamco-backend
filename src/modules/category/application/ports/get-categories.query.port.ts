@@ -1,6 +1,6 @@
 import { GetCategoriesInput } from '../inputs';
 import { CategoriesOuput } from '../output';
 
-export interface CategoriesQueryPort {
+export interface ICategoriesQuery {
   execute(query: GetCategoriesInput): Promise<CategoriesOuput>;
 }
