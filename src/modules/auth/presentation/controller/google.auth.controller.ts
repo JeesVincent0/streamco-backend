@@ -3,6 +3,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Inject,
   Req,
   Res,
   UseGuards,
@@ -10,14 +11,20 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import type { Response, Request } from 'express';
 
-import { GoogleAuthUseCase } from '../../application';
 import { RequestWithGoogle } from '../interfaces/request-with-google.interface';
 import { AUTH_REDIRECT_MAP } from '../config';
 import { GoogleAuthGuard } from '../../infrastructure';
+import {
+  GOOGLE_AUTH_USE_CASE_TOKEN,
+  type IGoogleAuthUseCase,
+} from '../../application';
 
 @Controller('auth')
 export class GoogleAuthController {
-  constructor(private readonly _googleAuthSignupUseCase: GoogleAuthUseCase) {}
+  constructor(
+    @Inject(GOOGLE_AUTH_USE_CASE_TOKEN)
+    private readonly _googleAuthSignupUseCase: IGoogleAuthUseCase,
+  ) {}
 
   @Get('/google')
   @UseGuards(GoogleAuthGuard)

@@ -1,16 +1,19 @@
 import { ICreateAdvertiserUserUseCase } from '@/modules/user/application';
 import { SignupAdvertiserInput } from '../../inputs';
-import { IPasswordHasher } from '../../ports';
+import { IPasswordHasher, ISignupAdvertiserUseCase } from '../../ports';
 import { GenerateOtpUseCase } from '../otp';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
+import { GenerateOtpUsecaseOutPut } from '../../output';
 
-export class SignupAdvertiserUseCase {
+export class SignupAdvertiserUseCase implements ISignupAdvertiserUseCase {
   constructor(
     private readonly _createAdvertiserUser: ICreateAdvertiserUserUseCase,
     private readonly _passwordHasher: IPasswordHasher,
     private readonly _generateOtpUseCase: GenerateOtpUseCase,
   ) {}
-  async execute(input: SignupAdvertiserInput) {
+  async execute(
+    input: SignupAdvertiserInput,
+  ): Promise<GenerateOtpUsecaseOutPut> {
     const hashPassword = await this._passwordHasher.hash(input.password);
     const { email } = await this._createAdvertiserUser.execute({
       ...input,

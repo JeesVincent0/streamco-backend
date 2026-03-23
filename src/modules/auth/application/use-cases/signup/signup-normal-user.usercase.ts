@@ -1,16 +1,19 @@
 import { ICreateNormalUserUseCase } from '@/modules/user/application';
 import { SignupNormalUserInput } from '../../inputs';
-import { IPasswordHasher } from '../../ports';
+import { IPasswordHasher, ISignupNormalUserUseCase } from '../../ports';
 import { GenerateOtpUseCase } from '../otp';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
+import { GenerateOtpUsecaseOutPut } from '../../output';
 
-export class SignupNormalUserUseCase {
+export class SignupNormalUserUseCase implements ISignupNormalUserUseCase {
   constructor(
     private readonly _createNormalUser: ICreateNormalUserUseCase,
     private readonly _passwordHasher: IPasswordHasher,
     private readonly _generateOtpUseCase: GenerateOtpUseCase,
   ) {}
-  async execute(input: SignupNormalUserInput) {
+  async execute(
+    input: SignupNormalUserInput,
+  ): Promise<GenerateOtpUsecaseOutPut> {
     const hashPassword = await this._passwordHasher.hash(input.password);
 
     const { email } = await this._createNormalUser.execute({

@@ -3,13 +3,15 @@ import { RefreshTokenUseCase } from '../token';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { AccessTokenPayload } from '@/shared/interfaces';
+import { SucceessResType } from '@/shared/types/success-res.type';
+import { ISignoutUseCase } from '../../ports';
 
-export class SignoutUseCase {
+export class SignoutUseCase implements ISignoutUseCase {
   constructor(
     private readonly _refreshTokenUseCase: RefreshTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
-  async execute(payload: AccessTokenPayload) {
+  async execute(payload: AccessTokenPayload): Promise<SucceessResType> {
     await this._refreshTokenUseCase.execute(
       payload.sub,
       RefreshTokenPurpose.REVOKE,

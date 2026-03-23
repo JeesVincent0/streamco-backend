@@ -8,7 +8,8 @@ import { FileLogger } from '@/shared/logger/file-logger';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { GenerateTokenUseCase } from '../token/generate-token.usecase';
-import { IVerifyOtpUseCase } from '../../ports';
+import { IConfirmSignupUserUseCase, IVerifyOtpUseCase } from '../../ports';
+import { ConfirmSignupUseCaseOutPut } from '../../output';
 
 /*
  *
@@ -21,14 +22,16 @@ import { IVerifyOtpUseCase } from '../../ports';
  *
  */
 
-export class ConfirmSignupUserUseCase {
+export class ConfirmSignupUserUseCase implements IConfirmSignupUserUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _verifyOtpUseCase: IVerifyOtpUseCase,
     private readonly _generateTokenUseCase: GenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
-  async execute(input: ConfirmRegistrationInput) {
+  async execute(
+    input: ConfirmRegistrationInput,
+  ): Promise<ConfirmSignupUseCaseOutPut> {
     // Verifying the OTP provided by the user
     const result = await this._verifyOtpUseCase.execute({
       id: input.id,

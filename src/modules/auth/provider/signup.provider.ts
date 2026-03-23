@@ -22,6 +22,11 @@ import {
   GENERATE_OTP_USE_CASE_TOKEN,
   VERIFY_OTP_USE_CASE_TOKEN,
   IVerifyOtpUseCase,
+  GOOGLE_AUTH_USE_CASE_TOKEN,
+  CONFIRM_SIGNUP_USE_CASE_TOKEN,
+  SIGNOUT_USE_CASE_TOKEN,
+  SIGNUP_ADVERTISER_USE_CASE_TOKEN,
+  SIGNUP_NORMAL_USER_USE_CASE_TOKEN,
 } from '../application';
 import { SigninUseCase } from '../application/use-cases/signin';
 import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
@@ -57,7 +62,7 @@ export const signupProvider = [
     inject: [TOKEN_SERVICE, USER_REPOSITORY_PORT, FileLogger],
   },
   {
-    provide: SignoutUseCase,
+    provide: SIGNOUT_USE_CASE_TOKEN,
     useFactory: (
       refreshTokenUseCase: RefreshTokenUseCase,
       logger: FileLogger,
@@ -100,7 +105,7 @@ export const signupProvider = [
   },
 
   {
-    provide: GoogleAuthUseCase,
+    provide: GOOGLE_AUTH_USE_CASE_TOKEN,
     useFactory: (
       userRepo: UserRepositoryPort,
       createUserWithGoogleAuth: ICreateUserWithGoogleAuthUseCase,
@@ -185,7 +190,7 @@ export const signupProvider = [
   },
 
   {
-    provide: SignupNormalUserUseCase,
+    provide: SIGNUP_NORMAL_USER_USE_CASE_TOKEN,
     useFactory: (
       createNormalUser: ICreateNormalUserUseCase,
       passwordHasher: IPasswordHasher,
@@ -205,7 +210,7 @@ export const signupProvider = [
   },
 
   {
-    provide: ConfirmSignupUserUseCase,
+    provide: CONFIRM_SIGNUP_USE_CASE_TOKEN,
     useFactory: (
       userRepo: UserRepositoryPort,
       verifyOtpUseCase: IVerifyOtpUseCase,
@@ -228,7 +233,7 @@ export const signupProvider = [
   },
 
   {
-    provide: SignupAdvertiserUseCase,
+    provide: SIGNUP_ADVERTISER_USE_CASE_TOKEN,
     useFactory: (
       createAdvertiserUser: ICreateAdvertiserUserUseCase,
       passwordHasher: IPasswordHasher,
