@@ -8,6 +8,7 @@ import { TokenServicePort } from '@/modules/auth-security/application';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { ICacheBaseRepo } from '@/shared/application/ports';
+import { ITokenBlackListUseCase } from '../../ports';
 
 /*
   This use case is responsible for blacklisting tokens. 
@@ -20,7 +21,7 @@ import { ICacheBaseRepo } from '@/shared/application/ports';
   log the event of token blacklisting.
 */
 
-export class TokenBlackListUseCase {
+export class TokenBlackListUseCase implements ITokenBlackListUseCase {
   constructor(
     private readonly _tokenBlacklistRepo: ICacheBaseRepo,
     private readonly _tokenService: TokenServicePort,

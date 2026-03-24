@@ -1,14 +1,13 @@
-import { RefreshTokenPurpose } from '@/modules/auth/domain/enums/refresh-token-purpose.enum';
-import { RefreshTokenUseCase } from '../token';
 import { FileLogger } from '@/shared/logger/file-logger';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { AccessTokenPayload } from '@/shared/interfaces';
 import { SucceessResType } from '@/shared/types/success-res.type';
-import { ISignoutUseCase } from '../../ports';
+import { IRefreshTokenUseCase, ISignoutUseCase } from '../../ports';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { RefreshTokenPurpose } from '@/modules/auth/domain/enums/refresh-token-purpose.enum';
 
 export class SignoutUseCase implements ISignoutUseCase {
   constructor(
-    private readonly _refreshTokenUseCase: RefreshTokenUseCase,
+    private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
   async execute(payload: AccessTokenPayload): Promise<SucceessResType> {

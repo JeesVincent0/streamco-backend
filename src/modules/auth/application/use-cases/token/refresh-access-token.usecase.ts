@@ -2,20 +2,19 @@
 // It will involve validating the refresh token, generating a new access token,
 // and returning it to the client.
 
-import { TokenServicePort } from '@/modules/auth-security/application';
-import { SCOPE } from '@/modules/auth-security/domain';
-import { TokenPayload } from '@/modules/auth/domain';
-import { UserRepositoryPort } from '@/modules/user/application';
 import { UserRole } from '@/modules/user/domain';
-import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { BadRequestError } from '@/shared/errors';
-import { FileLogger } from '@/shared/logger/file-logger';
+import { TokenPayload } from '@/modules/auth/domain';
+import { SCOPE } from '@/modules/auth-security/domain';
+import { UserRepositoryPort } from '@/modules/user/application';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { TokenServicePort } from '@/modules/auth-security/application';
+import { IRefreshAccessTokenUseCase } from '../../ports';
 
-export class RefreshAccessTokenUseCase {
+export class RefreshAccessTokenUseCase implements IRefreshAccessTokenUseCase {
   constructor(
     private readonly _tokenService: TokenServicePort,
     private readonly _userRepo: UserRepositoryPort,
-    private readonly _logger: FileLogger,
   ) {}
   async execute(userId: string) {
     const user = await this._userRepo.findById(userId);

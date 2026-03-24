@@ -7,7 +7,6 @@ import {
 
   // usecases
   ResetPasswordUseCase,
-  TokenBlackListUseCase,
 
   // tokens
   PASSWORD_HASHER_PORT_TOKEN,
@@ -16,6 +15,8 @@ import {
   IVerifyOtpUseCase,
   VerifyResetPasswordOtpUseCase,
   VERIFY_OTP_USE_CASE_TOKEN,
+  ITokenBlackListUseCase,
+  TOKEN_BLACK_LIST_USE_CASE_TOKEN,
 } from '../application';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { TokenServicePort } from '@/modules/auth-security/application';
@@ -27,7 +28,7 @@ export const resetPasswordProviders = [
     useFactory: (
       userRepo: UserRepositoryPort,
       passwordHasher: IPasswordHasher,
-      tokenBlacklist: TokenBlackListUseCase,
+      tokenBlacklist: ITokenBlackListUseCase,
       logger: FileLogger,
     ) => {
       return new ResetPasswordUseCase(
@@ -40,7 +41,7 @@ export const resetPasswordProviders = [
     inject: [
       USER_REPOSITORY_PORT,
       PASSWORD_HASHER_PORT_TOKEN,
-      TokenBlackListUseCase,
+      TOKEN_BLACK_LIST_USE_CASE_TOKEN,
       FileLogger,
     ],
   },

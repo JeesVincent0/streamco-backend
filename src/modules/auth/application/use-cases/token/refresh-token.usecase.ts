@@ -4,12 +4,13 @@ import { RefreshToken } from '@/modules/auth/domain/entity';
 import { RefreshTokenPurpose } from '@/modules/auth/domain/enums/refresh-token-purpose.enum';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { IRefreshTokenUseCase } from '../../ports';
 
 /*
  * RefreshTokenUseCase will handle the logic of creating and revoking refresh token.
  */
 
-export class RefreshTokenUseCase {
+export class RefreshTokenUseCase implements IRefreshTokenUseCase {
   constructor(
     private readonly _refreshTokenRepository: RefreshTokenPort,
     private readonly _tokenService: TokenServicePort,

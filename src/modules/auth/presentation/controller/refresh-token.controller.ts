@@ -1,16 +1,20 @@
-import { RefreshTokenGuard } from '@/modules/auth-security/presentation';
 import {
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
   Req,
   Res,
+  Post,
+  HttpCode,
   UseGuards,
+  HttpStatus,
+  Controller,
+  Inject,
 } from '@nestjs/common';
-import { RefreshAccessTokenUseCase } from '../../application/use-cases/token/refresh-accessp-token.usecase';
 import { type Response } from 'express';
 import { type RequestWithUserInterface } from '../interfaces';
+import {
+  REFRESH_ACCESS_TOKEN_USE_CASE_TOKEN,
+  type IRefreshAccessTokenUseCase,
+} from '../../application';
+import { RefreshTokenGuard } from '@/modules/auth-security/presentation';
 
 // This controller will handle the refresh token logic
 // It will be responsible for validating the refresh token,
@@ -19,7 +23,8 @@ import { type RequestWithUserInterface } from '../interfaces';
 @Controller('auth')
 export class RefreshTokenController {
   constructor(
-    private readonly _refreshAccessTokenUseCase: RefreshAccessTokenUseCase,
+    @Inject(REFRESH_ACCESS_TOKEN_USE_CASE_TOKEN)
+    private readonly _refreshAccessTokenUseCase: IRefreshAccessTokenUseCase,
   ) {}
   @Post('/refresh-token')
   @HttpCode(HttpStatus.OK)

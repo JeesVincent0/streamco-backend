@@ -1,14 +1,17 @@
-import { UserRepositoryPort } from '@/modules/user/application/ports';
+import { SCOPE } from '@/modules/auth-security/domain';
 import { ConfirmRegistrationInput } from '../../inputs';
+import { FileLogger } from '@/shared/logger/file-logger';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
 import { Email } from '@/modules/user/domain/value-objects';
-import { ResponseData, TokenPayload } from '@/modules/auth/domain';
-import { SCOPE } from '@/modules/auth-security/domain';
-import { FileLogger } from '@/shared/logger/file-logger';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { ResponseData, TokenPayload } from '@/modules/auth/domain';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
-import { GenerateTokenUseCase } from '../token/generate-token.usecase';
-import { IConfirmSignupUserUseCase, IVerifyOtpUseCase } from '../../ports';
+import { UserRepositoryPort } from '@/modules/user/application/ports';
+import {
+  IConfirmSignupUserUseCase,
+  IGenerateTokenUseCase,
+  IVerifyOtpUseCase,
+} from '../../ports';
 import { SigninUseCaseOutPut } from '../../output';
 
 /*
@@ -26,7 +29,7 @@ export class ConfirmSignupUserUseCase implements IConfirmSignupUserUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _verifyOtpUseCase: IVerifyOtpUseCase,
-    private readonly _generateTokenUseCase: GenerateTokenUseCase,
+    private readonly _generateTokenUseCase: IGenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
   async execute(input: ConfirmRegistrationInput): Promise<SigninUseCaseOutPut> {

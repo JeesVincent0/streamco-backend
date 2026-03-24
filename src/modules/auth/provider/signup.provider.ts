@@ -29,6 +29,10 @@ import {
   SIGNUP_NORMAL_USER_USE_CASE_TOKEN,
   ADMIN_SIGNIN_USE_CASE_TOKEN,
   SIGNIN_USE_CASE_TOKEN,
+  REFRESH_ACCESS_TOKEN_USE_CASE_TOKEN,
+  IRefreshTokenUseCase,
+  REFRESH_TOKEN_USE_CASE_TOKEN,
+  TOKEN_BLACK_LIST_USE_CASE_TOKEN,
 } from '../application';
 import { SigninUseCase } from '../application/use-cases/signin';
 import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
@@ -41,7 +45,7 @@ import { TokenServicePort } from '@/modules/auth-security/application/ports';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { GenerateTokenUseCase } from '../application/use-cases/token/generate-token.usecase';
 import { RefreshTokenPort } from '../application/ports/token';
-import { RefreshAccessTokenUseCase } from '../application/use-cases/token/refresh-accessp-token.usecase';
+import { RefreshAccessTokenUseCase } from '../application/use-cases/token/refresh-access-token.usecase';
 import { ICacheBaseRepo } from '@/shared/application/ports';
 
 // user module tokens
@@ -50,32 +54,32 @@ import {
   CREATE_USER_USE_CASE_TOKEN,
   CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
 } from '@/modules/user/application/user.tokens';
+import { IGenerateTokenUseCase } from '../application/ports/usecase/generate-token.usecase.port';
 
 export const signupProvider = [
   {
-    provide: RefreshAccessTokenUseCase,
+    provide: REFRESH_ACCESS_TOKEN_USE_CASE_TOKEN,
     useFactory: (
       tokenService: TokenServicePort,
       userRepo: UserRepositoryPort,
-      logger: FileLogger,
     ) => {
-      return new RefreshAccessTokenUseCase(tokenService, userRepo, logger);
+      return new RefreshAccessTokenUseCase(tokenService, userRepo);
     },
-    inject: [TOKEN_SERVICE, USER_REPOSITORY_PORT, FileLogger],
+    inject: [TOKEN_SERVICE, USER_REPOSITORY_PORT],
   },
   {
     provide: SIGNOUT_USE_CASE_TOKEN,
     useFactory: (
-      refreshTokenUseCase: RefreshTokenUseCase,
+      refreshTokenUseCase: IRefreshTokenUseCase,
       logger: FileLogger,
     ) => {
       return new SignoutUseCase(refreshTokenUseCase, logger);
     },
-    inject: [RefreshTokenUseCase, FileLogger],
+    inject: [REFRESH_TOKEN_USE_CASE_TOKEN, FileLogger],
   },
 
   {
-    provide: RefreshTokenUseCase,
+    provide: REFRESH_TOKEN_USE_CASE_TOKEN,
     useFactory: (
       refreshTokenRepository: RefreshTokenPort,
       tokenService: TokenServicePort,
@@ -91,10 +95,10 @@ export const signupProvider = [
   },
 
   {
-    provide: GenerateTokenUseCase,
+    provide: GENERATE_OTP_USE_CASE_TOKEN,
     useFactory: (
       tokenService: TokenServicePort,
-      refreshTokenUseCase: RefreshTokenUseCase,
+      refreshTokenUseCase: IRefreshTokenUseCase,
       logger: FileLogger,
     ) => {
       return new GenerateTokenUseCase(
@@ -103,7 +107,7 @@ export const signupProvider = [
         logger,
       );
     },
-    inject: [TOKEN_SERVICE, RefreshTokenUseCase, FileLogger],
+    inject: [TOKEN_SERVICE, REFRESH_TOKEN_USE_CASE_TOKEN, FileLogger],
   },
 
   {
@@ -111,7 +115,7 @@ export const signupProvider = [
     useFactory: (
       userRepo: UserRepositoryPort,
       createUserWithGoogleAuth: ICreateUserWithGoogleAuthUseCase,
-      generateTokenUseCase: GenerateTokenUseCase,
+      generateTokenUseCase: IGenerateTokenUseCase,
       logger: FileLogger,
     ) => {
       return new GoogleAuthUseCase(
@@ -124,7 +128,7 @@ export const signupProvider = [
     inject: [
       USER_REPOSITORY_PORT,
       CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
-      GenerateTokenUseCase,
+      GENERATE_OTP_USE_CASE_TOKEN,
       FileLogger,
     ],
   },
@@ -134,7 +138,7 @@ export const signupProvider = [
     useFactory: (
       userRepo: UserRepositoryPort,
       passwordHasher: IPasswordHasher,
-      generateTokenUseCase: GenerateTokenUseCase,
+      generateTokenUseCase: IGenerateTokenUseCase,
       logger: FileLogger,
     ) => {
       return new AdminSigninUseCase(
@@ -147,13 +151,13 @@ export const signupProvider = [
     inject: [
       USER_REPOSITORY_PORT,
       PASSWORD_HASHER_PORT_TOKEN,
-      GenerateTokenUseCase,
+      GENERATE_OTP_USE_CASE_TOKEN,
       FileLogger,
     ],
   },
 
   {
-    provide: TokenBlackListUseCase,
+    provide: TOKEN_BLACK_LIST_USE_CASE_TOKEN,
     useFactory: (
       tokenBlacklistRepo: ICacheBaseRepo,
       tokenService: TokenServicePort,
@@ -173,7 +177,7 @@ export const signupProvider = [
     useFactory: (
       userRepo: UserRepositoryPort,
       passwordHasher: IPasswordHasher,
-      generateTokenUseCase: GenerateTokenUseCase,
+      generateTokenUseCase: IGenerateTokenUseCase,
       logger: FileLogger,
     ) => {
       return new SigninUseCase(
@@ -186,7 +190,7 @@ export const signupProvider = [
     inject: [
       USER_REPOSITORY_PORT,
       PASSWORD_HASHER_PORT_TOKEN,
-      GenerateTokenUseCase,
+      GENERATE_OTP_USE_CASE_TOKEN,
       FileLogger,
     ],
   },
@@ -216,7 +220,7 @@ export const signupProvider = [
     useFactory: (
       userRepo: UserRepositoryPort,
       verifyOtpUseCase: IVerifyOtpUseCase,
-      generateTokenUseCase: GenerateTokenUseCase,
+      generateTokenUseCase: IGenerateTokenUseCase,
       logger: FileLogger,
     ) => {
       return new ConfirmSignupUserUseCase(
@@ -229,7 +233,7 @@ export const signupProvider = [
     inject: [
       USER_REPOSITORY_PORT,
       VERIFY_OTP_USE_CASE_TOKEN,
-      GenerateTokenUseCase,
+      GENERATE_OTP_USE_CASE_TOKEN,
       FileLogger,
     ],
   },
