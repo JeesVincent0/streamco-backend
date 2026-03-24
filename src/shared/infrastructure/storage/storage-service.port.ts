@@ -4,4 +4,5 @@ export interface IStorageService {
     folder: string,
     filename: string,
   ): Promise<string>;
+  getSignedViewUrl(pathOrKey: string): Promise<string>;
 }
