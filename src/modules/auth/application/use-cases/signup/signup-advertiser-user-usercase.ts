@@ -1,7 +1,10 @@
 import { ICreateAdvertiserUserUseCase } from '@/modules/user/application';
 import { SignupAdvertiserInput } from '../../inputs';
-import { IPasswordHasher, ISignupAdvertiserUseCase } from '../../ports';
-import { GenerateOtpUseCase } from '../otp';
+import {
+  IGenerateOtpUseCase,
+  IPasswordHasher,
+  ISignupAdvertiserUseCase,
+} from '../../ports';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
 import { GenerateOtpUsecaseOutPut } from '../../output';
 
@@ -9,7 +12,7 @@ export class SignupAdvertiserUseCase implements ISignupAdvertiserUseCase {
   constructor(
     private readonly _createAdvertiserUser: ICreateAdvertiserUserUseCase,
     private readonly _passwordHasher: IPasswordHasher,
-    private readonly _generateOtpUseCase: GenerateOtpUseCase,
+    private readonly _generateOtpUseCase: IGenerateOtpUseCase,
   ) {}
   async execute(
     input: SignupAdvertiserInput,

@@ -244,7 +244,7 @@ export const signupProvider = [
     useFactory: (
       createAdvertiserUser: ICreateAdvertiserUserUseCase,
       passwordHasher: IPasswordHasher,
-      generateOtp: GenerateOtpUseCase,
+      generateOtp: IGenerateOtpUseCase,
     ) => {
       return new SignupAdvertiserUseCase(
         createAdvertiserUser,
