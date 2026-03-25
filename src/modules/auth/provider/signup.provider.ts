@@ -33,6 +33,7 @@ import {
   IRefreshTokenUseCase,
   REFRESH_TOKEN_USE_CASE_TOKEN,
   TOKEN_BLACK_LIST_USE_CASE_TOKEN,
+  IGenerateOtpUseCase,
 } from '../application';
 import { SigninUseCase } from '../application/use-cases/signin';
 import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
@@ -200,7 +201,7 @@ export const signupProvider = [
     useFactory: (
       createNormalUser: ICreateNormalUserUseCase,
       passwordHasher: IPasswordHasher,
-      generateOtpUseCase: GenerateOtpUseCase,
+      generateOtpUseCase: IGenerateOtpUseCase,
     ) => {
       return new SignupNormalUserUseCase(
         createNormalUser,
