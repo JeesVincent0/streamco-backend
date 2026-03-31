@@ -73,10 +73,10 @@ export const otpProviders = [
       );
     },
     inject: [
-      OTP_SERVICE_TOKEN,
-      MAIL_SERVICE_PORT_TOKEN,
-      PASSWORD_HASHER_PORT_TOKEN,
       AUTH_CACHED_USER_REPOSITORY_PORT_TOKEN,
+      OTP_SERVICE_TOKEN,
+      PASSWORD_HASHER_PORT_TOKEN,
+      MAIL_SERVICE_PORT_TOKEN,
       FileLogger,
     ],
   },

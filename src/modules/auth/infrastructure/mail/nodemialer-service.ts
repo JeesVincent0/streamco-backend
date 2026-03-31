@@ -28,7 +28,7 @@ export class NodemailerService implements IMailService {
         subject: 'Your OTP Code',
         text: `Your OTP is ${otp}`,
       });
-    } catch (error) {
+    } catch {
       throw new BadRequestError('Failed to send OTP email');
     }
   }
