@@ -1,7 +1,6 @@
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 
-// Adjust these imports based on your exact file structure
 import { GetCategoriesDto } from '@/modules/category/presentation/dto';
 import { ICategoriesQuery } from '@/modules/category/application/ports';
 import { Category } from '@/modules/category/domain/entity';
@@ -18,23 +17,20 @@ export class GetAllCategoriesRepository implements ICategoriesQuery {
     const {
       page = 1,
       limit = 10,
-      sortBy = 'name',
-      order = 'asc',
+      sortBy = 'createdAt',
+      order = 'desc',
       status,
       search,
     } = query;
 
     const skip = (page - 1) * limit;
 
-    // 1. Base Filter Setup
     const filter: Record<string, any> = {};
 
-    // Only apply status filter if it exists and isn't "all"
     if (status && status !== 'all') {
       filter.status = status;
     }
 
-    // 2. Search logic
     if (search) {
       filter.$or = [
         { name: { $regex: search, $options: 'i' } },
@@ -42,13 +38,11 @@ export class GetAllCategoriesRepository implements ICategoriesQuery {
       ];
     }
 
-    // 3. Sorting logic
     const sortField = sortBy && sortBy !== 'all' ? sortBy : 'createdAt';
     const sort: Record<string, 1 | -1> = {
       [sortField]: order === 'desc' ? -1 : 1,
     };
 
-    // 4. Execute Queries
     const categories = await this._categoryModel
       .find(filter as Parameters<typeof this._categoryModel.find>[0])
       .sort(sort)
@@ -60,15 +54,13 @@ export class GetAllCategoriesRepository implements ICategoriesQuery {
       filter as Parameters<typeof this._categoryModel.find>[0],
     );
 
-    // 5. Return wrapped in 'data' to match CategoriesOuput type
     return {
       data: {
-        // Cast the lean mongoose documents to your Domain Entity
         categories: categories as unknown as Category[],
         pagination: {
           page: Number(page),
           limit: Number(limit),
-          totalPages: Math.ceil(total / limit) || 1, // Fallback to 1 page if total is 0
+          totalPages: Math.ceil(total / limit) || 1,
         },
       },
     };

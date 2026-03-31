@@ -5,6 +5,7 @@ import { GetUserProfileMapper } from '@/shared/mappers/get-user-profile.mapper';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { IGetUserProfileUseCase } from '../../ports/get-user/get-user-profile.usecase.port';
+import { Advertiser, BaseUser, User } from '@/modules/user/domain';
 
 export class GetUserProfileUseCase implements IGetUserProfileUseCase {
   constructor(
@@ -15,7 +16,7 @@ export class GetUserProfileUseCase implements IGetUserProfileUseCase {
     id: string;
     paramsId: string;
   }): Promise<UserResponse> {
-    let user;
+    let user: User | BaseUser | Advertiser | null;
     user = await this._userRepo.findById(input.paramsId);
     if (!user) {
       user = await this._userRepo.findById(input.id);

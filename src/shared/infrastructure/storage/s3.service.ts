@@ -27,8 +27,8 @@ export class S3Service implements IStorageService {
     folder: string,
     filename: string,
   ): Promise<string> {
-    // 1. Separate the mimetype from the base64 data
-    const matches = base64String.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    // 1. FIX: Simplified regex catches any MIME type and removes the escape warning
+    const matches = base64String.match(/^data:(.+?);base64,(.+)$/);
     if (!matches || matches.length !== 3) {
       throw new BadRequestException('Invalid base64 string provided');
     }
@@ -53,7 +53,8 @@ export class S3Service implements IStorageService {
     return `https://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
   }
 
-  async getSignedViewUrl(s3Key: string): Promise<string> {
+  // FIX: Removed 'async' keyword and wrapped the return in Promise.resolve()
+  getSignedViewUrl(s3Key: string): Promise<string> {
     const cloudFrontUrl = process.env.CLOUDFRONT_URL;
     const originalUrl = new URL(s3Key);
 
@@ -63,14 +64,16 @@ export class S3Service implements IStorageService {
     // The Unix timestamp for when the URL should expire (e.g., in 1 hour)
     const dateLessThan = new Date(Date.now() + 1000 * 60 * 60).toISOString();
 
-    return getSignedUrl({
-      url,
-      keyPairId: process.env.CLOUDFRONT_KEY_PAIR_ID as string,
-      dateLessThan,
-      privateKey: (process.env.CLOUDFRONT_PRIVATE_KEY as string).replace(
-        /\\n/g,
-        '\n',
-      ),
-    });
+    return Promise.resolve(
+      getSignedUrl({
+        url,
+        keyPairId: process.env.CLOUDFRONT_KEY_PAIR_ID as string,
+        dateLessThan,
+        privateKey: (process.env.CLOUDFRONT_PRIVATE_KEY as string).replace(
+          /\\n/g,
+          '\n',
+        ),
+      }),
+    );
   }
 }

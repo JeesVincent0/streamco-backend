@@ -44,7 +44,7 @@ export class CategoryRepositoryImplMonogoDB implements ICategoryRepo {
       .findOneAndUpdate(
         { id: persistenceData.id },
         { $set: persistenceData },
-        { new: true, upsert: true },
+        { returnDocument: 'after', upsert: true },
       )
       .lean()
       .exec();
