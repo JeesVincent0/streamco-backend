@@ -21,7 +21,6 @@ export class GenerateTokenUseCase implements IGenerateTokenUseCase {
     accessTokenPayload: AccessTokenPayload,
     refreshTokenPayload: RefreshTokenPayload,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    console.log('token payloads reached in the token generated use case');
     const accessToken =
       await this._tokenService.generateAccessToken(accessTokenPayload);
     const refreshToken =

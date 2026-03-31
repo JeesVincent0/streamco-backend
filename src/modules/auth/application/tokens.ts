@@ -13,9 +13,6 @@ export const GENERATE_TOKEN_USE_CASE_TOKEN = Symbol('IGenerateTokenUseCase');
 export const RESET_PASSWORD_USE_CASE_TOKEN = Symbol('IResetPasswordUseCase');
 export const AUTH_CACHED_USER_REPOSITORY_PORT_TOKEN = Symbol('ICacheBaseRepo');
 export const TOKEN_BLACK_LIST_USE_CASE_TOKEN = Symbol('ITokenBlackListUseCase');
-export const GENERATE_TOKEN_OTP_USE_CASE_TOKEN = Symbol(
-  'IGenerateTokenuseCase',
-);
 export const CONFIRM_SIGNUP_USE_CASE_TOKEN = Symbol(
   'IConfirmSignupUserUseCase',
 );

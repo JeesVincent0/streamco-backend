@@ -33,7 +33,7 @@ import {
   REFRESH_TOKEN_USE_CASE_TOKEN,
   TOKEN_BLACK_LIST_USE_CASE_TOKEN,
   IGenerateOtpUseCase,
-  GENERATE_TOKEN_OTP_USE_CASE_TOKEN,
+  GENERATE_TOKEN_USE_CASE_TOKEN,
 } from '../application';
 import { SigninUseCase } from '../application/use-cases/signin';
 import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
@@ -96,7 +96,7 @@ export const signupProvider = [
   },
 
   {
-    provide: GENERATE_TOKEN_OTP_USE_CASE_TOKEN,
+    provide: GENERATE_TOKEN_USE_CASE_TOKEN,
     useFactory: (
       tokenService: TokenServicePort,
       refreshTokenUseCase: IRefreshTokenUseCase,
@@ -129,7 +129,7 @@ export const signupProvider = [
     inject: [
       USER_REPOSITORY_PORT,
       CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
-      GENERATE_OTP_USE_CASE_TOKEN,
+      GENERATE_TOKEN_USE_CASE_TOKEN,
       FileLogger,
     ],
   },
@@ -152,7 +152,7 @@ export const signupProvider = [
     inject: [
       USER_REPOSITORY_PORT,
       PASSWORD_HASHER_PORT_TOKEN,
-      GENERATE_TOKEN_OTP_USE_CASE_TOKEN,
+      GENERATE_TOKEN_USE_CASE_TOKEN,
       FileLogger,
     ],
   },
@@ -191,7 +191,7 @@ export const signupProvider = [
     inject: [
       USER_REPOSITORY_PORT,
       PASSWORD_HASHER_PORT_TOKEN,
-      GENERATE_TOKEN_OTP_USE_CASE_TOKEN,
+      GENERATE_TOKEN_USE_CASE_TOKEN,
       FileLogger,
     ],
   },
@@ -234,7 +234,7 @@ export const signupProvider = [
     inject: [
       USER_REPOSITORY_PORT,
       VERIFY_OTP_USE_CASE_TOKEN,
-      GENERATE_TOKEN_OTP_USE_CASE_TOKEN,
+      GENERATE_TOKEN_USE_CASE_TOKEN,
       FileLogger,
     ],
   },

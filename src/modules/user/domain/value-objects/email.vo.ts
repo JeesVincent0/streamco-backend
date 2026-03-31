@@ -8,7 +8,6 @@ export class Email {
   }
 
   static create(email: string): Email {
-    console.log('this is email vo: ', email);
     if (!email) throw new BadRequestError('Email is required');
 
     const normalizedEmail = email.trim().toLowerCase();

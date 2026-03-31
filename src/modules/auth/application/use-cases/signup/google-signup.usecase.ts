@@ -63,10 +63,8 @@ export class GoogleAuthUseCase implements IGoogleAuthUseCase {
       user.role,
     );
 
-    console.log('reached');
     const { accessToken, refreshToken } =
       await this._generateTokenUseCase.execute(accessPayload, refreshPayload);
-    console.log('end');
 
     this._logger.log({
       event: LOG_EVENTS.USER_SIGNIN_SUCCESSFULL,
