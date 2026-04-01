@@ -3,23 +3,31 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Inject,
   Post,
   Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
 import { ResetPasswordDto, VerifyResetPasswordOtpDto } from '../dto';
-import { VerifyResetPasswordOtpUseCase } from '../../application';
+import {
+  type IResetPasswordUseCase,
+  type IVerifyResetPasswordOtpUseCase,
+  RESET_PASSWORD_USE_CASE_TOKEN,
+  VERIFY_RESET_PASSWORD_OTP_USE_CASE_TOKEN,
+} from '../../application';
 import { type Response } from 'express';
 import { ResetPasswordTokenGuard } from '@/modules/auth-security/presentation/guards/reset-password.guard';
-import { ResetPasswordUseCase } from '../../application/use-cases/';
 import { type RequestWithUserInterface } from '../interfaces';
 
 @Controller('auth')
 export class ResetPasswordController {
   constructor(
-    private readonly _resetPasswordUseCase: ResetPasswordUseCase,
-    private readonly _verifyResetPasswordOtpUseCase: VerifyResetPasswordOtpUseCase,
+    @Inject(RESET_PASSWORD_USE_CASE_TOKEN)
+    private readonly _resetPasswordUseCase: IResetPasswordUseCase,
+
+    @Inject(VERIFY_RESET_PASSWORD_OTP_USE_CASE_TOKEN)
+    private readonly _verifyResetPasswordOtpUseCase: IVerifyResetPasswordOtpUseCase,
   ) {}
 
   @Post('verify-reset-password')

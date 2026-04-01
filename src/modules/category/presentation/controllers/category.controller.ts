@@ -22,28 +22,28 @@ import {
   type GetCategoriesDto,
 } from '../dto';
 import type {
-  CreateCategoryPort,
-  GetCategoriesInterface,
-  UpdateCategoryStatusPort,
+  ICreateCategoryUasecase,
+  IGetCategoriesUsecase,
+  IUpdateCategoryStatusUsecase,
 } from '../../application/ports';
 import {
-  CREATE_CATEGORY_USE_CASE,
-  GET_CATEGORIES_USE_CASE,
-  UPDATE_CATEGORY_STATUS_USE_CASE,
+  CREATE_CATEGORY_USE_CASE_TOKEN,
+  GET_CATEGORIES_USE_CASE_TOKEN,
+  UPDATE_CATEGORY_STATUS_USE_CASE_TOKEN,
 } from '../../application/token';
 
 @Controller('admin/categories')
 @UseGuards(AccessTokenGuard, ScopeGuard)
 export class CategoryController {
   constructor(
-    @Inject(CREATE_CATEGORY_USE_CASE)
-    private readonly _createCategory: CreateCategoryPort,
+    @Inject(CREATE_CATEGORY_USE_CASE_TOKEN)
+    private readonly _createCategory: ICreateCategoryUasecase,
 
-    @Inject(GET_CATEGORIES_USE_CASE)
-    private readonly _getAllCategories: GetCategoriesInterface,
+    @Inject(GET_CATEGORIES_USE_CASE_TOKEN)
+    private readonly _getAllCategories: IGetCategoriesUsecase,
 
-    @Inject(UPDATE_CATEGORY_STATUS_USE_CASE)
-    private readonly _updateCategory: UpdateCategoryStatusPort,
+    @Inject(UPDATE_CATEGORY_STATUS_USE_CASE_TOKEN)
+    private readonly _updateCategory: IUpdateCategoryStatusUsecase,
   ) {}
 
   @Post('create')

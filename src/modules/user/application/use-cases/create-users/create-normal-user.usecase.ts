@@ -1,13 +1,13 @@
 import { CreateNormalUserInput } from '../../inputs';
 import { CreateUserOutPut } from '../../output';
-import { CreateNormalUserPort, UserRepositoryPort } from '../../ports';
+import { ICreateNormalUserUseCase, UserRepositoryPort } from '../../ports';
 import { Email, HashedPassword, User } from '@/modules/user/domain';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { BadRequestError } from '@/shared/errors';
 import { Gender } from '@/modules/user/domain/value-objects/gender.vo';
 import { AgeRules } from '@/modules/auth/domain/rules/age.rules';
 
-export class CreateNormalUserUseCase implements CreateNormalUserPort {
+export class CreateNormalUserUseCase implements ICreateNormalUserUseCase {
   constructor(private _userRepo: UserRepositoryPort) {}
   async execute(input: CreateNormalUserInput): Promise<CreateUserOutPut> {
     const email = Email.create(input.email);

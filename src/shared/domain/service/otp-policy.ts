@@ -13,9 +13,12 @@ export interface OtpState {
 }
 
 export class OtpPolicy {
-  private static readonly _MAX_VERIFICATION_COUNT = 6;
-  private static readonly _MAX_OTP_GENERATE_COUNT = 3;
-  private static readonly _RESEND_AFTER = 30_000;
+  private static readonly _max_verification_count =
+    Number(process.env.MAX_VERIFICATION_COUNT) | 6;
+  private static readonly _max_otp_generate_count =
+    Number(process.env.MAX_OTP_GENERATE_COUNT) | 3;
+  private static readonly _resend_after =
+    Number(process.env.RESEND_AFTER) | 30_000;
 
   static createInitialState(
     id: string,
@@ -28,9 +31,9 @@ export class OtpPolicy {
       email,
       hashedOtp,
       purpose,
-      verificationCount: this._MAX_VERIFICATION_COUNT,
-      otpGenerateCount: this._MAX_OTP_GENERATE_COUNT,
-      otpResendAt: new Date(Date.now() + this._RESEND_AFTER),
+      verificationCount: this._max_verification_count,
+      otpGenerateCount: this._max_otp_generate_count,
+      otpResendAt: new Date(Date.now() + this._resend_after),
     };
   }
 
@@ -49,7 +52,7 @@ export class OtpPolicy {
       ...state,
       otpGenerateCount: state.otpGenerateCount - 1,
       hashedOtp,
-      otpResendAt: new Date(Date.now() + this._RESEND_AFTER),
+      otpResendAt: new Date(Date.now() + this._resend_after),
     };
   }
 

@@ -1,15 +1,15 @@
-import { SucceessResType } from '@/shared/types/success-res.type';
-import {
-  UpdateUserEmailInterface,
-  VerifyOtpEmailUpdateInterface,
-} from '../../interfaces';
 import { VerifyOtpInput } from '@/shared/application/input';
 import { VerifyOtpInterface } from '@/shared/application/ports';
+import { SucceessResType } from '@/shared/types/success-res.type';
+import {
+  IUpdateUserEmailRepo,
+  IVerifyOtpEmailUpdateUseCase,
+} from '../../ports';
 
-export class VerifyOtpEmailUpdateUseCase implements VerifyOtpEmailUpdateInterface {
+export class VerifyOtpEmailUpdateUseCase implements IVerifyOtpEmailUpdateUseCase {
   constructor(
     private readonly _verifyOtp: VerifyOtpInterface,
-    private readonly _updateEmailRepo: UpdateUserEmailInterface,
+    private readonly _updateEmailRepo: IUpdateUserEmailRepo,
   ) {}
   async execute(input: VerifyOtpInput): Promise<SucceessResType> {
     const { email } = await this._verifyOtp.execute({

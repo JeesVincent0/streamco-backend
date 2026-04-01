@@ -1,9 +1,8 @@
-import { S3Service } from '@/shared/infrastructure/storage';
-import { ChannelRepoPort, UpdateChannelImagesPort } from '../application/ports';
+import { IChannelRepo, IUpdateChannelImageUsecase } from '../application/ports';
 import {
-  CHANNEL_REPO_PORT,
-  CREATE_CHANNEL_USE_CASE,
-  GET_CHANNELS_PORT,
+  CHANNEL_REPO_TOKEN,
+  CREATE_CHANNEL_USE_CASE_TOKEN,
+  GET_CHANNELS_USE_CASE_TOKEN,
   UPDATE_CHANNEL_IMAGES_USE_CASE,
 } from '../application/token';
 import {
@@ -12,37 +11,39 @@ import {
   UpdateChannelImageUsecase,
 } from '../application/usecase';
 import { ChannelRepository } from '../infrastructure/repository/channel.repository';
+import { type IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
+import { STORAGE_SERVICE_PORT_TOKEN } from '@/shared/infrastructure/storage/token';
 
 export const channelProviders = [
   {
-    provide: CREATE_CHANNEL_USE_CASE,
+    provide: CREATE_CHANNEL_USE_CASE_TOKEN,
     useFactory: (
-      updateImage: UpdateChannelImagesPort,
-      channelRepo: ChannelRepoPort,
+      updateImage: IUpdateChannelImageUsecase,
+      channelRepo: IChannelRepo,
     ) => {
       return new CreateChannelUsecase(updateImage, channelRepo);
     },
-    inject: [UPDATE_CHANNEL_IMAGES_USE_CASE, CHANNEL_REPO_PORT],
+    inject: [UPDATE_CHANNEL_IMAGES_USE_CASE, CHANNEL_REPO_TOKEN],
   },
 
   {
     provide: UPDATE_CHANNEL_IMAGES_USE_CASE,
-    useFactory: (s3Service: S3Service) => {
+    useFactory: (s3Service: IStorageService) => {
       return new UpdateChannelImageUsecase(s3Service);
     },
-    inject: [S3Service],
+    inject: [STORAGE_SERVICE_PORT_TOKEN],
   },
 
   {
-    provide: CHANNEL_REPO_PORT,
+    provide: CHANNEL_REPO_TOKEN,
     useClass: ChannelRepository,
   },
 
   {
-    provide: GET_CHANNELS_PORT,
-    useFactory: (channelRepo: ChannelRepoPort) => {
+    provide: GET_CHANNELS_USE_CASE_TOKEN,
+    useFactory: (channelRepo: IChannelRepo) => {
       return new GetChannelsUsecase(channelRepo);
     },
-    inject: [CHANNEL_REPO_PORT],
+    inject: [CHANNEL_REPO_TOKEN],
   },
 ];

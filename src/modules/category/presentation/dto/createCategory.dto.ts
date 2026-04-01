@@ -7,11 +7,13 @@ import {
   Matches,
 } from 'class-validator';
 import { CATEGORY_STATUS } from '../../domain/enums/category-status.enum';
+import { Transform } from 'class-transformer';
 
 export class CreateCategoryDto {
+  @Transform(({ value }) => (typeof value === 'string' ? value?.trim() : ''))
   @IsString()
   @IsNotEmpty({ message: 'Category name cannot be empty' })
-  @MaxLength(30) // Increased to allow normal category names
+  @MaxLength(30)
   name: string;
 
   @IsString()

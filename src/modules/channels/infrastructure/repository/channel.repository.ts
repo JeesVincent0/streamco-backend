@@ -3,18 +3,31 @@ import { Model } from 'mongoose';
 import { Channel } from '../../domain/entity';
 import {
   ChannelFilterParams,
-  ChannelRepoPort,
+  IChannelRepo,
   PaginatedChannelsResult,
 } from '../../application/ports';
 import { ChannelDocument } from '../schema';
 import { ChannelMapper } from '../mappers/channel.mappers';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { STORAGE_SERVICE_PORT_TOKEN } from '@/shared/infrastructure/storage/token';
+import { type IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
+
+interface IFilter {
+  userId?: string;
+  $or?: [
+    { channelName: { $regex: string; $options: 'i' } },
+    { channelId: { $regex: string; $options: 'i' } },
+  ];
+}
 
 @Injectable()
-export class ChannelRepository implements ChannelRepoPort {
+export class ChannelRepository implements IChannelRepo {
   constructor(
     @InjectModel('Channel')
     private readonly _channelModel: Model<ChannelDocument>,
+
+    @Inject(STORAGE_SERVICE_PORT_TOKEN)
+    private readonly _storageService: IStorageService,
   ) {}
 
   async findChannelsWithPagination({
@@ -23,14 +36,12 @@ export class ChannelRepository implements ChannelRepoPort {
     search,
     userId,
   }: ChannelFilterParams): Promise<PaginatedChannelsResult> {
-    const filter: any = {};
+    const filter: IFilter = {};
 
-    // 1. Filter by specific user if requested
     if (userId) {
       filter.userId = userId;
     }
 
-    // 2. Apply Search if user typed something
     if (search) {
       filter.$or = [
         { channelName: { $regex: search, $options: 'i' } },
@@ -38,7 +49,6 @@ export class ChannelRepository implements ChannelRepoPort {
       ];
     }
 
-    // 3. Run queries in parallel for performance
     const [total, rawChannels] = await Promise.all([
       this._channelModel.countDocuments(filter),
       this._channelModel
@@ -49,10 +59,37 @@ export class ChannelRepository implements ChannelRepoPort {
         .exec(),
     ]);
 
-    // 4. Map DB Documents back to pure Domain Entities
+    const channels = await Promise.all(
+      rawChannels.map(async (doc) => {
+        if (
+          doc.profileImageUrl &&
+          doc.profileImageUrl.startsWith(
+            'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
+          )
+        ) {
+          doc.profileImageUrl = await this._storageService.getSignedViewUrl(
+            doc.profileImageUrl,
+          );
+        }
+
+        if (
+          doc.backgroundBannerUrl &&
+          doc.backgroundBannerUrl.startsWith(
+            'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
+          )
+        ) {
+          doc.backgroundBannerUrl = await this._storageService.getSignedViewUrl(
+            doc.backgroundBannerUrl,
+          );
+        }
+
+        return ChannelMapper.toDomain(doc);
+      }),
+    );
+
     return {
       total,
-      channels: rawChannels.map((doc) => ChannelMapper.toDomain(doc)),
+      channels,
     };
   }
 
@@ -60,6 +97,28 @@ export class ChannelRepository implements ChannelRepoPort {
     const channelDoc = await this._channelModel.findOne({ channelId }).exec();
 
     if (!channelDoc) return null;
+    if (
+      channelDoc.profileImageUrl &&
+      channelDoc.profileImageUrl.startsWith(
+        'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
+      )
+    ) {
+      channelDoc.profileImageUrl = await this._storageService.getSignedViewUrl(
+        channelDoc.profileImageUrl,
+      );
+    }
+
+    if (
+      channelDoc.backgroundBannerUrl &&
+      channelDoc.backgroundBannerUrl.startsWith(
+        'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
+      )
+    ) {
+      channelDoc.backgroundBannerUrl =
+        await this._storageService.getSignedViewUrl(
+          channelDoc.backgroundBannerUrl,
+        );
+    }
 
     return ChannelMapper.toDomain(channelDoc);
   }
@@ -79,7 +138,7 @@ export class ChannelRepository implements ChannelRepoPort {
       await this._channelModel
         .findOneAndUpdate({ id: channel.id }, persistenceData, {
           upsert: true,
-          new: true,
+          returnDocument: 'after',
         })
         .exec();
     } else {

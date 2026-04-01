@@ -1,18 +1,26 @@
 import { UserResponse } from '@/shared/types';
-import { GetUserProfileInterface } from '../../interfaces/';
 import { UserRepositoryPort } from '../../ports';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { GetUserProfileMapper } from '@/shared/mappers/get-user-profile.mapper';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { IGetUserProfileUseCase } from '../../ports/get-user/get-user-profile.usecase.port';
+import { Advertiser, BaseUser, User } from '@/modules/user/domain';
 
-export class GetUserProfileUseCase implements GetUserProfileInterface {
+export class GetUserProfileUseCase implements IGetUserProfileUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _logger: FileLogger,
   ) {}
-  async execute(input: { id: string }): Promise<UserResponse> {
-    const user = await this._userRepo.findById(input.id);
+  async execute(input: {
+    id: string;
+    paramsId: string;
+  }): Promise<UserResponse> {
+    let user: User | BaseUser | Advertiser | null;
+    user = await this._userRepo.findById(input.paramsId);
+    if (!user) {
+      user = await this._userRepo.findById(input.id);
+    }
     if (!user) {
       this._logger.error({
         event: LOG_EVENTS.USER_NOT_FOUND,

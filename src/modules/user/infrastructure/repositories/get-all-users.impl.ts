@@ -1,10 +1,10 @@
 import { GetAllUsersDto } from '@/shared/dto';
-import { UserQueryPort } from '../../application/ports/';
 import { BaseUser } from '../../domain';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
+import { IUserQuery } from '../../application';
 
-export class GetAllUsersRepository implements UserQueryPort {
+export class GetAllUsersRepository implements IUserQuery {
   constructor(
     @InjectModel('User') private readonly _userModel: Model<BaseUser>,
   ) {}

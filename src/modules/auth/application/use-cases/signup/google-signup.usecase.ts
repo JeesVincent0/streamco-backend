@@ -1,25 +1,26 @@
 import {
-  CreateUserWIthGoogleAuthPort,
+  ICreateUserWithGoogleAuthUseCase,
   UserRepositoryPort,
 } from '@/modules/user/application';
-import { Email, UserRole, UserStatus } from '@/modules/user/domain';
 import { TokenPayload } from '../../../domain';
-import { SCOPE } from '@/modules/auth-security/domain';
-import { GoogleAuth } from '../../inputs';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { GenerateTokenUseCase } from '../token/generate-token.usecase';
+import { GoogleAuthInPut } from '../../inputs';
+import { IGenerateTokenUseCase, IGoogleAuthUseCase } from '../../ports';
 import { BadRequestError } from '@/shared/errors';
+import { GoogleAuthUseCaseOutPut } from '../../output';
+import { SCOPE } from '@/modules/auth-security/domain';
+import { FileLogger } from '@/shared/logger/file-logger';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { Email, UserRole, UserStatus } from '@/modules/user/domain';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 
-export class GoogleAuthUseCase {
+export class GoogleAuthUseCase implements IGoogleAuthUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
-    private readonly _createUserWithGoogleAuth: CreateUserWIthGoogleAuthPort,
-    private readonly _generateTokenUseCase: GenerateTokenUseCase,
+    private readonly _createUserWithGoogleAuth: ICreateUserWithGoogleAuthUseCase,
+    private readonly _generateTokenUseCase: IGenerateTokenUseCase,
     private readonly _logger: FileLogger,
   ) {}
-  async execute(input: GoogleAuth) {
+  async execute(input: GoogleAuthInPut): Promise<GoogleAuthUseCaseOutPut> {
     const email = Email.create(input.email);
 
     let user = await this._userRepo.findByEmail(email);

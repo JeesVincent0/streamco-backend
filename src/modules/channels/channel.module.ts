@@ -4,9 +4,11 @@ import { AuthSecurityModule } from '../auth-security/auth-security.module';
 import { channelProviders } from './provider';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ChannelSchema } from './infrastructure/schema';
+import { StorageModule } from '@/shared/infrastructure/storage/storage.module';
 
 @Module({
   imports: [
+    StorageModule,
     AuthSecurityModule,
     MongooseModule.forFeature([{ name: 'Channel', schema: ChannelSchema }]),
   ],

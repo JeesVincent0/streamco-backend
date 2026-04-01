@@ -11,7 +11,7 @@ export interface PaginatedChannelsResult {
   total: number;
 }
 
-export interface ChannelRepoPort {
+export interface IChannelRepo {
   findByChannelId(channelId: string): Promise<Channel | null>;
   findByUserId(userId: string): Promise<Channel | null>;
   save(channel: Channel): Promise<void>;

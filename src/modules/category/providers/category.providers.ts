@@ -1,54 +1,60 @@
-import { CategoriesQueryPort } from '../application/ports';
-import { CategoryRepoPort } from '../application/ports/category-repository.port';
+// repo interfaces
+import { ICategoriesQuery, ICategoryRepo } from '../application/ports';
+
+// tokens
 import {
-  CATEGORY_REPO_PORT,
-  CREATE_CATEGORY_USE_CASE,
-  GET_CATEGORIES_QUERY_PORT,
-  GET_CATEGORIES_USE_CASE,
-  UPDATE_CATEGORY_STATUS_USE_CASE,
+  CATEGORY_REPO_TOKEN,
+  GET_CATEGORIES_QUERY_TOKEN,
+  GET_CATEGORIES_USE_CASE_TOKEN,
+  CREATE_CATEGORY_USE_CASE_TOKEN,
+  UPDATE_CATEGORY_STATUS_USE_CASE_TOKEN,
 } from '../application/token';
+
+// usecases
 import {
-  CreateCategoryUasecase,
   GetCategoriesUsecase,
+  CreateCategoryUasecase,
   UpdateCategoryStatusUsecase,
 } from '../application/usecase';
+
+// repository concrete methods
 import {
-  CategoryRepositoryImplMonogoDB,
   GetAllCategoriesRepository,
+  CategoryRepositoryImplMonogoDB,
 } from '../infrastructure/repositories';
 
 export const categoryProviders = [
   {
-    provide: CREATE_CATEGORY_USE_CASE,
-    useFactory: (categoryRepo: CategoryRepoPort) => {
+    provide: CREATE_CATEGORY_USE_CASE_TOKEN,
+    useFactory: (categoryRepo: ICategoryRepo) => {
       return new CreateCategoryUasecase(categoryRepo);
     },
-    inject: [CATEGORY_REPO_PORT],
+    inject: [CATEGORY_REPO_TOKEN],
   },
 
   {
-    provide: GET_CATEGORIES_USE_CASE,
-    useFactory: (categoryRepo: CategoriesQueryPort) => {
+    provide: GET_CATEGORIES_USE_CASE_TOKEN,
+    useFactory: (categoryRepo: ICategoriesQuery) => {
       return new GetCategoriesUsecase(categoryRepo);
     },
-    inject: [GET_CATEGORIES_QUERY_PORT],
+    inject: [GET_CATEGORIES_QUERY_TOKEN],
   },
 
   {
-    provide: UPDATE_CATEGORY_STATUS_USE_CASE,
-    useFactory: (categoryRepo: CategoryRepoPort) => {
+    provide: UPDATE_CATEGORY_STATUS_USE_CASE_TOKEN,
+    useFactory: (categoryRepo: ICategoryRepo) => {
       return new UpdateCategoryStatusUsecase(categoryRepo);
     },
-    inject: [CATEGORY_REPO_PORT],
+    inject: [CATEGORY_REPO_TOKEN],
   },
 
   {
-    provide: CATEGORY_REPO_PORT,
+    provide: CATEGORY_REPO_TOKEN,
     useClass: CategoryRepositoryImplMonogoDB,
   },
 
   {
-    provide: GET_CATEGORIES_QUERY_PORT,
+    provide: GET_CATEGORIES_QUERY_TOKEN,
     useClass: GetAllCategoriesRepository,
   },
 ];

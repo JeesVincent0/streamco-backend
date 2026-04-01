@@ -7,8 +7,9 @@ import {
 } from '@/modules/user/domain';
 import { IGoogleAuthInput } from '../../inputs';
 import { UserRepositoryPort } from '../../ports';
+import { ICreateUserWithGoogleAuthUseCase } from '../../ports';
 
-export class CreateUserWithGoogleAuthUseCase {
+export class CreateUserWithGoogleAuthUseCase implements ICreateUserWithGoogleAuthUseCase {
   constructor(private readonly _userRepo: UserRepositoryPort) {}
   async execute(input: IGoogleAuthInput): Promise<BaseUser> {
     const email = Email.create(input.email);

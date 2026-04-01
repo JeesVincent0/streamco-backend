@@ -1,5 +1,5 @@
 import { UpdateUserBasicInput } from '../../inputs/update-user';
 
-export interface UpdateUserBasicPort {
+export interface IUpdateUserBasicRepo {
   execute(input: UpdateUserBasicInput): Promise<void>;
 }

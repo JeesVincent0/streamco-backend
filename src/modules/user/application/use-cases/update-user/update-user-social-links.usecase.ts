@@ -1,14 +1,15 @@
 import { SucceessResType } from '@/shared/types/success-res.type';
 import { SocialLinksInput } from '../../inputs/update-user';
-import { UpdateUserSocialLinksInterface } from '../../interfaces';
 import { UserRepositoryPort } from '../../ports';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { User, UserSocialMediaType } from '@/modules/user/domain';
+import { IUpdateUserSocialLinksUseCase } from '../../ports/update-user/update-user-social-link.usecase.port';
 
-export class UpdateUserSocialLinksUseCase implements UpdateUserSocialLinksInterface {
+export class UpdateUserSocialLinksUseCase implements IUpdateUserSocialLinksUseCase {
   constructor(private readonly _userRepo: UserRepositoryPort) {}
   async execute(input: SocialLinksInput): Promise<SucceessResType> {
+    // get the user from the DB
     const user = (await this._userRepo.findById(input.id)) as User;
     if (!user) {
       throw new BadRequestError(ERROR_MESSAGES.USER_NOT_FOUND);

@@ -1,19 +1,18 @@
 import { UpdateUserEmailInput } from '../../inputs/update-user';
-import { UpdateUserEmailInterface } from '../../interfaces';
 import { Email } from '@/modules/user/domain';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
-import type { CheckUserExistsPort } from '../../ports';
+import type { ICheckUserExists, IUpdateUserEmailUseCase } from '../../ports';
 import type { SendOtpInterface } from '@/shared/application/ports';
 import { OtpPurpose } from '@/modules/auth/domain';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { SucceessOtpSend } from '../../output';
 
-export class UpdateUserEmailUseCase implements UpdateUserEmailInterface {
+export class UpdateUserEmailUseCase implements IUpdateUserEmailUseCase {
   constructor(
-    private readonly _checkUserExists: CheckUserExistsPort,
+    private readonly _checkUserExists: ICheckUserExists,
     private readonly _sendOtp: SendOtpInterface,
     private readonly _logger: FileLogger,
   ) {}

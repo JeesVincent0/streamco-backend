@@ -1,13 +1,13 @@
 import { SucceessResType } from '@/shared/types/success-res.type';
 import { UpdateAvatarUrlType } from '../../inputs/update-user/update-user-avatar.input';
-import { UpdateUserAvatarInterface } from '../../interfaces/update-user-avatar.interface';
 import type { UserRepositoryPort } from '../../ports';
 import { FileLogger } from '@/shared/logger/file-logger';
 import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { IUpdateUserAvatarUlrUsecase } from '../../ports/update-user';
 
-export class UpdateUserAvatarUlrUsecase implements UpdateUserAvatarInterface {
+export class UpdateUserAvatarUlrUsecase implements IUpdateUserAvatarUlrUsecase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _logger: FileLogger,

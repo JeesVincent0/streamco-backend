@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import type { CategoryRepoPort } from '../../application/ports/category-repository.port';
+import type { ICategoryRepo } from '../../application/ports/category-repository.port';
 import { Category } from '../../domain/entity';
 import { CategoryDocument } from '../schema';
 import { CategoryMapper } from '../mappers';
 import { Slug } from '../../domain/value-objects';
 
 @Injectable()
-export class CategoryRepositoryImplMonogoDB implements CategoryRepoPort {
+export class CategoryRepositoryImplMonogoDB implements ICategoryRepo {
   constructor(
     @InjectModel('Categories')
     private readonly _categoryModel: Model<CategoryDocument>,
@@ -44,7 +44,7 @@ export class CategoryRepositoryImplMonogoDB implements CategoryRepoPort {
       .findOneAndUpdate(
         { id: persistenceData.id },
         { $set: persistenceData },
-        { new: true, upsert: true },
+        { returnDocument: 'after', upsert: true },
       )
       .lean()
       .exec();

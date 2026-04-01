@@ -1,30 +1,40 @@
 import {
   SigninDto,
-  SignupAdvertiserUserDto,
   SignupNormalUserDto,
+  SignupAdvertiserUserDto,
 } from '../dto';
+
 import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
   Req,
   Res,
+  Post,
+  Body,
+  Inject,
+  HttpCode,
   UseGuards,
+  Controller,
+  HttpStatus,
 } from '@nestjs/common';
-import { ConfirmSignupUserUseCase } from '../../application/use-cases/signup/confirm-signup-user.usecase';
-import {
-  SignupAdvertiserUseCase,
-  SignupNormalUserUseCase,
-} from '../../application/use-cases';
-import { SigninUseCase } from '../../application/use-cases/signin';
-import { AdminSigninUseCase } from '../../application/use-cases/signin/admin-signin-usecase';
+
 import { type Response } from 'express';
-import { SignoutUseCase } from '../../application/use-cases/signup/signout.usecase';
-import type { RequestWithUserInterface } from '../interfaces';
+import { type RequestWithUserInterface } from '../interfaces';
 import { AccessTokenGuard } from '@/modules/auth-security/presentation';
 import { AccessTokenPayload } from '@/modules/auth-security/application/types';
+
+import {
+  SIGNIN_USE_CASE_TOKEN,
+  SIGNOUT_USE_CASE_TOKEN,
+  ADMIN_SIGNIN_USE_CASE_TOKEN,
+  CONFIRM_SIGNUP_USE_CASE_TOKEN,
+  SIGNUP_ADVERTISER_USE_CASE_TOKEN,
+  SIGNUP_NORMAL_USER_USE_CASE_TOKEN,
+  type ISignoutUseCase,
+  type IConfirmSignupUserUseCase,
+  type ISignupAdvertiserUseCase,
+  type ISignupNormalUserUseCase,
+  type IAdminSigninUseCase,
+  type ISigninUseCase,
+} from '../../application';
 
 // Controller for handling registration
 // of both normal users and advertisers.
@@ -36,12 +46,23 @@ import { AccessTokenPayload } from '@/modules/auth-security/application/types';
 @Controller('auth')
 export class RegistrationController {
   constructor(
-    private readonly _signinUseCase: SigninUseCase,
-    private readonly _signupNormalUserUseCase: SignupNormalUserUseCase,
-    private readonly _signupAdvertiserUserUseCase: SignupAdvertiserUseCase,
-    private readonly _confirmSignupUserUseCase: ConfirmSignupUserUseCase,
-    private readonly _adminSigninUseCase: AdminSigninUseCase,
-    private readonly _signoutUseCase: SignoutUseCase,
+    @Inject(SIGNIN_USE_CASE_TOKEN)
+    private readonly _signinUseCase: ISigninUseCase,
+
+    @Inject(SIGNUP_NORMAL_USER_USE_CASE_TOKEN)
+    private readonly _signupNormalUserUseCase: ISignupNormalUserUseCase,
+
+    @Inject(SIGNUP_ADVERTISER_USE_CASE_TOKEN)
+    private readonly _signupAdvertiserUserUseCase: ISignupAdvertiserUseCase,
+
+    @Inject(CONFIRM_SIGNUP_USE_CASE_TOKEN)
+    private readonly _confirmSignupUserUseCase: IConfirmSignupUserUseCase,
+
+    @Inject(ADMIN_SIGNIN_USE_CASE_TOKEN)
+    private readonly _adminSigninUseCase: IAdminSigninUseCase,
+
+    @Inject(SIGNOUT_USE_CASE_TOKEN)
+    private readonly _signoutUseCase: ISignoutUseCase,
   ) {}
 
   // Normal User registration

@@ -9,17 +9,19 @@ import {
 } from './infrastructure/schemas';
 
 import { userProviders } from './providers/user.providers';
-import {
-  CREATE_ADVERTISER_USER_PORT,
-  CREATE_NORMAL_USER_PORT,
-  CREATE_USER_WITH_GOOGLE_AUTH_PORT,
-  GET_ALL_USERS_PORT,
-  UPDATE_USER_STATUS_PORT,
-  USER_REPOSITORY_PORT,
-} from './application';
+import { USER_REPOSITORY_PORT } from './application';
 import { AuthSecurityModule } from '../auth-security/auth-security.module';
 import { SharedModule } from '@/shared/shared.module';
 import { StorageModule } from '@/shared/infrastructure/storage/storage.module';
+
+// TOKENS
+import {
+  CREATE_ADVERTISER_USE_CASE_TOKEN,
+  CREATE_USER_USE_CASE_TOKEN,
+  CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
+} from './application/user.tokens';
+import { AdminController } from './presentation/controller/admin.controller';
+import { adminProvide } from './providers/admin.providers';
 
 @Module({
   imports: [
@@ -40,15 +42,14 @@ import { StorageModule } from '@/shared/infrastructure/storage/storage.module';
     AuthSecurityModule,
     SharedModule,
   ],
-  controllers: [UserController],
-  providers: [...userProviders],
+  controllers: [UserController, AdminController],
+  providers: [...userProviders, ...adminProvide],
   exports: [
+    CREATE_USER_USE_CASE_TOKEN,
+    CREATE_ADVERTISER_USE_CASE_TOKEN,
+    CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
+
     USER_REPOSITORY_PORT,
-    GET_ALL_USERS_PORT,
-    CREATE_NORMAL_USER_PORT,
-    CREATE_ADVERTISER_USER_PORT,
-    CREATE_USER_WITH_GOOGLE_AUTH_PORT,
-    UPDATE_USER_STATUS_PORT,
   ],
 })
 export class UserModule {}

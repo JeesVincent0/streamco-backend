@@ -5,16 +5,20 @@ import { BaseUserDocument } from '../schemas/base-user.schema';
 import { Email } from '@/modules/user/domain/value-objects';
 import { Advertiser, BaseUser, User } from '../../domain/entity';
 import { BaseUserMapper } from '../mappers/base-user.mapper';
-import { FileLogger } from '@/shared/logger/file-logger';
 import { UserRole } from '../../domain/enums';
 import { AdvertiserMapper, UserMappers } from '../mappers';
 import { BadRequestError } from '@/shared/errors';
+import { Inject } from '@nestjs/common';
+import { STORAGE_SERVICE_PORT_TOKEN } from '@/shared/infrastructure/storage/token';
+import { type IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
 
 export class MongoRepository implements UserRepositoryPort {
   constructor(
     @InjectModel('User')
     private readonly _userModel: Model<BaseUserDocument>,
-    private readonly _logger: FileLogger,
+
+    @Inject(STORAGE_SERVICE_PORT_TOKEN)
+    private readonly _storageService: IStorageService,
   ) {}
 
   async findById(id: string): Promise<BaseUser | null | User | Advertiser> {
@@ -24,6 +28,17 @@ export class MongoRepository implements UserRepositoryPort {
     });
 
     if (!userDoc) return null;
+
+    if (
+      userDoc.avatarUrl &&
+      userDoc.avatarUrl.startsWith(
+        'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
+      )
+    ) {
+      userDoc.avatarUrl = await this._storageService.getSignedViewUrl(
+        userDoc.avatarUrl,
+      );
+    }
 
     return BaseUserMapper.toDomain(userDoc);
   }
@@ -37,7 +52,16 @@ export class MongoRepository implements UserRepositoryPort {
     });
 
     if (!userDoc) return null;
-
+    if (
+      userDoc.avatarUrl &&
+      userDoc.avatarUrl.startsWith(
+        'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
+      )
+    ) {
+      userDoc.avatarUrl = await this._storageService.getSignedViewUrl(
+        userDoc.avatarUrl,
+      );
+    }
     return BaseUserMapper.toDomain(userDoc);
   }
 
