@@ -5,7 +5,6 @@ import { IGetAllChannelsUseCase } from '../../ports';
 
 export class GetAllChannelsUseCase implements IGetAllChannelsUseCase {
   execute(input: GetAllChannelsUseCaseInPut): GetAllChannelsUseCaseOutPut {
-    console.log(input);
     return {
       status: 'success',
       message: 'Channels retrieved successfully',

@@ -16,10 +16,10 @@ import {
   ScopeGuard,
   AccessTokenGuard,
 } from '@/modules/auth-security/presentation';
+import { GetChannelsQueryArgsDto } from '../dto';
 import { SCOPE } from '@/modules/auth-security/domain';
 import type { IGetAllChannelsUseCase } from '../../application/ports';
 import { GET_ALL_CHANNELS_USE_CASE_TOKEN } from '../../application/token';
-import type { GetChannelsQueryArgsDto } from '../dto';
 
 @Controller(`${ROUTES.ADMIN.ROOT}/${ROUTES.ADMIN.CHANNELS}`)
 @UseGuards(AccessTokenGuard, ScopeGuard)
@@ -75,6 +75,14 @@ export class AdminChannelController {
   @Scopes(SCOPE.ADMIN_READ)
   @HttpCode(HttpStatus.OK)
   getAllChannels(@Query() qeuryArgs: GetChannelsQueryArgsDto) {
-    console.log(qeuryArgs);
+    return this._getAllChannelsUseCase.execute({
+      page: qeuryArgs.page,
+      limit: qeuryArgs.limit,
+      sortBy: qeuryArgs.sortBy,
+      order: qeuryArgs.order,
+      search: qeuryArgs.search,
+      isLive: qeuryArgs.isLive,
+      status: qeuryArgs.status,
+    });
   }
 }
