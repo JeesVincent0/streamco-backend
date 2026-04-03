@@ -7,6 +7,8 @@ import { MongoDatabaseModule } from '@/shared/infrastructure/database/mongo/mong
 import { HealthController } from './shared/health/health.controller';
 import { CategoryModule } from './modules/category/category.module';
 import { ChannelModule } from './modules/channels/channel.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TransformResponseInterceptor } from './shared/interceptors';
 
 @Module({
   imports: [
@@ -21,6 +23,11 @@ import { ChannelModule } from './modules/channels/channel.module';
     }),
   ],
   controllers: [HealthController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformResponseInterceptor,
+    },
+  ],
 })
 export class AppModule {}

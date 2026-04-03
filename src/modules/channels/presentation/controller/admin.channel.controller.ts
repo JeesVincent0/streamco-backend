@@ -21,6 +21,8 @@ import { SCOPE } from '@/modules/auth-security/domain';
 import type { IGetAllChannelsUseCase } from '../../application/ports';
 import { GET_ALL_CHANNELS_USE_CASE_TOKEN } from '../../application/token';
 import { ChannelResponseMappers } from '../mappers';
+import { ResponseMessage } from '@/shared/decorators';
+import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
 
 @Controller(`${ROUTES.ADMIN.ROOT}/${ROUTES.ADMIN.CHANNELS}`)
 @UseGuards(AccessTokenGuard, ScopeGuard)
@@ -33,20 +35,18 @@ export class AdminChannelController {
   @Patch(`${ROUTES.COMMON.ID}/${ROUTES.COMMON.STATUS}`)
   @Scopes(SCOPE.ADMIN_WRITE)
   @HttpCode(HttpStatus.OK)
+  @ResponseMessage(SUCCESS_MESSAGE.CHANNEL_STATUS_CHANGED_SUCCESSFULLY)
   changeStatus(
     @Body() body: { channelId: string; status: string },
     @Param() param: { id: string },
   ) {
     console.log(body, param.id);
-    return {
-      status: 'success',
-      message: 'Status changed',
-    };
   }
 
   @Get(`${ROUTES.COMMON.ID}`)
   @Scopes(SCOPE.ADMIN_READ)
   @HttpCode(HttpStatus.OK)
+  @ResponseMessage(SUCCESS_MESSAGE.CHANNEL_FETCHED_SUCCESSFULLY)
   getChannel(@Param() id) {
     console.log(id);
 
@@ -65,16 +65,13 @@ export class AdminChannelController {
       userId: 'a4a51dfb-5765-4378-92f8-d75e69a5c040',
     };
 
-    return {
-      status: 'success',
-      message: 'successfully fetched',
-      data: channel,
-    };
+    return channel;
   }
 
   @Get()
   @Scopes(SCOPE.ADMIN_READ)
   @HttpCode(HttpStatus.OK)
+  @ResponseMessage(SUCCESS_MESSAGE.CHANNELS_FETCHED_SUCCESSFULLY)
   async getAllChannels(@Query() qeuryArgs: GetChannelsQueryArgsDto) {
     const result = await this._getAllChannelsUseCase.execute({
       page: qeuryArgs.page,
@@ -86,17 +83,15 @@ export class AdminChannelController {
       status: qeuryArgs.status,
     });
 
-    return {
-      status: 'success',
-      message: 'Channels fetched sucessfully',
-      data: {
-        pagination: {
-          page: result.pagination.page,
-          limit: result.pagination.limit,
-          totalPages: result.pagination.totalPages,
-        },
-        channels: ChannelResponseMappers.toChannels(result.channels),
+    const data = {
+      pagination: {
+        page: result.pagination.page,
+        limit: result.pagination.limit,
+        totalPages: result.pagination.totalPages,
       },
+      channels: ChannelResponseMappers.toChannels(result.channels),
     };
+
+    return data;
   }
 }
