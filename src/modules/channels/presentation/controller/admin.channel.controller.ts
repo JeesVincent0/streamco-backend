@@ -20,6 +20,7 @@ import { GetChannelsQueryArgsDto } from '../dto';
 import { SCOPE } from '@/modules/auth-security/domain';
 import type { IGetAllChannelsUseCase } from '../../application/ports';
 import { GET_ALL_CHANNELS_USE_CASE_TOKEN } from '../../application/token';
+import { ChannelResponseMappers } from '../mappers';
 
 @Controller(`${ROUTES.ADMIN.ROOT}/${ROUTES.ADMIN.CHANNELS}`)
 @UseGuards(AccessTokenGuard, ScopeGuard)
@@ -74,8 +75,8 @@ export class AdminChannelController {
   @Get()
   @Scopes(SCOPE.ADMIN_READ)
   @HttpCode(HttpStatus.OK)
-  getAllChannels(@Query() qeuryArgs: GetChannelsQueryArgsDto) {
-    return this._getAllChannelsUseCase.execute({
+  async getAllChannels(@Query() qeuryArgs: GetChannelsQueryArgsDto) {
+    const result = await this._getAllChannelsUseCase.execute({
       page: qeuryArgs.page,
       limit: qeuryArgs.limit,
       sortBy: qeuryArgs.sortBy,
@@ -84,5 +85,18 @@ export class AdminChannelController {
       isLive: qeuryArgs.isLive,
       status: qeuryArgs.status,
     });
+
+    return {
+      status: 'success',
+      message: 'Channels fetched sucessfully',
+      data: {
+        pagination: {
+          page: result.pagination.page,
+          limit: result.pagination.limit,
+          totalPages: result.pagination.totalPages,
+        },
+        channels: ChannelResponseMappers.toChannels(result.channels),
+      },
+    };
   }
 }

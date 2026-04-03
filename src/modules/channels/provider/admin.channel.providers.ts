@@ -1,12 +1,22 @@
-import { GET_ALL_CHANNELS_USE_CASE_TOKEN } from '../application/token';
+import { IGetAllChannelsRepository } from '../application/ports/admin/get-all-channels.repository.port';
+import {
+  GET_ALL_CHANNELS_REPO_TOKEN,
+  GET_ALL_CHANNELS_USE_CASE_TOKEN,
+} from '../application/token';
 import { GetAllChannelsUseCase } from '../application/usecase';
+import { GetAllChannelsRepositoryImpl } from '../infrastructure/repository';
 
 export const adminChannelProviders = [
   {
     provide: GET_ALL_CHANNELS_USE_CASE_TOKEN,
-    useFactory: () => {
-      return new GetAllChannelsUseCase();
+    useFactory: (getAllChannels: IGetAllChannelsRepository) => {
+      return new GetAllChannelsUseCase(getAllChannels);
     },
-    inject: [],
+    inject: [GET_ALL_CHANNELS_REPO_TOKEN],
+  },
+
+  {
+    provide: GET_ALL_CHANNELS_REPO_TOKEN,
+    useClass: GetAllChannelsRepositoryImpl,
   },
 ];
