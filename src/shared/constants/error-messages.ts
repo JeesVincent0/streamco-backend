@@ -1,4 +1,8 @@
 export const ERROR_MESSAGES = {
+  // FOR CHANNEL MODULE
+  CHANNEL_NOT_EXISTS: 'Channel not exists',
+  WRONG_STATUS: 'Wrong channel status entered',
+
   USE_ANOTHER_CHANNEL_ID: 'Use another channel ID',
   CATEGORY_NOT_FOUND: 'Category not found',
   USE_ANOTHER_SLUG: 'User another slug',

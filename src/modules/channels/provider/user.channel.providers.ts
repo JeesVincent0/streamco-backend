@@ -14,7 +14,7 @@ import { ChannelRepository } from '../infrastructure/repository/channel.reposito
 import { type IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
 import { STORAGE_SERVICE_PORT_TOKEN } from '@/shared/infrastructure/storage/token';
 
-export const channelProviders = [
+export const userChannelProviders = [
   {
     provide: CREATE_CHANNEL_USE_CASE_TOKEN,
     useFactory: (
