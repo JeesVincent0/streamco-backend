@@ -12,15 +12,16 @@ import { TransformResponseInterceptor } from './shared/interceptors';
 
 @Module({
   imports: [
-    ChannelModule,
-    AuthModule,
-    UserModule,
-    LoggerModule,
-    MongoDatabaseModule,
-    CategoryModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    MongoDatabaseModule,
+    LoggerModule,
+
+    AuthModule,
+    UserModule,
+    CategoryModule,
+    ChannelModule,
   ],
   controllers: [HealthController],
   providers: [

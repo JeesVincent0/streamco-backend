@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RESPONSE_MESSAGE } from '../decorators';
 
-// 1. Define the interface strictly
 export interface Response<T> {
   status: string;
   message: string;
@@ -19,20 +18,25 @@ export interface Response<T> {
 @Injectable()
 export class TransformResponseInterceptor<T> implements NestInterceptor<
   T,
-  Response<T>
+  Response<T> | T
 > {
   constructor(private reflector: Reflector) {}
 
   intercept(
     context: ExecutionContext,
     next: CallHandler<T>,
-  ): Observable<Response<T>> {
+  ): Observable<Response<T> | T> {
+    const message = this.reflector.get<string>(
+      RESPONSE_MESSAGE,
+      context.getHandler(),
+    );
+
+    if (!message) {
+      return next.handle();
+    }
+
     return next.handle().pipe(
       map((data: T): Response<T> => {
-        const message =
-          this.reflector.get<string>(RESPONSE_MESSAGE, context.getHandler()) ||
-          'Operation successful';
-
         const response: Response<T> = {
           status: 'success',
           message: message,
