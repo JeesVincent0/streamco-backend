@@ -7,3 +7,7 @@ export const GET_ALL_CHANNELS_USE_CASE_TOKEN = Symbol('IGetAllChannelsUseCase');
 export const UPDATE_CHANNEL_IMAGES_USE_CASE = Symbol(
   'UPDATE_CHANNEL_IMAGES_USE_CASE',
 );
+
+export const UPDATE_CHANNEL_STATUS_USE_CASE_TOKEN = Symbol(
+  'IUpdateChannelStatusUseCase',
+);
