@@ -3,8 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { redisProvider } from './redis.provider';
 import { RedisService } from './redis.service';
 import { FileLogger } from '@/shared/logger/file-logger';
-import { REDIS_IMPLE_TOKEN } from './token';
+
 import { RedisAuthCachedUserRepository } from './repositories/redis-auth-cached-user.repository';
+import { CHACHE_REPO_TOKEN } from './token';
 
 @Global()
 @Module({
@@ -14,13 +15,13 @@ import { RedisAuthCachedUserRepository } from './repositories/redis-auth-cached-
     RedisService,
     { provide: FileLogger, useClass: FileLogger },
     {
-      provide: REDIS_IMPLE_TOKEN,
+      provide: CHACHE_REPO_TOKEN,
       useFactory: (redisService: RedisService) => {
         return new RedisAuthCachedUserRepository(redisService);
       },
       inject: [RedisService],
     },
   ],
-  exports: [RedisService, REDIS_IMPLE_TOKEN],
+  exports: [RedisService, CHACHE_REPO_TOKEN],
 })
 export class RedisModule {}

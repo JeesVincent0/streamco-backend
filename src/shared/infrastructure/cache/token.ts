@@ -1,1 +1,1 @@
-export const REDIS_IMPLE_TOKEN = Symbol('RedisImplementation');
+export const CHACHE_REPO_TOKEN = Symbol('RedisImplementation');

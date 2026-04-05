@@ -1,14 +1,32 @@
 import { AccessTokenGuard } from '@/modules/auth-security/presentation';
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { ChannelOwnershipGuard } from '../../infrastructure/guards';
+import { ROUTES } from '@/shared/constants/routes';
+import { ResponseMessage } from '@/shared/decorators';
+import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
+import type { IGetBaseChannelUseCase } from '../../application/ports';
+import { GET_BASE_CHANNEL_USE_CASE_TOKEN } from '../../application/token';
 
-@Controller('channel')
+@Controller(ROUTES.CHANNEL.ROOT)
 @UseGuards(AccessTokenGuard, ChannelOwnershipGuard)
 export class ChannelController {
-  constructor() {}
+  constructor(
+    @Inject(GET_BASE_CHANNEL_USE_CASE_TOKEN)
+    private readonly _getBaseChannelUseCase: IGetBaseChannelUseCase,
+  ) {}
 
-  @Get(':id')
-  getBaseChannel(@Param('id') id: string) {
-    console.log('Get base channel id', id);
+  @Get(ROUTES.COMMON.ID)
+  @HttpCode(HttpStatus.OK)
+  @ResponseMessage(SUCCESS_MESSAGE.BASE_CHANNEL_DATA_FETCHED_SUCCESSFULLY)
+  async getBaseChannel(@Param('id') channelId: string) {
+    return await this._getBaseChannelUseCase.execute({ channelId });
   }
 }

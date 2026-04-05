@@ -10,7 +10,7 @@ import type { IChannelRepo } from '../../application/ports';
 import type { ICacheBaseRepo } from '@/shared/application/ports';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { RequestWithUserInterface } from '@/shared/interfaces';
-import { REDIS_IMPLE_TOKEN } from '@/shared/infrastructure/cache/token';
+import { CHACHE_REPO_TOKEN } from '@/shared/infrastructure/cache/token';
 
 @Injectable()
 export class ChannelOwnershipGuard implements CanActivate {
@@ -18,7 +18,7 @@ export class ChannelOwnershipGuard implements CanActivate {
     @Inject(CHANNEL_REPO_TOKEN)
     private readonly _channelRepo: IChannelRepo,
 
-    @Inject(REDIS_IMPLE_TOKEN)
+    @Inject(CHACHE_REPO_TOKEN)
     private readonly _chacheRepo: ICacheBaseRepo,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -45,6 +45,8 @@ export class ChannelOwnershipGuard implements CanActivate {
           channel.channelId,
           {
             userId: channel.userId,
+            channelName: channel.channelName,
+            profileImageUrl: channel.profileImageUrl,
           },
           Number(process.env.CHANNEL_CHACHE_TIMEOUT),
         );

@@ -3,6 +3,9 @@ export const ROUTES = {
     ROOT: 'admin',
     CHANNELS: 'channels',
   },
+  CHANNEL: {
+    ROOT: 'channel',
+  },
   COMMON: {
     ID: ':id',
     STATUS: 'status',
