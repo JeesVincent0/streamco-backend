@@ -44,9 +44,16 @@ export class ChannelOwnershipGuard implements CanActivate {
         await this._chacheRepo.save(
           channel.channelId,
           {
+            bio: channel.bio,
+            status: channel.status,
             userId: channel.userId,
+            isLive: channel.isLive,
+            createdAt: channel.createdAt,
+            channelId: channel.channelId,
             channelName: channel.channelName,
             profileImageUrl: channel.profileImageUrl,
+            subscribersCount: channel.subscribersCount,
+            backgroundBannerUrl: channel.backgroundBannerUrl,
           },
           Number(process.env.CHANNEL_CHACHE_TIMEOUT),
         );

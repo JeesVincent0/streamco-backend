@@ -1,3 +1,3 @@
-export interface GetBaseChannelInput {
+export interface GetChannelInput {
   channelId: string;
 }
