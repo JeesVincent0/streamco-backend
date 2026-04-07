@@ -1,45 +1,47 @@
 import {
-  // Ports
-  USER_REPOSITORY_PORT,
-
-  // use cases
-  CreateNormalUserUseCase,
-  CreateAdvertiserUserUseCase,
+  ICheckUserExists,
   UserRepositoryPort,
+  IUpdateUserBasicRepo,
+  USER_REPOSITORY_PORT,
+  IUpdateUserEmailRepo,
   GetUserProfileUseCase,
   UPDATE_USER_EMAIL_PORT,
-  ICheckUserExists,
-  IUpdateUserBasicRepo,
-  IUpdateUserEmailRepo,
+  CreateNormalUserUseCase,
+  CreateAdvertiserUserUseCase,
 } from '../application';
-import { CreateUserWithGoogleAuthUseCase } from '../application';
-import { GetBaseUserUseCase } from '../application/use-cases/get-user/get-base-user.usecase';
-import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
-import { FileLogger } from '@/shared/logger/file-logger';
+
+import {
+  GetBaseUserUseCase,
+  UpdateUserAvatarUlrUsecase,
+} from '../application/use-cases/';
+
 import {
   UpdateUserBasicUseCase,
   UpdateUserEmailUseCase,
   UpdateUserSocialLinksUseCase,
   VerifyOtpEmailUpdateUseCase,
 } from '../application/use-cases/update-user';
+
 import {
   CheckUserExistsImplMongoRepository,
   UpdateUserBasicImplMonogoRepository,
   UpdateUserEmailImplMonogoRepository,
 } from '../infrastructure';
+
 import {
   SEND_OTP_USE_CASE,
   VERIFY_OTP_USE_CASE,
 } from '@/shared/application/tokens';
+
 import {
   SendOtpInterface,
   VerifyOtpInterface,
 } from '@/shared/application/ports';
-import { UpdateUserAvatarUlrUsecase } from '../application/use-cases/update-user/update-user-avatarurl.usecase';
 
 // tokens
 import {
   CREATE_USER_USE_CASE_TOKEN,
+  UPDATE_USER_BASIC_REPO_TOKEN,
   CHECK_USER_EXISTS_REPO_TOKEN,
   GET_BASE_USER_USE_CASE_TOKEN,
   GET_USER_PROFILE_USE_CASE_TOKEN,
@@ -50,14 +52,27 @@ import {
   VERIFY_OTP_EMAIL_UPDATE_USE_CASE_TOKEN,
   UPDATE_USER_SOCIAL_LINKS_USE_CASE_TOKEN,
   CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
-  UPDATE_USER_BASIC_REPO_TOKEN,
 } from '../application/user.tokens';
+
+import { FileLogger } from '@/shared/logger/file-logger';
+import { CreateUserWithGoogleAuthUseCase } from '../application';
+import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
+import { USER_CHECK_TOKEN } from '../infrastructure/infra.tokens';
+import { UserCheckAdapter } from '../infrastructure/adapters';
 
 /*
  * UserProviders defines the providers for user-related use cases and repositories.
  */
 
 export const userProviders = [
+  {
+    provide: USER_CHECK_TOKEN,
+    useFactory: (userRepo: UserRepositoryPort) => {
+      return new UserCheckAdapter(userRepo);
+    },
+    inject: [USER_REPOSITORY_PORT],
+  },
+
   {
     provide: UPDATE_USER_AVATAR_URL_USE_CASE_TOKEN,
     useFactory: (userRepo: UserRepositoryPort, logger: FileLogger) => {

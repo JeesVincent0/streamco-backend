@@ -1,4 +1,6 @@
 export const ERROR_MESSAGES = {
+  // COMMON ERROS
+  ACCESS_DENIED: 'Access denied',
   // FOR CHANNEL MODULE
   CHANNEL_NOT_EXISTS: 'Channel not exists',
   WRONG_STATUS: 'Wrong channel status entered',

@@ -14,9 +14,10 @@ import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
 import type { IGetBaseChannelUseCase } from '../../application/ports';
 import { AccessTokenGuard } from '@/modules/auth-security/presentation';
 import { GET_BASE_CHANNEL_USE_CASE_TOKEN } from '../../application/token';
+import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guard';
 
 @Controller(ROUTES.CHANNEL.ROOT)
-@UseGuards(AccessTokenGuard, ChannelOwnershipGuard)
+@UseGuards(AccessTokenGuard, ChannelOwnershipGuard, ActiveUserGuard)
 export class ChannelController {
   constructor(
     @Inject(GET_BASE_CHANNEL_USE_CASE_TOKEN)

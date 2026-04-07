@@ -14,11 +14,12 @@ import {
   AdminChannelController,
 } from './presentation/controller';
 import { ChannelOwnershipGuard } from './infrastructure/guards';
-import { RedisModule } from '@/shared/infrastructure/cache/redis.module';
+import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guard';
+import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
-    RedisModule,
+    UserModule,
     StorageModule,
     AuthSecurityModule,
     MongooseModule.forFeature([{ name: 'Channel', schema: ChannelSchema }]),
@@ -29,6 +30,7 @@ import { RedisModule } from '@/shared/infrastructure/cache/redis.module';
     AdminChannelController,
   ],
   providers: [
+    ActiveUserGuard,
     ChannelOwnershipGuard,
     ...channelProviders,
     ...userChannelProviders,
