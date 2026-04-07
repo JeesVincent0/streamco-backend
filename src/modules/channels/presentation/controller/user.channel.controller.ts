@@ -1,33 +1,38 @@
 import {
-  Controller,
-  Post,
-  Body,
-  HttpCode,
-  HttpStatus,
-  UseGuards,
-  Inject,
-  Req,
   Get,
+  Req,
+  Body,
+  Post,
   Query,
+  Inject,
+  HttpCode,
+  UseGuards,
+  HttpStatus,
+  Controller,
 } from '@nestjs/common';
-import { CreateChannelDto, GetChannelsQueryDto } from '../dto';
-import type {
-  ICreateChannelUseCase,
-  IGetChannelsUseCase,
-} from '../../application/ports';
-import {
-  AccessTokenGuard,
-  ScopeGuard,
-  Scopes,
-} from '@/modules/auth-security/presentation';
-import { SCOPE } from '@/modules/auth-security/domain';
-import {
-  CREATE_CHANNEL_USE_CASE_TOKEN,
-  GET_CHANNELS_USE_CASE_TOKEN,
-} from '../../application/token';
-import { type RequestWithUserInterface } from '@/shared/interfaces';
 
-@Controller('channels')
+import {
+  GET_CHANNELS_USE_CASE_TOKEN,
+  CREATE_CHANNEL_USE_CASE_TOKEN,
+} from '../../application/token';
+
+import type {
+  IGetChannelsUseCase,
+  ICreateChannelUseCase,
+} from '../../application/ports';
+
+import {
+  Scopes,
+  ScopeGuard,
+  AccessTokenGuard,
+} from '@/modules/auth-security/presentation';
+
+import { ROUTES } from '@/shared/constants/routes';
+import { SCOPE } from '@/modules/auth-security/domain';
+import { type RequestWithUserInterface } from '@/shared/interfaces';
+import { CreateChannelDto, GetChannelsQueryDto } from '../dto';
+
+@Controller(ROUTES.CHANNEL.CHANNELS)
 @UseGuards(AccessTokenGuard, ScopeGuard)
 export class UserChannelController {
   constructor(
@@ -38,7 +43,7 @@ export class UserChannelController {
     private readonly _getChannelsUseCase: IGetChannelsUseCase,
   ) {}
 
-  @Post('create')
+  @Post(ROUTES.COMMON.CREATE)
   @Scopes(SCOPE.USER_WRITE)
   @HttpCode(HttpStatus.OK)
   async createChannel(
@@ -61,10 +66,10 @@ export class UserChannelController {
     @Req() req: RequestWithUserInterface,
   ) {
     return this._getChannelsUseCase.execute({
-      page: query.page as number,
-      limit: query.limit as number,
       search: query.search,
       userId: req.user.sub,
+      page: query.page as number,
+      limit: query.limit as number,
     });
   }
 }

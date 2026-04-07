@@ -5,10 +5,12 @@ export const ROUTES = {
   },
   CHANNEL: {
     ROOT: 'channel',
+    CHANNELS: 'channels',
     BASE: 'base',
   },
   COMMON: {
     ID: ':id',
     STATUS: 'status',
+    CREATE: 'create',
   },
 };

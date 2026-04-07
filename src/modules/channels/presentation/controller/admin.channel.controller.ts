@@ -88,9 +88,9 @@ export class AdminChannelController {
     const result = await this._getAllChannelsUseCase.execute({
       page: qeuryArgs.page,
       limit: qeuryArgs.limit,
-      sortBy: qeuryArgs.sortBy,
       order: qeuryArgs.order,
       search: qeuryArgs.search,
+      sortBy: qeuryArgs.sortBy,
       isLive: qeuryArgs.isLive,
       status: qeuryArgs.status,
     });
