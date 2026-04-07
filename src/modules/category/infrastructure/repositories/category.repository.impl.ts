@@ -32,11 +32,6 @@ export class CategoryRepositoryImplMonogoDB implements ICategoryRepo {
     return CategoryMapper.toDomain(document);
   }
 
-  async findAll(): Promise<Category[]> {
-    const documents = await this._categoryModel.find().lean().exec();
-    return documents.map((doc) => CategoryMapper.toDomain(doc));
-  }
-
   async save(entity: Category): Promise<Category> {
     const persistenceData = CategoryMapper.toPersistence(entity);
 
