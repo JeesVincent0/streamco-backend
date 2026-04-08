@@ -159,7 +159,7 @@ export class UserController {
   ) {
     return this._updateUserAvatarUrl.execute({
       userId: req.user.sub,
-      avatarUrl: file.location,
+      avatarUrl: file.key,
     });
   }
 }

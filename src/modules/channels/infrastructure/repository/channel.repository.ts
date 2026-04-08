@@ -63,9 +63,7 @@ export class ChannelRepository implements IChannelRepo {
       rawChannels.map(async (doc) => {
         if (
           doc.profileImageUrl &&
-          doc.profileImageUrl.startsWith(
-            'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
-          )
+          !doc.profileImageUrl.startsWith('https://lh3.googleusercontent.com')
         ) {
           doc.profileImageUrl = await this._storageService.getSignedViewUrl(
             doc.profileImageUrl,
@@ -74,8 +72,8 @@ export class ChannelRepository implements IChannelRepo {
 
         if (
           doc.backgroundBannerUrl &&
-          doc.backgroundBannerUrl.startsWith(
-            'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
+          !doc.backgroundBannerUrl.startsWith(
+            'https://lh3.googleusercontent.com',
           )
         ) {
           doc.backgroundBannerUrl = await this._storageService.getSignedViewUrl(
@@ -99,8 +97,8 @@ export class ChannelRepository implements IChannelRepo {
     if (!channelDoc) return null;
     if (
       channelDoc.profileImageUrl &&
-      channelDoc.profileImageUrl.startsWith(
-        'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
+      !channelDoc.profileImageUrl.startsWith(
+        'https://lh3.googleusercontent.com',
       )
     ) {
       channelDoc.profileImageUrl = await this._storageService.getSignedViewUrl(
@@ -110,8 +108,8 @@ export class ChannelRepository implements IChannelRepo {
 
     if (
       channelDoc.backgroundBannerUrl &&
-      channelDoc.backgroundBannerUrl.startsWith(
-        'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
+      !channelDoc.backgroundBannerUrl.startsWith(
+        'https://lh3.googleusercontent.com',
       )
     ) {
       channelDoc.backgroundBannerUrl =

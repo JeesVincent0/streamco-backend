@@ -31,9 +31,7 @@ export class MongoRepository implements UserRepositoryPort {
 
     if (
       userDoc.avatarUrl &&
-      userDoc.avatarUrl.startsWith(
-        'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
-      )
+      !userDoc.avatarUrl.startsWith('https://lh3.googleusercontent.com')
     ) {
       userDoc.avatarUrl = await this._storageService.getSignedViewUrl(
         userDoc.avatarUrl,
@@ -54,9 +52,7 @@ export class MongoRepository implements UserRepositoryPort {
     if (!userDoc) return null;
     if (
       userDoc.avatarUrl &&
-      userDoc.avatarUrl.startsWith(
-        'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
-      )
+      !userDoc.avatarUrl.startsWith('https://lh3.googleusercontent.com')
     ) {
       userDoc.avatarUrl = await this._storageService.getSignedViewUrl(
         userDoc.avatarUrl,
