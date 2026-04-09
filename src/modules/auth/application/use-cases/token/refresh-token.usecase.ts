@@ -1,10 +1,10 @@
-import { TokenServicePort } from '@/modules/auth-security/application';
-import { RefreshTokenPort } from '../../ports/token';
-import { RefreshToken } from '@/modules/auth/domain/entity';
-import { RefreshTokenPurpose } from '@/modules/auth/domain/enums/refresh-token-purpose.enum';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { IRefreshTokenUseCase } from '../../ports';
+import { RefreshTokenPort } from '../../ports/token';
+import { ILogger } from '@/shared/logger/logger.interface';
+import { RefreshToken } from '@/modules/auth/domain/entity';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { TokenServicePort } from '@/modules/auth-security/application';
+import { RefreshTokenPurpose } from '@/modules/auth/domain/enums/refresh-token-purpose.enum';
 
 /*
  * RefreshTokenUseCase will handle the logic of creating and revoking refresh token.
@@ -14,7 +14,7 @@ export class RefreshTokenUseCase implements IRefreshTokenUseCase {
   constructor(
     private readonly _refreshTokenRepository: RefreshTokenPort,
     private readonly _tokenService: TokenServicePort,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(token: string, purpose: RefreshTokenPurpose): Promise<void> {
     if (purpose === RefreshTokenPurpose.CREATE) {

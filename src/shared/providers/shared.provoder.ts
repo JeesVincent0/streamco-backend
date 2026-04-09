@@ -1,27 +1,30 @@
 import {
+  IMailService,
   ICacheBaseRepo,
   GenerateOtpPort,
-  IMailService,
   passwordHasherPort,
 } from '../application/ports';
 import {
+  SEND_OTP_USE_CASE,
+  RESEND_OTP_USE_CASE,
+  VERIFY_OTP_USE_CASE,
   CACHE_BASE_REPO_PORT,
+  PASSWORD_HASHER_PORT,
   GENERATE_OTP_INTERFACE,
   MAIL_SERVICE_PORT_TOKEN,
-  PASSWORD_HASHER_PORT,
-  RESEND_OTP_USE_CASE,
-  SEND_OTP_USE_CASE,
-  VERIFY_OTP_USE_CASE,
 } from '../application/tokens';
+
+import {
+  NodemailerService,
+  GenerateOtpImplCrypto,
+  BcryptPasswordHasherImpl,
+} from '../infrastructure';
+
 import { SendOtpUseCase } from '../application/usecase/send-otp.usecase';
 import { VerifyOtpUseCase, ResendOtpUsecae } from '../application/usecase';
-import {
-  BcryptPasswordHasherImpl,
-  GenerateOtpImplCrypto,
-  NodemailerService,
-} from '../infrastructure';
 import { RedisAuthCachedUserRepository } from '../infrastructure/cache/repositories/redis-auth-cached-user.repository';
-import { FileLogger } from '../logger/file-logger';
+import { ILogger } from '../logger/logger.interface';
+import { LOGGER_TOKEN } from '../logger';
 
 export const sharedProvider = [
   {
@@ -57,7 +60,7 @@ export const sharedProvider = [
       generateOtpPort: GenerateOtpPort,
       otpHasher: passwordHasherPort,
       mailService: IMailService,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new ResendOtpUsecae(
         cacheRepo,
@@ -72,7 +75,7 @@ export const sharedProvider = [
       GENERATE_OTP_INTERFACE,
       PASSWORD_HASHER_PORT,
       MAIL_SERVICE_PORT_TOKEN,
-      FileLogger,
+      LOGGER_TOKEN,
     ],
   },
 

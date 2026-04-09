@@ -1,14 +1,15 @@
-import { TOKEN_TYPE } from '@/modules/auth/domain';
 import {
   VerifiedAccessTokenPayload,
   VerifiedRefreshTokenPayload,
   VerifiedResetPasswordTokenPayload,
 } from '@/shared/interfaces/token-type';
-import { TokenServicePort } from '@/modules/auth-security/application';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
-import { ICacheBaseRepo } from '@/shared/application/ports';
+
+import { TOKEN_TYPE } from '@/modules/auth/domain';
 import { ITokenBlackListUseCase } from '../../ports';
+import { ICacheBaseRepo } from '@/shared/application/ports';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { TokenServicePort } from '@/modules/auth-security/application';
+import { ILogger } from '@/shared/logger/logger.interface';
 
 /*
   This use case is responsible for blacklisting tokens. 
@@ -25,7 +26,7 @@ export class TokenBlackListUseCase implements ITokenBlackListUseCase {
   constructor(
     private readonly _tokenBlacklistRepo: ICacheBaseRepo,
     private readonly _tokenService: TokenServicePort,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(token: string, type: TOKEN_TYPE) {
     let payload:

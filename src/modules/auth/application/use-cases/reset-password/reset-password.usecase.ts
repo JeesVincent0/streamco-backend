@@ -1,24 +1,25 @@
-import { TOKEN_TYPE, VerifyPassword } from '@/modules/auth/domain';
-import { UserRepositoryPort } from '@/modules/user/application';
-import { BadRequestError } from '@/shared/errors';
-import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import {
   IPasswordHasher,
   IResetPasswordUseCase,
   ITokenBlackListUseCase,
 } from '../../ports';
-import { HashedPassword } from '@/modules/user/domain';
+
+import { BadRequestError } from '@/shared/errors';
 import { ResetPasswordInput } from '../../inputs';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { HashedPassword } from '@/modules/user/domain';
 import { ResetPasswordUseCaseOutPut } from '../../output';
+import { ILogger } from '@/shared/logger/logger.interface';
+import { UserRepositoryPort } from '@/modules/user/application';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { TOKEN_TYPE, VerifyPassword } from '@/modules/auth/domain';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 
 export class ResetPasswordUseCase implements IResetPasswordUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _passwordHasher: IPasswordHasher,
     private readonly _tokenBlacklistUseCase: ITokenBlackListUseCase,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(
     input: ResetPasswordInput,

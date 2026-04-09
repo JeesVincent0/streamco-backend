@@ -1,17 +1,18 @@
 import {
   Inject,
   Injectable,
-  ExecutionContext,
   CanActivate,
+  ExecutionContext,
 } from '@nestjs/common';
 
+import { BadRequestError } from '@/shared/errors';
+import type { ILogger } from '@/shared/logger/logger.interface';
 import type { IUserCheck } from '@/shared/application/ports';
 import { RequestWithUserInterface } from '@/shared/interfaces';
-import { USER_CHECK_TOKEN } from '@/modules/user/infrastructure/infra.tokens';
-import { BadRequestError } from '@/shared/errors';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-import { FileLogger } from '@/shared/logger/file-logger';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { USER_CHECK_TOKEN } from '@/modules/user/infrastructure/infra.tokens';
+import { LOGGER_TOKEN } from '@/shared/logger';
 
 @Injectable()
 export class ActiveUserGuard implements CanActivate {
@@ -19,7 +20,8 @@ export class ActiveUserGuard implements CanActivate {
     @Inject(USER_CHECK_TOKEN)
     private readonly _userCheck: IUserCheck,
 
-    private readonly _logger: FileLogger,
+    @Inject(LOGGER_TOKEN)
+    private readonly _logger: ILogger,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

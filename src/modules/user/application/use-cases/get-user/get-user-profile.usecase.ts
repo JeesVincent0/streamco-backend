@@ -1,16 +1,16 @@
+import { ILogger } from '@/shared/logger';
 import { UserResponse } from '@/shared/types';
 import { UserRepositoryPort } from '../../ports';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-import { GetUserProfileMapper } from '@/shared/mappers/get-user-profile.mapper';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
-import { IGetUserProfileUseCase } from '../../ports/get-user/get-user-profile.usecase.port';
 import { Advertiser, BaseUser, User } from '@/modules/user/domain';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { GetUserProfileMapper } from '@/shared/mappers/get-user-profile.mapper';
+import { IGetUserProfileUseCase } from '../../ports/get-user/get-user-profile.usecase.port';
 
 export class GetUserProfileUseCase implements IGetUserProfileUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(input: {
     id: string;

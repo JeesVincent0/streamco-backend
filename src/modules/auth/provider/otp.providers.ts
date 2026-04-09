@@ -23,7 +23,8 @@ import {
   VERIFY_OTP_USE_CASE_TOKEN,
 } from '../application';
 import { ICacheBaseRepo } from '@/shared/application/ports';
-import { FileLogger } from '@/shared/logger/file-logger';
+import { ILogger } from '@/shared/logger/logger.interface';
+import { LOGGER_TOKEN } from '@/shared/logger';
 
 export const otpProviders = [
   {
@@ -34,7 +35,7 @@ export const otpProviders = [
       passwordHasher: IPasswordHasher,
       cacheRepo: ICacheBaseRepo,
       mailService: IMailService,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new GenerateOtpUseCase(
         otpService,
@@ -51,7 +52,7 @@ export const otpProviders = [
       PASSWORD_HASHER_PORT_TOKEN,
       AUTH_CACHED_USER_REPOSITORY_PORT_TOKEN,
       MAIL_SERVICE_PORT_TOKEN,
-      FileLogger,
+      LOGGER_TOKEN,
     ],
   },
 
@@ -62,7 +63,7 @@ export const otpProviders = [
       otpService: IOtpService,
       otpHasher: IPasswordHasher,
       mailService: IMailService,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new ResendOtpUseCase(
         cachedRepo,
@@ -77,7 +78,7 @@ export const otpProviders = [
       OTP_SERVICE_TOKEN,
       PASSWORD_HASHER_PORT_TOKEN,
       MAIL_SERVICE_PORT_TOKEN,
-      FileLogger,
+      LOGGER_TOKEN,
     ],
   },
 

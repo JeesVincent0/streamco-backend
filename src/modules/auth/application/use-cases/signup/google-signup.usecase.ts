@@ -4,21 +4,21 @@ import {
 } from '@/modules/user/application';
 import { TokenPayload } from '../../../domain';
 import { GoogleAuthInPut } from '../../inputs';
-import { IGenerateTokenUseCase, IGoogleAuthUseCase } from '../../ports';
 import { BadRequestError } from '@/shared/errors';
 import { GoogleAuthUseCaseOutPut } from '../../output';
 import { SCOPE } from '@/modules/auth-security/domain';
-import { FileLogger } from '@/shared/logger/file-logger';
+import { ILogger } from '@/shared/logger/logger.interface';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { Email, UserRole, UserStatus } from '@/modules/user/domain';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { IGenerateTokenUseCase, IGoogleAuthUseCase } from '../../ports';
 
 export class GoogleAuthUseCase implements IGoogleAuthUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _createUserWithGoogleAuth: ICreateUserWithGoogleAuthUseCase,
     private readonly _generateTokenUseCase: IGenerateTokenUseCase,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(input: GoogleAuthInPut): Promise<GoogleAuthUseCaseOutPut> {
     const email = Email.create(input.email);

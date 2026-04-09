@@ -54,11 +54,11 @@ import {
   CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
 } from '../application/user.tokens';
 
-import { FileLogger } from '@/shared/logger/file-logger';
-import { CreateUserWithGoogleAuthUseCase } from '../application';
-import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
-import { USER_CHECK_TOKEN } from '../infrastructure/infra.tokens';
+import { ILogger, LOGGER_TOKEN } from '@/shared/logger';
 import { UserCheckAdapter } from '../infrastructure/adapters';
+import { CreateUserWithGoogleAuthUseCase } from '../application';
+import { USER_CHECK_TOKEN } from '../infrastructure/infra.tokens';
+import { MongoRepository } from '../infrastructure/repositories/user-repository.impl';
 
 /*
  * UserProviders defines the providers for user-related use cases and repositories.
@@ -75,10 +75,10 @@ export const userProviders = [
 
   {
     provide: UPDATE_USER_AVATAR_URL_USE_CASE_TOKEN,
-    useFactory: (userRepo: UserRepositoryPort, logger: FileLogger) => {
+    useFactory: (userRepo: UserRepositoryPort, logger: ILogger) => {
       return new UpdateUserAvatarUlrUsecase(userRepo, logger);
     },
-    inject: [USER_REPOSITORY_PORT, FileLogger],
+    inject: [USER_REPOSITORY_PORT, LOGGER_TOKEN],
   },
 
   {
@@ -136,10 +136,10 @@ export const userProviders = [
 
   {
     provide: GET_USER_PROFILE_USE_CASE_TOKEN,
-    useFactory: (userRepo: UserRepositoryPort, logger: FileLogger) => {
+    useFactory: (userRepo: UserRepositoryPort, logger: ILogger) => {
       return new GetUserProfileUseCase(userRepo, logger);
     },
-    inject: [USER_REPOSITORY_PORT, FileLogger],
+    inject: [USER_REPOSITORY_PORT, LOGGER_TOKEN],
   },
 
   {
@@ -147,11 +147,11 @@ export const userProviders = [
     useFactory: (
       checkUserExists: ICheckUserExists,
       sendOtp: SendOtpInterface,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new UpdateUserEmailUseCase(checkUserExists, sendOtp, logger);
     },
-    inject: [CHECK_USER_EXISTS_REPO_TOKEN, SEND_OTP_USE_CASE, FileLogger],
+    inject: [CHECK_USER_EXISTS_REPO_TOKEN, SEND_OTP_USE_CASE, LOGGER_TOKEN],
   },
 
   {

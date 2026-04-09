@@ -1,20 +1,19 @@
-import { UpdateUserEmailInput } from '../../inputs/update-user';
+import { ILogger } from '@/shared/logger';
 import { Email } from '@/modules/user/domain';
-import { BadRequestError } from '@/shared/errors';
-import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-
-import type { ICheckUserExists, IUpdateUserEmailUseCase } from '../../ports';
-import type { SendOtpInterface } from '@/shared/application/ports';
-import { OtpPurpose } from '@/modules/auth/domain';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { SucceessOtpSend } from '../../output';
+import { BadRequestError } from '@/shared/errors';
+import { OtpPurpose } from '@/modules/auth/domain';
+import { UpdateUserEmailInput } from '../../inputs/update-user';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import type { SendOtpInterface } from '@/shared/application/ports';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import type { ICheckUserExists, IUpdateUserEmailUseCase } from '../../ports';
 
 export class UpdateUserEmailUseCase implements IUpdateUserEmailUseCase {
   constructor(
     private readonly _checkUserExists: ICheckUserExists,
     private readonly _sendOtp: SendOtpInterface,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(input: UpdateUserEmailInput): Promise<SucceessOtpSend> {
     const email = Email.create(input.newEmail);

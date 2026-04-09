@@ -1,5 +1,5 @@
-import { FileLogger } from '@/shared/logger/file-logger';
 import { AccessTokenPayload } from '@/shared/interfaces';
+import { ILogger } from '@/shared/logger/logger.interface';
 import { SucceessResType } from '@/shared/types/success-res.type';
 import { IRefreshTokenUseCase, ISignoutUseCase } from '../../ports';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
@@ -8,7 +8,7 @@ import { RefreshTokenPurpose } from '@/modules/auth/domain/enums/refresh-token-p
 export class SignoutUseCase implements ISignoutUseCase {
   constructor(
     private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(payload: AccessTokenPayload): Promise<SucceessResType> {
     await this._refreshTokenUseCase.execute(
