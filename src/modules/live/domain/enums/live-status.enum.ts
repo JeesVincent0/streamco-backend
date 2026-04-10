@@ -1,0 +1,6 @@
+export enum LIVESTATUS {
+  LIVE = 'LIVE',
+  ENDED = 'ENDED',
+  CANCELLED = 'CANCELLED',
+  SCHEDULED = 'SCHEDULED',
+}
