@@ -1,12 +1,12 @@
-import { Email } from '@/modules/user/domain/';
-import { UserRepositoryPort } from '@/modules/user/application';
-import { type IMailService, IOtpService, IPasswordHasher } from '../../ports';
 import { OtpPolicy } from '@/shared/domain';
+import { Email } from '@/modules/user/domain/';
 import { GenerateOtpInput } from '../../inputs';
 import { UniqueIdService } from '@/shared/domain';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { ILogger } from '@/shared/logger/logger.interface';
 import { ICacheBaseRepo } from '@/shared/application/ports';
+import { UserRepositoryPort } from '@/modules/user/application';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { type IMailService, IOtpService, IPasswordHasher } from '../../ports';
 import { IGenerateOtpUseCase } from '../../ports/usecase/generate-otp-usecase.port';
 import { GenerateOtpUsecaseOutPut } from '../../output/generate-otp.usecase.output';
 
@@ -29,7 +29,7 @@ export class GenerateOtpUseCase implements IGenerateOtpUseCase {
     private readonly _passwordHasher: IPasswordHasher,
     private readonly _cacheRepository: ICacheBaseRepo,
     private readonly _mailService: IMailService,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
 
   async execute(input: GenerateOtpInput): Promise<GenerateOtpUsecaseOutPut> {

@@ -1,25 +1,26 @@
-import { UserRepositoryPort } from '@/modules/user/application';
-import { SigninInput } from '../../inputs';
-import { Email, Password, UserRole } from '@/modules/user/domain';
-import { BadRequestError } from '@/shared/errors';
-import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import {
   IAdminSigninUseCase,
   IGenerateTokenUseCase,
   IPasswordHasher,
 } from '../../ports';
-import { ResponseData, TokenPayload } from '@/modules/auth/domain';
-import { SCOPE } from '@/modules/auth-security/domain';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+
+import { SigninInput } from '../../inputs';
+import { BadRequestError } from '@/shared/errors';
 import { SigninUseCaseOutPut } from '../../output';
+import { SCOPE } from '@/modules/auth-security/domain';
+import { ILogger } from '@/shared/logger/logger.interface';
+import { UserRepositoryPort } from '@/modules/user/application';
+import { Email, Password, UserRole } from '@/modules/user/domain';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { ResponseData, TokenPayload } from '@/modules/auth/domain';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 
 export class AdminSigninUseCase implements IAdminSigninUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
     private readonly _passwordHashser: IPasswordHasher,
     private readonly _generateTokenUseCase: IGenerateTokenUseCase,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(input: SigninInput): Promise<SigninUseCaseOutPut> {
     const email = Email.create(input.email);

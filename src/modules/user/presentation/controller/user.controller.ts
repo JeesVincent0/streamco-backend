@@ -48,6 +48,11 @@ import {
   VERIFY_OTP_EMAIL_UPDATE_USE_CASE_TOKEN,
   UPDATE_USER_SOCIAL_LINKS_USE_CASE_TOKEN,
 } from '../../application/user.tokens';
+import { UserResponseMapper } from '../mappers';
+import { ResponseMessage } from '@/shared/decorators';
+import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
+import { STORAGE_SERVICE_PORT_TOKEN } from '@/shared/infrastructure/storage/token';
+import { type IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
 
 @Controller('user')
 @UseGuards(AccessTokenGuard, ScopeGuard)
@@ -73,25 +78,46 @@ export class UserController {
 
     @Inject(UPDATE_USER_AVATAR_URL_USE_CASE_TOKEN)
     private readonly _updateUserAvatarUrl: IUpdateUserAvatarUlrUsecase,
+
+    @Inject(STORAGE_SERVICE_PORT_TOKEN)
+    private readonly _storageService: IStorageService,
   ) {}
 
   @Get('base')
   @Scopes(SCOPE.USER_READ)
   @HttpCode(HttpStatus.OK)
-  getBaseUser(@Req() req: RequestWithUserInterface) {
-    return this._getBaseUserUseCase.execute({
+  @ResponseMessage(SUCCESS_MESSAGE.BASE_USER_DATA_FETCHED_SUCCESSFULLY)
+  async getBaseUser(@Req() req: RequestWithUserInterface) {
+    const result = await this._getBaseUserUseCase.execute({
       id: req.user.sub,
     });
+
+    const baseUser = await UserResponseMapper.toBaseUserOutput(
+      result,
+      this._storageService,
+    );
+    return baseUser;
   }
 
   @Get('profile/:id')
   @Scopes(SCOPE.USER_READ)
   @HttpCode(HttpStatus.OK)
-  getProfile(@Req() req: RequestWithUserInterface, @Param('id') id: string) {
-    return this._getUserProfileUseCase.execute({
+  @ResponseMessage(SUCCESS_MESSAGE.USER_DATA_FETCHED_SUCCESSFULLY)
+  async getProfile(
+    @Req() req: RequestWithUserInterface,
+    @Param('id') id: string,
+  ) {
+    const result = await this._getUserProfileUseCase.execute({
       id: req.user.sub,
       paramsId: id,
     });
+
+    const user = await UserResponseMapper.toResponse(
+      result,
+      this._storageService,
+    );
+
+    return user;
   }
 
   @Put('profile/update-email')
@@ -159,7 +185,7 @@ export class UserController {
   ) {
     return this._updateUserAvatarUrl.execute({
       userId: req.user.sub,
-      avatarUrl: file.location,
+      avatarUrl: file.key,
     });
   }
 }

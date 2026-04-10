@@ -1,16 +1,17 @@
-import { OtpPolicy, OtpState } from '@/shared/domain';
-import { ResendOtpInterface } from '../ports/resend-otp.port';
 import {
   ICacheBaseRepo,
   GenerateOtpPort,
   IMailService,
   passwordHasherPort,
 } from '../ports';
-import { FileLogger } from '@/shared/logger/file-logger';
+
+import { Email } from '@/modules/user/domain';
 import { BadRequestError } from '@/shared/errors';
+import { OtpPolicy, OtpState } from '@/shared/domain';
+import { ILogger } from '@/shared/logger/logger.interface';
+import { ResendOtpInterface } from '../ports/resend-otp.port';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
-import { Email } from '@/modules/user/domain';
 
 export class ResendOtpUsecae implements ResendOtpInterface {
   constructor(
@@ -18,7 +19,7 @@ export class ResendOtpUsecae implements ResendOtpInterface {
     private readonly _generateOtp: GenerateOtpPort,
     private readonly _otpHasher: passwordHasherPort,
     private readonly _mailService: IMailService,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(input: { id: string }): Promise<{ otpResendAt: Date }> {
     const cachedUser = await this._cachedRepository.get<OtpState>(input.id);

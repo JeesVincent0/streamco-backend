@@ -1,7 +1,16 @@
 export const ERROR_MESSAGES = {
+  // COMMON ERROS
+  ACCESS_DENIED: 'Access denied',
+
   // FOR CHANNEL MODULE
+  CHANNEL_BLOCKED: 'Channel blocked',
   CHANNEL_NOT_EXISTS: 'Channel not exists',
   WRONG_STATUS: 'Wrong channel status entered',
+  PERMISSION_DENIED: 'Permission denied',
+
+  // FOR USER
+  USER_NOT_EXISTS: 'User not exits',
+  USER_SUSPENDED: 'User suspended',
 
   USE_ANOTHER_CHANNEL_ID: 'Use another channel ID',
   CATEGORY_NOT_FOUND: 'Category not found',
@@ -9,6 +18,7 @@ export const ERROR_MESSAGES = {
   USE_ANOTHER_EMAIL_ID: 'Use another email ID',
   UNSUPPORTED_USER_TYPE: 'Unsupported user type',
   YOUR_ACCOUNT_SUSPENDED: 'Your account is suspended.',
+
   // Token error messages
   INVALID_TOKEN: 'Invalid token',
   MISSING_TOKEN: 'Missing Token',

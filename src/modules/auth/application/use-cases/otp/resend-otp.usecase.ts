@@ -1,13 +1,13 @@
+import { Email } from '@/modules/user/domain';
 import { BadRequestError } from '@/shared/errors';
 import { OtpPolicy, OtpState } from '@/shared/domain';
-import { IMailService, IOtpService, IPasswordHasher } from '../../ports';
-import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-import { Email } from '@/modules/user/domain';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
-import { ICacheBaseRepo } from '@/shared/application/ports';
-import { IResendOtpUseCase } from '../../ports/usecase/resend-otp-usecase.port';
 import { ResendOtpUseCaseOutPut } from '../../output';
+import { ILogger } from '@/shared/logger/logger.interface';
+import { ICacheBaseRepo } from '@/shared/application/ports';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
+import { IMailService, IOtpService, IPasswordHasher } from '../../ports';
+import { IResendOtpUseCase } from '../../ports/usecase/resend-otp-usecase.port';
 
 export class ResendOtpUseCase implements IResendOtpUseCase {
   constructor(
@@ -15,7 +15,7 @@ export class ResendOtpUseCase implements IResendOtpUseCase {
     private readonly _otpService: IOtpService,
     private readonly _otpHasher: IPasswordHasher,
     private readonly _mailService: IMailService,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
 
   async execute(input: { id: string }): Promise<ResendOtpUseCaseOutPut> {

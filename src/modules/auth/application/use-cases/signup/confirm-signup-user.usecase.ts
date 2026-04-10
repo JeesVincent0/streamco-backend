@@ -1,18 +1,19 @@
+import { SigninUseCaseOutPut } from '../../output';
 import { SCOPE } from '@/modules/auth-security/domain';
 import { ConfirmRegistrationInput } from '../../inputs';
-import { FileLogger } from '@/shared/logger/file-logger';
 import { OtpPurpose } from '@/modules/auth/domain/enums';
 import { Email } from '@/modules/user/domain/value-objects';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { ResponseData, TokenPayload } from '@/modules/auth/domain';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { UserRepositoryPort } from '@/modules/user/application/ports';
+
 import {
   IConfirmSignupUserUseCase,
   IGenerateTokenUseCase,
   IVerifyOtpUseCase,
 } from '../../ports';
-import { SigninUseCaseOutPut } from '../../output';
+import { ILogger } from '@/shared/logger/logger.interface';
 
 /*
  *
@@ -30,7 +31,7 @@ export class ConfirmSignupUserUseCase implements IConfirmSignupUserUseCase {
     private readonly _userRepo: UserRepositoryPort,
     private readonly _verifyOtpUseCase: IVerifyOtpUseCase,
     private readonly _generateTokenUseCase: IGenerateTokenUseCase,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(input: ConfirmRegistrationInput): Promise<SigninUseCaseOutPut> {
     // Verifying the OTP provided by the user

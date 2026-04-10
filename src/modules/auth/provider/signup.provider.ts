@@ -1,61 +1,64 @@
+// user module tokens
 import {
-  ICreateAdvertiserUserUseCase,
-  USER_REPOSITORY_PORT,
+  CREATE_USER_USE_CASE_TOKEN,
+  CREATE_ADVERTISER_USE_CASE_TOKEN,
+  CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
+} from '@/modules/user/application/user.tokens';
+
+import {
   UserRepositoryPort,
+  USER_REPOSITORY_PORT,
   ICreateNormalUserUseCase,
+  ICreateAdvertiserUserUseCase,
   ICreateUserWithGoogleAuthUseCase,
 } from '@/modules/user/application';
+
 import {
-  ConfirmSignupUserUseCase,
   GoogleAuthUseCase,
   RefreshTokenUseCase,
+  TokenBlackListUseCase,
   SignupAdvertiserUseCase,
   SignupNormalUserUseCase,
-  TokenBlackListUseCase,
+  ConfirmSignupUserUseCase,
 } from '../application/use-cases';
 
 import {
-  PASSWORD_HASHER_PORT_TOKEN,
   IPasswordHasher,
-  REFRESH_TOKEN_REPOSITORY_PORT,
-  GENERATE_OTP_USE_CASE_TOKEN,
-  VERIFY_OTP_USE_CASE_TOKEN,
   IVerifyOtpUseCase,
-  GOOGLE_AUTH_USE_CASE_TOKEN,
-  CONFIRM_SIGNUP_USE_CASE_TOKEN,
+  IGenerateOtpUseCase,
+  IRefreshTokenUseCase,
+  SIGNIN_USE_CASE_TOKEN,
   SIGNOUT_USE_CASE_TOKEN,
+  VERIFY_OTP_USE_CASE_TOKEN,
+  PASSWORD_HASHER_PORT_TOKEN,
+  GOOGLE_AUTH_USE_CASE_TOKEN,
+  GENERATE_OTP_USE_CASE_TOKEN,
+  ADMIN_SIGNIN_USE_CASE_TOKEN,
+  REFRESH_TOKEN_USE_CASE_TOKEN,
+  CONFIRM_SIGNUP_USE_CASE_TOKEN,
+  REFRESH_TOKEN_REPOSITORY_PORT,
+  GENERATE_TOKEN_USE_CASE_TOKEN,
+  TOKEN_BLACK_LIST_USE_CASE_TOKEN,
   SIGNUP_ADVERTISER_USE_CASE_TOKEN,
   SIGNUP_NORMAL_USER_USE_CASE_TOKEN,
-  ADMIN_SIGNIN_USE_CASE_TOKEN,
-  SIGNIN_USE_CASE_TOKEN,
   REFRESH_ACCESS_TOKEN_USE_CASE_TOKEN,
-  IRefreshTokenUseCase,
-  REFRESH_TOKEN_USE_CASE_TOKEN,
-  TOKEN_BLACK_LIST_USE_CASE_TOKEN,
-  IGenerateOtpUseCase,
-  GENERATE_TOKEN_USE_CASE_TOKEN,
 } from '../application';
-import { SigninUseCase } from '../application/use-cases/signin';
-import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
-import { SignoutUseCase } from '../application/use-cases/signup/signout.usecase';
-import {
-  BLACKLIST_TOKEN_CACKE,
-  TOKEN_SERVICE,
-} from '@/modules/auth-security/application/tokens';
-import { TokenServicePort } from '@/modules/auth-security/application/ports';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { GenerateTokenUseCase } from '../application/use-cases/token/generate-token.usecase';
-import { RefreshTokenPort } from '../application/ports/token';
-import { RefreshAccessTokenUseCase } from '../application/use-cases/token/refresh-access-token.usecase';
-import { ICacheBaseRepo } from '@/shared/application/ports';
 
-// user module tokens
 import {
-  CREATE_ADVERTISER_USE_CASE_TOKEN,
-  CREATE_USER_USE_CASE_TOKEN,
-  CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
-} from '@/modules/user/application/user.tokens';
+  TOKEN_SERVICE,
+  BLACKLIST_TOKEN_CACKE,
+} from '@/modules/auth-security/application/tokens';
+
+import { ILogger, LOGGER_TOKEN } from '@/shared/logger';
+import { ICacheBaseRepo } from '@/shared/application/ports';
+import { RefreshTokenPort } from '../application/ports/token';
+import { SigninUseCase } from '../application/use-cases/signin';
+import { TokenServicePort } from '@/modules/auth-security/application/ports';
+import { SignoutUseCase } from '../application/use-cases/signup/signout.usecase';
+import { AdminSigninUseCase } from '../application/use-cases/signin/admin-signin-usecase';
+import { GenerateTokenUseCase } from '../application/use-cases/token/generate-token.usecase';
 import { IGenerateTokenUseCase } from '../application/ports/usecase/generate-token.usecase.port';
+import { RefreshAccessTokenUseCase } from '../application/use-cases/token/refresh-access-token.usecase';
 
 export const signupProvider = [
   {
@@ -72,11 +75,11 @@ export const signupProvider = [
     provide: SIGNOUT_USE_CASE_TOKEN,
     useFactory: (
       refreshTokenUseCase: IRefreshTokenUseCase,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new SignoutUseCase(refreshTokenUseCase, logger);
     },
-    inject: [REFRESH_TOKEN_USE_CASE_TOKEN, FileLogger],
+    inject: [REFRESH_TOKEN_USE_CASE_TOKEN, LOGGER_TOKEN],
   },
 
   {
@@ -84,7 +87,7 @@ export const signupProvider = [
     useFactory: (
       refreshTokenRepository: RefreshTokenPort,
       tokenService: TokenServicePort,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new RefreshTokenUseCase(
         refreshTokenRepository,
@@ -92,7 +95,7 @@ export const signupProvider = [
         logger,
       );
     },
-    inject: [REFRESH_TOKEN_REPOSITORY_PORT, TOKEN_SERVICE, FileLogger],
+    inject: [REFRESH_TOKEN_REPOSITORY_PORT, TOKEN_SERVICE, LOGGER_TOKEN],
   },
 
   {
@@ -100,7 +103,7 @@ export const signupProvider = [
     useFactory: (
       tokenService: TokenServicePort,
       refreshTokenUseCase: IRefreshTokenUseCase,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new GenerateTokenUseCase(
         tokenService,
@@ -108,7 +111,7 @@ export const signupProvider = [
         logger,
       );
     },
-    inject: [TOKEN_SERVICE, REFRESH_TOKEN_USE_CASE_TOKEN, FileLogger],
+    inject: [TOKEN_SERVICE, REFRESH_TOKEN_USE_CASE_TOKEN, LOGGER_TOKEN],
   },
 
   {
@@ -117,7 +120,7 @@ export const signupProvider = [
       userRepo: UserRepositoryPort,
       createUserWithGoogleAuth: ICreateUserWithGoogleAuthUseCase,
       generateTokenUseCase: IGenerateTokenUseCase,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new GoogleAuthUseCase(
         userRepo,
@@ -130,7 +133,7 @@ export const signupProvider = [
       USER_REPOSITORY_PORT,
       CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,
       GENERATE_TOKEN_USE_CASE_TOKEN,
-      FileLogger,
+      LOGGER_TOKEN,
     ],
   },
 
@@ -140,7 +143,7 @@ export const signupProvider = [
       userRepo: UserRepositoryPort,
       passwordHasher: IPasswordHasher,
       generateTokenUseCase: IGenerateTokenUseCase,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new AdminSigninUseCase(
         userRepo,
@@ -153,7 +156,7 @@ export const signupProvider = [
       USER_REPOSITORY_PORT,
       PASSWORD_HASHER_PORT_TOKEN,
       GENERATE_TOKEN_USE_CASE_TOKEN,
-      FileLogger,
+      LOGGER_TOKEN,
     ],
   },
 
@@ -162,7 +165,7 @@ export const signupProvider = [
     useFactory: (
       tokenBlacklistRepo: ICacheBaseRepo,
       tokenService: TokenServicePort,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new TokenBlackListUseCase(
         tokenBlacklistRepo,
@@ -170,7 +173,7 @@ export const signupProvider = [
         logger,
       );
     },
-    inject: [BLACKLIST_TOKEN_CACKE, TOKEN_SERVICE, FileLogger],
+    inject: [BLACKLIST_TOKEN_CACKE, TOKEN_SERVICE, LOGGER_TOKEN],
   },
 
   {
@@ -179,7 +182,7 @@ export const signupProvider = [
       userRepo: UserRepositoryPort,
       passwordHasher: IPasswordHasher,
       generateTokenUseCase: IGenerateTokenUseCase,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new SigninUseCase(
         userRepo,
@@ -192,7 +195,7 @@ export const signupProvider = [
       USER_REPOSITORY_PORT,
       PASSWORD_HASHER_PORT_TOKEN,
       GENERATE_TOKEN_USE_CASE_TOKEN,
-      FileLogger,
+      LOGGER_TOKEN,
     ],
   },
 
@@ -222,7 +225,7 @@ export const signupProvider = [
       userRepo: UserRepositoryPort,
       verifyOtpUseCase: IVerifyOtpUseCase,
       generateTokenUseCase: IGenerateTokenUseCase,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new ConfirmSignupUserUseCase(
         userRepo,
@@ -235,7 +238,7 @@ export const signupProvider = [
       USER_REPOSITORY_PORT,
       VERIFY_OTP_USE_CASE_TOKEN,
       GENERATE_TOKEN_USE_CASE_TOKEN,
-      FileLogger,
+      LOGGER_TOKEN,
     ],
   },
 

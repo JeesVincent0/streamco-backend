@@ -1,9 +1,11 @@
-import { Logger, Injectable } from '@nestjs/common';
+import { Logger, Injectable, Global } from '@nestjs/common';
 import * as fs from 'fs';
 import * as path from 'path';
+import { ILogger } from './logger.interface';
 
+@Global()
 @Injectable()
-export class FileLogger extends Logger {
+export class FileLogger extends Logger implements ILogger {
   private readonly logFile = path.join(process.cwd(), 'logs', 'app.log');
 
   constructor() {

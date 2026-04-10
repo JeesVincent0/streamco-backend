@@ -2,12 +2,13 @@ import {
   IUpdateUserStatusUseCase,
   UserRepositoryPort,
 } from '@/modules/user/application';
+
+import { ILogger } from '@/shared/logger';
+import { BadRequestError } from '@/shared/errors';
 import { UserStatus } from '@/modules/user/domain';
+import { SucceessResType } from '@/shared/types/success-res.type';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
-import { BadRequestError } from '@/shared/errors';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { SucceessResType } from '@/shared/types/success-res.type';
 
 /*
  * Use case for updating the status of a user.
@@ -17,7 +18,7 @@ import { SucceessResType } from '@/shared/types/success-res.type';
 export class UpdateUserStatusUseCase implements IUpdateUserStatusUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(
     userId: string,

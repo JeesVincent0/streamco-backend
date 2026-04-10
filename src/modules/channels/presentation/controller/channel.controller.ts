@@ -1,70 +1,54 @@
 import {
-  Controller,
-  Post,
-  Body,
-  HttpCode,
-  HttpStatus,
-  UseGuards,
-  Inject,
-  Req,
   Get,
-  Query,
+  Param,
+  Inject,
+  HttpCode,
+  UseGuards,
+  HttpStatus,
+  Controller,
 } from '@nestjs/common';
-import { CreateChannelDto, GetChannelsQueryDto } from '../dto';
-import type {
-  ICreateChannelUseCase,
-  IGetChannelsUseCase,
-} from '../../application/ports';
-import {
-  AccessTokenGuard,
-  ScopeGuard,
-  Scopes,
-} from '@/modules/auth-security/presentation';
-import { SCOPE } from '@/modules/auth-security/domain';
-import {
-  CREATE_CHANNEL_USE_CASE_TOKEN,
-  GET_CHANNELS_USE_CASE_TOKEN,
-} from '../../application/token';
-import { type RequestWithUserInterface } from '@/shared/interfaces';
 
-@Controller('channels')
-@UseGuards(AccessTokenGuard, ScopeGuard)
+import {
+  ChannelOwnershipGuard,
+  IsChannelActiveGuard,
+} from '../../infrastructure/guards';
+
+import { ROUTES } from '@/shared/constants/routes';
+import { ChannelResponseMappers } from '../mappers';
+import { ResponseMessage } from '@/shared/decorators';
+import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
+import { type IGetBaseChannelUseCase } from '../../application/ports';
+import { AccessTokenGuard } from '@/modules/auth-security/presentation';
+import { GET_BASE_CHANNEL_USE_CASE_TOKEN } from '../../application/token';
+import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guard';
+import { STORAGE_SERVICE_PORT_TOKEN } from '@/shared/infrastructure/storage/token';
+import { type IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
+
+@Controller(ROUTES.CHANNEL.ROOT)
+@UseGuards(
+  AccessTokenGuard,
+  ActiveUserGuard,
+  ChannelOwnershipGuard,
+  IsChannelActiveGuard,
+)
 export class ChannelController {
   constructor(
-    @Inject(CREATE_CHANNEL_USE_CASE_TOKEN)
-    private readonly _createChannelUseCase: ICreateChannelUseCase,
+    @Inject(GET_BASE_CHANNEL_USE_CASE_TOKEN)
+    private readonly _getBaseChannelUseCase: IGetBaseChannelUseCase,
 
-    @Inject(GET_CHANNELS_USE_CASE_TOKEN)
-    private readonly _getChannelsUseCase: IGetChannelsUseCase,
+    @Inject(STORAGE_SERVICE_PORT_TOKEN)
+    private readonly _s3Service: IStorageService,
   ) {}
 
-  @Post('create')
-  @Scopes(SCOPE.USER_WRITE)
+  @Get(ROUTES.COMMON.ID)
   @HttpCode(HttpStatus.OK)
-  async createChannel(
-    @Body() body: CreateChannelDto,
-    @Req() req: RequestWithUserInterface,
-  ) {
-    return this._createChannelUseCase.execute({
-      channelId: body.channelId,
-      channelName: body.channelName,
-      profileImageUrl: body.profileImage,
-      userId: req.user.sub,
-      backgroundBannerUrl: body.backgroundBanner,
-      bio: body.bio,
-    });
-  }
-
-  @Get()
-  getChannels(
-    @Query() query: GetChannelsQueryDto,
-    @Req() req: RequestWithUserInterface,
-  ) {
-    return this._getChannelsUseCase.execute({
-      page: query.page as number,
-      limit: query.limit as number,
-      search: query.search,
-      userId: req.user.sub,
-    });
+  @ResponseMessage(SUCCESS_MESSAGE.BASE_CHANNEL_DATA_FETCHED_SUCCESSFULLY)
+  async getBaseChannel(@Param('id') channelId: string) {
+    const result = await this._getBaseChannelUseCase.execute({ channelId });
+    const channel = await ChannelResponseMappers.toChannel(
+      result,
+      this._s3Service,
+    );
+    return channel;
   }
 }

@@ -15,7 +15,7 @@ export type UserResponse =
       dob: Date | null;
       location: string | null;
       socialLinks: { type: string; url: string }[];
-      avatarUrl: string | null;
+      avatarUrl: string | null | undefined;
       contentType: UserContentType;
       gender?: UserGender | null;
       bio?: string | null;
@@ -32,5 +32,5 @@ export type UserResponse =
       isProfileCompleted: boolean;
       companyName: string | null | undefined;
       createdAt: Date;
-      avatarUrl: string | null;
+      avatarUrl: string | null | undefined;
     };

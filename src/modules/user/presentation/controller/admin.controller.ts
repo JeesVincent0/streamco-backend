@@ -26,6 +26,9 @@ import type {
   IGetAllUsersUseCase,
   IUpdateUserStatusUseCase,
 } from '../../application';
+import { ResponseMessage } from '@/shared/decorators';
+import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
+import { UserResponseMapper } from '../mappers';
 
 @Controller('admin/users')
 @UseGuards(AccessTokenGuard, ScopeGuard)
@@ -38,12 +41,12 @@ export class AdminController {
     private readonly _updateUserStatusUseCase: IUpdateUserStatusUseCase,
   ) {}
 
-  // Endpoint to get all users with pagination, filtering, and sorting options
   @Get()
   @HttpCode(HttpStatus.OK)
   @Scopes(SCOPE.ADMIN_READ)
-  getAllUsers(@Query() query: GetAllUsersDto) {
-    return this._getAllUsersUseCase.execute({
+  @ResponseMessage(SUCCESS_MESSAGE.ALL_USER_DATA_FETCHED_SUCCESSFULLY)
+  async getAllUsers(@Query() query: GetAllUsersDto) {
+    const result = await this._getAllUsersUseCase.execute({
       page: query.page,
       limit: query.limit,
       search: query.search,
@@ -53,6 +56,15 @@ export class AdminController {
       sortBy: query.sortBy,
       order: query.order,
     });
+
+    const users = result.users.map((user) =>
+      UserResponseMapper.toAdminTable(user),
+    );
+
+    return {
+      ...result,
+      users,
+    };
   }
 
   // Endpoint to update the status of a user ( ACTIVE, SUSPENDED, DELETED)

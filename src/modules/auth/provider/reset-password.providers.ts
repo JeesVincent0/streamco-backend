@@ -2,6 +2,7 @@ import {
   USER_REPOSITORY_PORT,
   UserRepositoryPort,
 } from '@/modules/user/application';
+
 import {
   IPasswordHasher,
 
@@ -18,9 +19,11 @@ import {
   ITokenBlackListUseCase,
   TOKEN_BLACK_LIST_USE_CASE_TOKEN,
 } from '../application';
-import { FileLogger } from '@/shared/logger/file-logger';
+
 import { TokenServicePort } from '@/modules/auth-security/application';
 import { TOKEN_SERVICE } from '@/modules/auth-security/application/tokens';
+import { ILogger } from '@/shared/logger/logger.interface';
+import { LOGGER_TOKEN } from '@/shared/logger';
 
 export const resetPasswordProviders = [
   {
@@ -29,7 +32,7 @@ export const resetPasswordProviders = [
       userRepo: UserRepositoryPort,
       passwordHasher: IPasswordHasher,
       tokenBlacklist: ITokenBlackListUseCase,
-      logger: FileLogger,
+      logger: ILogger,
     ) => {
       return new ResetPasswordUseCase(
         userRepo,
@@ -42,7 +45,7 @@ export const resetPasswordProviders = [
       USER_REPOSITORY_PORT,
       PASSWORD_HASHER_PORT_TOKEN,
       TOKEN_BLACK_LIST_USE_CASE_TOKEN,
-      FileLogger,
+      LOGGER_TOKEN,
     ],
   },
   {

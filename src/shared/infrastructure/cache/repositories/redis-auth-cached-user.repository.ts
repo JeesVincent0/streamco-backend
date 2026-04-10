@@ -1,18 +1,14 @@
 import { Global, Injectable } from '@nestjs/common';
 import { RedisService } from '../redis.service';
-import { FileLogger } from '@/shared/logger/file-logger';
 import { ICacheBaseRepo } from '@/shared/application/ports';
 
 @Global()
 @Injectable()
 export class RedisAuthCachedUserRepository implements ICacheBaseRepo {
-  constructor(
-    private readonly redisService: RedisService,
-    private readonly _logger: FileLogger,
-  ) {}
+  constructor(private readonly redisService: RedisService) {}
 
   private buildKey(key: string): string {
-    return `auth:user:${key}`;
+    return `auth:${key}`;
   }
 
   async get<T>(key: string): Promise<T | null> {

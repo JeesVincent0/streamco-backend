@@ -1,8 +1,7 @@
 // application/usecase/get-channels.usecase.ts
-import { GetChannelsInput } from '../inputs/get-channels.input';
 import { GetChannelsOutput } from '../output';
 import { IChannelRepo, IGetChannelsUseCase } from '../ports';
-import { ChannelMapper } from '../../infrastructure/mappers/channel.mappers';
+import { GetChannelsInput } from '../inputs/get-channels.input';
 
 export class GetChannelsUsecase implements IGetChannelsUseCase {
   constructor(private readonly _channelRepo: IChannelRepo) {}
@@ -22,23 +21,14 @@ export class GetChannelsUsecase implements IGetChannelsUseCase {
         userId,
       });
 
-    // 3. Calculate total pages
     const totalPages = Math.ceil(total / limit);
 
-    // 4. Convert Domain Entities to plain JSON objects for the HTTP response
-    const plainChannels = channels.map((channel) =>
-      ChannelMapper.toPersistence(channel),
-    );
-
     return {
-      status: 'success',
-      data: {
-        channels: plainChannels,
-        total,
-        page,
-        limit,
-        totalPages,
-      },
+      channels,
+      total,
+      page,
+      limit,
+      totalPages,
     };
   }
 }

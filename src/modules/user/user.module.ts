@@ -22,6 +22,7 @@ import {
 } from './application/user.tokens';
 import { AdminController } from './presentation/controller/admin.controller';
 import { adminProvide } from './providers/admin.providers';
+import { USER_CHECK_TOKEN } from './infrastructure/infra.tokens';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { adminProvide } from './providers/admin.providers';
   controllers: [UserController, AdminController],
   providers: [...userProviders, ...adminProvide],
   exports: [
+    USER_CHECK_TOKEN,
     CREATE_USER_USE_CASE_TOKEN,
     CREATE_ADVERTISER_USE_CASE_TOKEN,
     CREATE_USER_WITH_GOOGLE_AUTH_USE_CASE_TOKEN,

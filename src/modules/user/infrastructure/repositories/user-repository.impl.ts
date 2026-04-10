@@ -29,17 +29,6 @@ export class MongoRepository implements UserRepositoryPort {
 
     if (!userDoc) return null;
 
-    if (
-      userDoc.avatarUrl &&
-      userDoc.avatarUrl.startsWith(
-        'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
-      )
-    ) {
-      userDoc.avatarUrl = await this._storageService.getSignedViewUrl(
-        userDoc.avatarUrl,
-      );
-    }
-
     return BaseUserMapper.toDomain(userDoc);
   }
 
@@ -52,16 +41,6 @@ export class MongoRepository implements UserRepositoryPort {
     });
 
     if (!userDoc) return null;
-    if (
-      userDoc.avatarUrl &&
-      userDoc.avatarUrl.startsWith(
-        'https://streamco-avatar-2026.s3.us-east-1.amazonaws.com',
-      )
-    ) {
-      userDoc.avatarUrl = await this._storageService.getSignedViewUrl(
-        userDoc.avatarUrl,
-      );
-    }
     return BaseUserMapper.toDomain(userDoc);
   }
 

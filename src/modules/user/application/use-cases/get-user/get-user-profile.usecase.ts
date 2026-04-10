@@ -1,21 +1,16 @@
-import { UserResponse } from '@/shared/types';
+import { ILogger } from '@/shared/logger';
 import { UserRepositoryPort } from '../../ports';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
-import { GetUserProfileMapper } from '@/shared/mappers/get-user-profile.mapper';
-import { FileLogger } from '@/shared/logger/file-logger';
+import { Advertiser, BaseUser, User } from '@/modules/user/domain';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { IGetUserProfileUseCase } from '../../ports/get-user/get-user-profile.usecase.port';
-import { Advertiser, BaseUser, User } from '@/modules/user/domain';
 
 export class GetUserProfileUseCase implements IGetUserProfileUseCase {
   constructor(
     private readonly _userRepo: UserRepositoryPort,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
-  async execute(input: {
-    id: string;
-    paramsId: string;
-  }): Promise<UserResponse> {
+  async execute(input: { id: string; paramsId: string }): Promise<BaseUser> {
     let user: User | BaseUser | Advertiser | null;
     user = await this._userRepo.findById(input.paramsId);
     if (!user) {
@@ -29,21 +24,12 @@ export class GetUserProfileUseCase implements IGetUserProfileUseCase {
       });
       throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
     }
-    const responseData = GetUserProfileMapper.toResponse(user);
-    if (!responseData) {
-      this._logger.error({
-        event: LOG_EVENTS.USER_NOT_FOUND,
-        context: 'GetUserProfileUseCase',
-        userId: `${input.id}`,
-      });
-      throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
-    }
     this._logger.log({
       event: LOG_EVENTS.USER_PROFILE_RETRIEVED,
       context: 'GetUserProfileUseCase',
       userId: `${input.id}`,
     });
 
-    return responseData;
+    return user;
   }
 }

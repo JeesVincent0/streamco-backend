@@ -1,10 +1,10 @@
+import { IRefreshTokenUseCase } from '../../ports';
+import { ILogger } from '@/shared/logger/logger.interface';
+import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { TokenServicePort } from '@/modules/auth-security/application';
 import { AccessTokenPayload, RefreshTokenPayload } from '@/shared/interfaces';
-import { RefreshTokenPurpose } from '@/modules/auth/domain/enums/refresh-token-purpose.enum';
-import { FileLogger } from '@/shared/logger/file-logger';
-import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { IGenerateTokenUseCase } from '../../ports/usecase/generate-token.usecase.port';
-import { IRefreshTokenUseCase } from '../../ports';
+import { RefreshTokenPurpose } from '@/modules/auth/domain/enums/refresh-token-purpose.enum';
 
 /*
  * GenerateTokenUseCase will create access token and refresh token,
@@ -15,7 +15,7 @@ export class GenerateTokenUseCase implements IGenerateTokenUseCase {
   constructor(
     private readonly _tokenService: TokenServicePort,
     private readonly _refreshTokenUseCase: IRefreshTokenUseCase,
-    private readonly _logger: FileLogger,
+    private readonly _logger: ILogger,
   ) {}
   async execute(
     accessTokenPayload: AccessTokenPayload,
