@@ -8,9 +8,7 @@ import {
 } from '../../application/ports';
 import { ChannelDocument } from '../schema';
 import { ChannelMapper } from '../mappers/channel.mappers';
-import { Inject, Injectable } from '@nestjs/common';
-import { STORAGE_SERVICE_PORT_TOKEN } from '@/shared/infrastructure/storage/token';
-import { type IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
+import { Injectable } from '@nestjs/common';
 
 interface IFilter {
   userId?: string;
@@ -25,9 +23,6 @@ export class ChannelRepository implements IChannelRepo {
   constructor(
     @InjectModel('Channel')
     private readonly _channelModel: Model<ChannelDocument>,
-
-    @Inject(STORAGE_SERVICE_PORT_TOKEN)
-    private readonly _storageService: IStorageService,
   ) {}
 
   async findChannelsWithPagination({
@@ -59,31 +54,9 @@ export class ChannelRepository implements IChannelRepo {
         .exec(),
     ]);
 
-    const channels = await Promise.all(
-      rawChannels.map(async (doc) => {
-        if (
-          doc.profileImageUrl &&
-          !doc.profileImageUrl.startsWith('https://lh3.googleusercontent.com')
-        ) {
-          doc.profileImageUrl = await this._storageService.getSignedViewUrl(
-            doc.profileImageUrl,
-          );
-        }
-
-        if (
-          doc.backgroundBannerUrl &&
-          !doc.backgroundBannerUrl.startsWith(
-            'https://lh3.googleusercontent.com',
-          )
-        ) {
-          doc.backgroundBannerUrl = await this._storageService.getSignedViewUrl(
-            doc.backgroundBannerUrl,
-          );
-        }
-
-        return ChannelMapper.toDomain(doc);
-      }),
-    );
+    const channels = rawChannels.map((doc) => {
+      return ChannelMapper.toDomain(doc);
+    });
 
     return {
       total,
@@ -95,28 +68,6 @@ export class ChannelRepository implements IChannelRepo {
     const channelDoc = await this._channelModel.findOne({ channelId }).exec();
 
     if (!channelDoc) return null;
-    if (
-      channelDoc.profileImageUrl &&
-      !channelDoc.profileImageUrl.startsWith(
-        'https://lh3.googleusercontent.com',
-      )
-    ) {
-      channelDoc.profileImageUrl = await this._storageService.getSignedViewUrl(
-        channelDoc.profileImageUrl,
-      );
-    }
-
-    if (
-      channelDoc.backgroundBannerUrl &&
-      !channelDoc.backgroundBannerUrl.startsWith(
-        'https://lh3.googleusercontent.com',
-      )
-    ) {
-      channelDoc.backgroundBannerUrl =
-        await this._storageService.getSignedViewUrl(
-          channelDoc.backgroundBannerUrl,
-        );
-    }
 
     return ChannelMapper.toDomain(channelDoc);
   }

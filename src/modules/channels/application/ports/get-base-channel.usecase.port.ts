@@ -1,6 +1,6 @@
 import { GetChannelInput } from '../inputs';
-import { GetBaseChannelOutPut } from '../output';
+import { Channel } from '../../domain/entity';
 
 export interface IGetBaseChannelUseCase {
-  execute(input: GetChannelInput): Promise<GetBaseChannelOutPut>;
+  execute(input: GetChannelInput): Promise<Channel>;
 }

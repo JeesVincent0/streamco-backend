@@ -8,7 +8,7 @@ export interface GetChannelOutPut {
   channelId: string;
   channelName: string;
   status: CHANNEL_STATUS;
-  profileImageUrl?: string;
+  profileImageUrl?: string | null;
   subscribersCount: number;
-  backgroundBannerUrl?: string;
+  backgroundBannerUrl?: string | null;
 }

@@ -35,10 +35,12 @@ import {
   UPDATE_CHANNEL_STATUS_USE_CASE_TOKEN,
 } from '../../application/token';
 
+import { CHANNEL_STATUS } from '../../domain/enums';
 import { ChannelResponseMappers } from '../mappers';
 import { ResponseMessage } from '@/shared/decorators';
 import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
-import { CHANNEL_STATUS } from '../../domain/enums';
+import { STORAGE_SERVICE_PORT_TOKEN } from '@/shared/infrastructure/storage/token';
+import { type IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
 
 @Controller(`${ROUTES.ADMIN.ROOT}/${ROUTES.ADMIN.CHANNELS}`)
 @UseGuards(AccessTokenGuard, ScopeGuard)
@@ -52,6 +54,9 @@ export class AdminChannelController {
 
     @Inject(UPDATE_CHANNEL_STATUS_USE_CASE_TOKEN)
     private readonly _updateChannelStatusUseCase: IUpdateChannelStatusUseCase,
+
+    @Inject(STORAGE_SERVICE_PORT_TOKEN)
+    private readonly _s3Service: IStorageService,
   ) {}
 
   @Patch(`${ROUTES.COMMON.ID}/${ROUTES.COMMON.STATUS}`)
@@ -77,7 +82,7 @@ export class AdminChannelController {
       channelId: id,
     });
 
-    return ChannelResponseMappers.toChannel(channelEnity);
+    return ChannelResponseMappers.toChannel(channelEnity, this._s3Service);
   }
 
   @Get()

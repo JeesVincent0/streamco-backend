@@ -11,6 +11,7 @@ import type { ICacheBaseRepo } from '@/shared/application/ports';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { RequestWithUserInterface } from '@/shared/interfaces';
 import { CHACHE_REPO_TOKEN } from '@/shared/infrastructure/cache/token';
+import { BadRequestError } from '@/shared/errors';
 
 @Injectable()
 export class ChannelOwnershipGuard implements CanActivate {
@@ -28,37 +29,13 @@ export class ChannelOwnershipGuard implements CanActivate {
     const userId = request.user?.sub;
     const channelId = request.params.id as string;
 
-    const chacheChannel = await this._chacheRepo.get<{ userId: string }>(
-      channelId,
-    );
+    const channel = await this._channelRepo.findByChannelId(channelId);
 
-    if (chacheChannel) {
-      if (chacheChannel.userId !== userId) {
-        throw new ForbiddenException(ERROR_MESSAGES.PERMISSION_DENIED);
-      }
-    } else {
-      const channel = await this._channelRepo.findByChannelId(channelId);
-      if (channel?.userId !== userId) {
-        throw new ForbiddenException(ERROR_MESSAGES.PERMISSION_DENIED);
-      } else {
-        await this._chacheRepo.save(
-          channel.channelId,
-          {
-            bio: channel.bio,
-            status: channel.status,
-            userId: channel.userId,
-            isLive: channel.isLive,
-            createdAt: channel.createdAt,
-            channelId: channel.channelId,
-            channelName: channel.channelName,
-            profileImageUrl: channel.profileImageUrl,
-            subscribersCount: channel.subscribersCount,
-            backgroundBannerUrl: channel.backgroundBannerUrl,
-          },
-          Number(process.env.CHANNEL_CHACHE_TIMEOUT),
-        );
-      }
-    }
+    if (!channel)
+      throw new BadRequestError(ERROR_MESSAGES.USE_ANOTHER_CHANNEL_ID);
+
+    if (channel?.userId !== userId)
+      throw new ForbiddenException(ERROR_MESSAGES.PERMISSION_DENIED);
 
     return true;
   }
