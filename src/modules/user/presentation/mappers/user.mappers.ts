@@ -31,6 +31,17 @@ export class UserResponseMapper {
     };
   }
 
+  static toAdminTable(user: BaseUser) {
+    return {
+      id: user.id,
+      displayName: user.displayName,
+      email: user.email,
+      status: user.status,
+      role: user.role,
+      isVerified: user.isVerified,
+    };
+  }
+
   static async toResponse(
     user: BaseUser,
     storageService: IStorageService,

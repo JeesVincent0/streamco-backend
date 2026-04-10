@@ -1,9 +1,8 @@
-import { GetAllUsersInput } from '../../inputs';
-import { Mappers } from '../../mappers';
 import { IUserQuery } from '../../ports';
-import { IGetAllUsersUseCase } from '../../ports/get-user/get-all-users.usecase.port';
+import { GetAllUsersInput } from '../../inputs';
 import { normalizeGetUsersQuery } from '../../utility';
-import { GetAllUsersOutput } from '../../output/get-all-users.output';
+import { IGetAllUsersUseCase } from '../../ports/get-user/get-all-users.usecase.port';
+import { BaseUser } from '@/modules/user/domain';
 
 export class GetAllUsersUseCase implements IGetAllUsersUseCase {
   constructor(private readonly _getAllUsersPort: IUserQuery) {}
@@ -18,12 +17,8 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
     sortBy,
     order,
   }: GetAllUsersInput): Promise<{
-    status: string;
-    message: string;
-    data: {
-      users: GetAllUsersOutput[];
-      pagination: { page: number; limit: number; totalPages: number };
-    };
+    users: BaseUser[];
+    pagination: { page: number; limit: number; totalPages: number };
   }> {
     const normalizedQuery = normalizeGetUsersQuery({
       page,
@@ -38,14 +33,10 @@ export class GetAllUsersUseCase implements IGetAllUsersUseCase {
 
     const { users, pagination } =
       await this._getAllUsersPort.getUsers(normalizedQuery);
-    const userData = Mappers.toGetAllUserResponse(users);
+
     return {
-      status: 'success',
-      message: 'Users retrieved successfully',
-      data: {
-        users: userData,
-        pagination,
-      },
+      users,
+      pagination,
     };
   }
 }
