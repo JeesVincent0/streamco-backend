@@ -16,6 +16,7 @@ import {
 import { ChannelOwnershipGuard } from './infrastructure/guards';
 import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guard';
 import { UserModule } from '../user/user.module';
+import { CHANNEL_REPO_TOKEN } from './application/token';
 
 @Module({
   imports: [
@@ -36,5 +37,6 @@ import { UserModule } from '../user/user.module';
     ...userChannelProviders,
     ...adminChannelProviders,
   ],
+  exports: [CHANNEL_REPO_TOKEN],
 })
 export class ChannelModule {}

@@ -1,24 +1,14 @@
-import { UniqueIdService } from '@/shared/domain';
 import { LIVESTATUS } from '../enums';
 import { VISIBILITY } from '../enums';
-
-interface CreateLiveInput {
-  title: string;
-  channelId: string;
-  streamKey: string;
-
-  description?: string;
-  categoryId?: string;
-  thumbnailUrl?: string;
-  scheduledAt?: Date;
-}
+import { CreateLiveInput } from '../interfaces';
+import { UniqueIdService } from '@/shared/domain';
 
 export class Live {
   private constructor(
     private _id: string,
     private _title: string,
     private _channelId: string,
-    private _streamKey: string,
+    private _rtcRoomId: string,
 
     private _status: LIVESTATUS,
     private _visibility: VISIBILITY,
@@ -61,7 +51,7 @@ export class Live {
       id,
       data.title,
       data.channelId,
-      data.streamKey,
+      data.rtcRoomId,
 
       LIVESTATUS.SCHEDULED,
       VISIBILITY.PUBLIC,
@@ -105,64 +95,163 @@ export class Live {
   get title() {
     return this._title;
   }
+  get description() {
+    return this._description;
+  }
+
+  get channelId() {
+    return this._channelId;
+  }
+  get rtcRoomId() {
+    return this._rtcRoomId;
+  }
+
   get status() {
     return this._status;
   }
+  get visibility() {
+    return this._visibility;
+  }
+
   get viewerCount() {
     return this._viewerCount;
   }
+  get peakViewerCount() {
+    return this._peakViewerCount;
+  }
+  get likeCount() {
+    return this._likeCount;
+  }
+  get commentCount() {
+    return this._commentCount;
+  }
 
-  public updateDetails(data: { title?: string; description?: string }) {
-    if (data.title) this._title = data.title;
-    if (data.description) this._description = data.description;
+  get isChatEnabled() {
+    return this._isChatEnabled;
+  }
+  get isRecordingEnabled() {
+    return this._isRecordingEnabled;
+  }
 
+  get createdAt() {
+    return this._createdAt;
+  }
+  get updatedAt() {
+    return this._updatedAt;
+  }
+
+  get categoryId() {
+    return this._categoryId;
+  }
+  get thumbnailUrl() {
+    return this._thumbnailUrl;
+  }
+
+  get scheduledAt() {
+    return this._scheduledAt;
+  }
+  get startedAt() {
+    return this._startedAt;
+  }
+  get endedAt() {
+    return this._endedAt;
+  }
+
+  get streamUrl() {
+    return this._streamUrl;
+  }
+  get playbackUrl() {
+    return this._playbackUrl;
+  }
+  get recordingUrl() {
+    return this._recordingUrl;
+  }
+
+  get isBlocked() {
+    return this._isBlocked;
+  }
+  get blockedReason() {
+    return this._blockedReason;
+  }
+
+  get duration() {
+    return this._duration;
+  }
+  get deletedAt() {
+    return this._deletedAt;
+  }
+
+  public setTitle(title: string) {
+    this._title = title;
     this.touch();
   }
 
-  public startLive() {
-    if (this._status !== LIVESTATUS.SCHEDULED) {
-      throw new Error('Cannot start live');
-    }
-
-    this._status = LIVESTATUS.LIVE;
-    this._startedAt = new Date();
+  public setDescription(description?: string) {
+    this._description = description;
     this.touch();
   }
 
-  public endLive(recordingUrl?: string) {
-    if (this._status !== LIVESTATUS.LIVE) {
-      throw new Error('Live not active');
-    }
-
-    this._status = LIVESTATUS.ENDED;
-    this._endedAt = new Date();
-
-    if (recordingUrl) {
-      this._recordingUrl = recordingUrl;
-    }
-
-    if (this._startedAt && this._endedAt) {
-      this._duration =
-        (this._endedAt.getTime() - this._startedAt.getTime()) / 1000;
-    }
-
+  public setVisibility(visibility: VISIBILITY) {
+    this._visibility = visibility;
     this.touch();
   }
 
-  public incrementViewer() {
-    this._viewerCount++;
-
-    if (this._viewerCount > this._peakViewerCount) {
-      this._peakViewerCount = this._viewerCount;
-    }
+  public setCategory(categoryId?: string) {
+    this._categoryId = categoryId;
+    this.touch();
   }
 
-  public decrementViewer() {
-    if (this._viewerCount > 0) this._viewerCount--;
+  public setThumbnail(thumbnailUrl?: string) {
+    this._thumbnailUrl = thumbnailUrl;
+    this.touch();
   }
 
-  public addLike() {
-    this._likeCount++;
+  public setScheduledAt(date?: Date) {
+    this._scheduledAt = date;
+    this.touch();
+  }
+
+  public setStreamingUrls(data: { streamUrl?: string; playbackUrl?: string }) {
+    if (data.streamUrl) this._streamUrl = data.streamUrl;
+    if (data.playbackUrl) this._playbackUrl = data.playbackUrl;
+    this.touch();
+  }
+
+  public enableChat() {
+    this._isChatEnabled = true;
+    this.touch();
+  }
+
+  public disableChat() {
+    this._isChatEnabled = false;
+    this.touch();
+  }
+
+  public enableRecording() {
+    this._isRecordingEnabled = true;
+    this.touch();
+  }
+
+  public disableRecording() {
+    this._isRecordingEnabled = false;
+    this.touch();
+  }
+
+  public block(reason: string) {
+    this._isBlocked = true;
+    this._blockedReason = reason;
+    this.touch();
+  }
+
+  public unblock() {
+    this._isBlocked = false;
+    this._blockedReason = undefined;
+    this.touch();
+  }
+
+  public softDelete() {
+    this._deletedAt = new Date();
+    this.touch();
   }
 
   private touch() {

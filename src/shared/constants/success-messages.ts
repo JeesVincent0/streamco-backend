@@ -10,4 +10,8 @@ export const SUCCESS_MESSAGE = {
   BASE_USER_DATA_FETCHED_SUCCESSFULLY: 'Base user data fetched successfully',
   USER_DATA_FETCHED_SUCCESSFULLY: 'User data fetched successfully',
   ALL_USER_DATA_FETCHED_SUCCESSFULLY: 'All users data fetched successfully',
+
+  // FOR LIVE
+  SCHEDULED_LIVE_SUCCESSFULLY: 'Scheduled live successfully',
+  SCHEDULED_LIVE_FETCHED_SUCCESSFULLY: 'Scheduled live fetched successfully',
 };

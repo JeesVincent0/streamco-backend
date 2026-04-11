@@ -1,13 +1,25 @@
 export const ROUTES = {
+  // FOR ADMIN
   ADMIN: {
     ROOT: 'admin',
     CHANNELS: 'channels',
   },
+
+  // FOR CHANNEL
   CHANNEL: {
     ROOT: 'channel',
     CHANNELS: 'channels',
     BASE: 'base',
   },
+
+  // FOR LIVE
+  LIVE: {
+    ROOT: 'live',
+    SCHEDULE: 'schedule',
+    SCHEDULED: 'scheduled',
+  },
+
+  // COMMIN ROUTES
   COMMON: {
     ID: ':id',
     STATUS: 'status',
