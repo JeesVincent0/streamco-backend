@@ -10,7 +10,7 @@ export class CreateChannelDto {
   @IsString()
   @IsNotEmpty({ message: 'Channel name is required' })
   @MaxLength(40)
-  channelName: string;
+  channelName!: string;
 
   @IsString()
   @IsNotEmpty({ message: 'Channel ID is required' })
@@ -19,7 +19,7 @@ export class CreateChannelDto {
     message:
       'Channel ID can only contain lowercase letters, numbers, and underscores',
   })
-  channelId: string;
+  channelId!: string;
 
   @IsString()
   @IsOptional()

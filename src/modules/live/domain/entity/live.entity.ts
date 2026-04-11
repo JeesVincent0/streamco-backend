@@ -29,6 +29,8 @@ export class Live {
     private _thumbnailUrl?: string,
 
     private _scheduledAt?: Date,
+    private _expectedDuration?: number,
+
     private _startedAt?: Date,
     private _endedAt?: Date,
 
@@ -72,6 +74,7 @@ export class Live {
       data.thumbnailUrl,
 
       data.scheduledAt,
+      data.expectedDuration,
 
       undefined,
       undefined,
@@ -149,6 +152,9 @@ export class Live {
 
   get scheduledAt() {
     return this._scheduledAt;
+  }
+  get expectedDuration() {
+    return this._expectedDuration;
   }
   get startedAt() {
     return this._startedAt;

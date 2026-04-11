@@ -7,4 +7,5 @@ export interface CreateLiveInput {
   categoryId?: string;
   thumbnailUrl?: string;
   scheduledAt?: Date;
+  expectedDuration?: number;
 }
