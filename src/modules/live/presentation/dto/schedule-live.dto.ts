@@ -1,57 +1,42 @@
 import {
-  IsEnum,
-  IsNumber,
   IsString,
-  MaxLength,
   IsNotEmpty,
+  IsOptional,
+  IsEnum,
+  Matches,
 } from 'class-validator';
-
-import { Transform, Type } from 'class-transformer';
-import { LIVESTATUS, VISIBILITY } from '../../domain/enums';
+import { VISIBILITY } from '../../domain/enums';
 
 export class ScheduleLiveDto {
-  @Transform(({ value }): unknown =>
-    typeof value === 'string' ? value.trim() : value,
-  )
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
   title!: string;
 
-  @Transform(({ value }): unknown =>
-    typeof value === 'string' ? value.trim() : value,
-  )
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(100)
-  channelId!: string;
-
   @IsEnum(VISIBILITY)
-  @IsNotEmpty()
   visibility!: VISIBILITY;
 
-  @Transform(({ value }): unknown =>
-    typeof value === 'string' ? value.trim() : value,
-  )
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(500)
-  description!: string;
+  @IsOptional()
+  description?: string;
 
-  @Transform(({ value }): unknown =>
-    typeof value === 'string' ? value.trim() : value,
-  )
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
   categoryId!: string;
 
   @IsString()
-  @IsNotEmpty()
-  @MaxLength(300)
-  thumbnail!: string;
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'Date must be in YYYY-MM-DD format',
+  })
+  date!: string;
 
-  @Type(() => Number)
-  @IsNumber()
-  expectedDuration!: number;
+  @IsString()
+  @Matches(/^\d{2}:\d{2}$/, { message: 'Time must be in HH:mm format' })
+  time!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  duration!: string;
+
+  @IsString()
+  thumbnail?: string;
 }
