@@ -29,9 +29,17 @@ export class LiveMappers {
 
       rtcRoomId: entity.rtcRoomId,
       scheduledAt: entity.scheduledAt,
+
       expectedDuration: entity.expectedDuration
         ? entity.expectedDuration.getValue()
         : undefined,
+      expectedEndAt:
+        entity.scheduledAt && entity.expectedDuration
+          ? new Date(
+              entity.scheduledAt.getTime() +
+                entity.expectedDuration.toMinutes() * 60000,
+            )
+          : undefined,
 
       startedAt: entity.startedAt,
       endedAt: entity.endedAt,

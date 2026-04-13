@@ -32,4 +32,20 @@ export class LiveRepositoryMongooseImpl implements ILiveRepo {
 
     return LiveMappers.toDomain(doc);
   }
+
+  async findConflict(
+    channelId: string,
+    newStart: Date,
+    newEnd: Date,
+  ): Promise<boolean> {
+    const doc = await this.liveModel.findOne({
+      channelId,
+      status: 'SCHEDULED',
+
+      scheduledAt: { $lt: newEnd },
+      expectedEndAt: { $gt: newStart },
+    });
+
+    return !!doc;
+  }
 }

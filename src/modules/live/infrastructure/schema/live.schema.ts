@@ -64,6 +64,9 @@ export class LiveModel {
   expectedDuration?: string;
 
   @Prop({ type: Date })
+  expectedEndAt!: Date;
+
+  @Prop({ type: Date })
   startedAt?: Date;
 
   @Prop({ type: Date })

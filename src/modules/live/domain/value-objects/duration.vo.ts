@@ -1,10 +1,10 @@
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 
 export class Duration {
-  private value: string;
+  private _value: string;
 
   private constructor(duration: string) {
-    this.value = duration;
+    this._value = duration;
   }
 
   static create(duration: string): Duration {
@@ -19,7 +19,12 @@ export class Duration {
     return regex.test(duration);
   }
 
+  toMinutes(): number {
+    const [hours, minutes] = this._value.split(':').map(Number);
+    return hours * 60 + minutes;
+  }
+
   getValue(): string {
-    return this.value;
+    return this._value;
   }
 }
