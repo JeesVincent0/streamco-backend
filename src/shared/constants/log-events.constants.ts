@@ -28,4 +28,12 @@ export const LOG_EVENTS = {
   USER_CREATION_FAILED: 'USER_CREATION_FAILED',
   PASSWORD_RESET: 'PASSWORD_RESET',
   USER_VERIFIED: 'USER_VERIFIED',
+
+  // FOR LIVE MODULE
+  CATEGORY_BLOCKED: 'Category blocked',
+  THUMBNAIL_UPLOADED: 'Thumbnail uploaded',
+  LIVE_SCHEDULED: 'Live Scheduled',
+
+  // COMMON
+  ENTITY_CREATED: 'Entity created',
 } as const;

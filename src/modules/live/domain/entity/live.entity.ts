@@ -2,14 +2,13 @@ import { LIVESTATUS } from '../enums';
 import { VISIBILITY } from '../enums';
 import { CreateLiveInput } from '../interfaces';
 import { UniqueIdService } from '@/shared/domain';
-import { Time } from '../value-objects';
+import { Duration, Time } from '../value-objects';
 
 export class Live {
   private constructor(
     private _id: string,
     private _title: string,
     private _channelId: string,
-    private _rtcRoomId: string,
 
     private _status: LIVESTATUS,
     private _visibility: VISIBILITY,
@@ -29,8 +28,9 @@ export class Live {
     private _categoryId?: string,
     private _thumbnailUrl?: string,
 
+    private _rtcRoomId?: string,
     private _scheduledAt?: Date,
-    private _expectedDuration?: number,
+    private _expectedDuration?: Duration,
 
     private _startedAt?: Date,
     private _endedAt?: Date,
@@ -63,7 +63,6 @@ export class Live {
       id,
       data.title,
       data.channelId,
-      data.rtcRoomId,
 
       LIVESTATUS.SCHEDULED,
       VISIBILITY.PUBLIC,
@@ -83,6 +82,7 @@ export class Live {
       data.categoryId,
       data.thumbnailUrl,
 
+      undefined,
       data.scheduledAt,
       data.expectedDuration,
 
@@ -101,6 +101,87 @@ export class Live {
     );
   }
 
+  public static restore(data: {
+    id: string;
+    title: string;
+    channelId: string;
+
+    status: LIVESTATUS;
+    visibility: VISIBILITY;
+
+    viewerCount: number;
+    peakViewerCount: number;
+    likeCount: number;
+    commentCount: number;
+
+    isChatEnabled: boolean;
+    isRecordingEnabled: boolean;
+
+    createdAt: Date;
+    updatedAt: Date;
+
+    description?: string;
+    categoryId?: string;
+    thumbnailUrl?: string;
+
+    rtcRoomId?: string;
+    scheduledAt?: Date;
+    expectedDuration?: Duration;
+
+    startedAt?: Date;
+    endedAt?: Date;
+
+    streamUrl?: string;
+    playbackUrl?: string;
+    recordingUrl?: string;
+
+    isBlocked?: boolean;
+    blockedReason?: string;
+
+    duration?: number;
+    deletedAt?: Date | null;
+  }): Live {
+    return new Live(
+      data.id,
+      data.title,
+      data.channelId,
+
+      data.status,
+      data.visibility,
+
+      data.viewerCount,
+      data.peakViewerCount,
+      data.likeCount,
+      data.commentCount,
+
+      data.isChatEnabled,
+      data.isRecordingEnabled,
+
+      data.createdAt,
+      data.updatedAt,
+
+      data.description,
+      data.categoryId,
+      data.thumbnailUrl,
+
+      data.rtcRoomId,
+      data.scheduledAt,
+      data.expectedDuration,
+
+      data.startedAt,
+      data.endedAt,
+
+      data.streamUrl,
+      data.playbackUrl,
+      data.recordingUrl,
+
+      data.isBlocked,
+      data.blockedReason,
+
+      data.duration,
+      data.deletedAt,
+    );
+  }
   // GETTERS
   get id() {
     return this._id;

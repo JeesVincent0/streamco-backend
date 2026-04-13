@@ -1,11 +1,11 @@
+import { Duration } from '../value-objects';
+
 export interface CreateLiveInput {
   title: string;
   channelId: string;
-  rtcRoomId: string;
-
-  description?: string;
-  categoryId?: string;
-  thumbnailUrl?: string;
-  scheduledAt?: Date;
-  expectedDuration?: number;
+  scheduledAt: Date;
+  categoryId: string;
+  description: string;
+  thumbnailUrl: string;
+  expectedDuration: Duration;
 }

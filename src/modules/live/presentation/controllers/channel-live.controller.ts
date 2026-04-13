@@ -3,11 +3,11 @@ import {
   Post,
   Body,
   Param,
+  Inject,
   HttpCode,
   UseGuards,
   HttpStatus,
   Controller,
-  Inject,
 } from '@nestjs/common';
 
 import { ScheduleLiveDto } from '../dto';
@@ -33,8 +33,11 @@ export class ChannelLiveController {
   @HttpCode(HttpStatus.OK)
   @Scopes(SCOPE.USER_WRITE)
   @ResponseMessage(SUCCESS_MESSAGE.SCHEDULED_LIVE_SUCCESSFULLY)
-  scheduleLive(@Body() body: ScheduleLiveDto, @Param('id') channelId: string) {
-    this._scheduleLiveUseCase.execute({
+  async scheduleLive(
+    @Body() body: ScheduleLiveDto,
+    @Param('id') channelId: string,
+  ) {
+    await this._scheduleLiveUseCase.execute({
       time: body.time,
       date: body.date,
       title: body.title,

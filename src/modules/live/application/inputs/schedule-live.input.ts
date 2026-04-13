@@ -1,10 +1,9 @@
 import { VISIBILITY } from '../../domain/enums';
-import { Duration, Time } from '../../domain/value-objects';
 
 export interface ScheduleLiveInput {
   date: Date;
-  time: Time;
-  duration: Duration;
+  time: string;
+  duration: string;
   title: string;
   visibility: VISIBILITY;
   categoryId: string;
