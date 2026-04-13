@@ -2,6 +2,7 @@ import { LIVESTATUS } from '../enums';
 import { VISIBILITY } from '../enums';
 import { CreateLiveInput } from '../interfaces';
 import { UniqueIdService } from '@/shared/domain';
+import { Time } from '../value-objects';
 
 export class Live {
   private constructor(
@@ -44,6 +45,15 @@ export class Live {
     private _duration?: number,
     private _deletedAt?: Date | null,
   ) {}
+
+  public static createStartDate(date: Date, time: Time): Date {
+    const result = new Date(date);
+
+    const [hours, minutes] = time.getValue().split(':').map(Number);
+    result.setHours(hours, minutes, 0, 0);
+
+    return result;
+  }
 
   public static create(data: CreateLiveInput): Live {
     const now = new Date();
