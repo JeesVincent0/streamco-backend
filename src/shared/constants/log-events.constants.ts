@@ -33,6 +33,7 @@ export const LOG_EVENTS = {
   CATEGORY_BLOCKED: 'Category blocked',
   THUMBNAIL_UPLOADED: 'Thumbnail uploaded',
   LIVE_SCHEDULED: 'Live Scheduled',
+  SCHEDULED_TIME_MUST_BE_IN_THE_FUTURE: 'Scheduled time must be in the future',
 
   // COMMON
   ENTITY_CREATED: 'Entity created',

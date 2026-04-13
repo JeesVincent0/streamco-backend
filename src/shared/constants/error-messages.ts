@@ -3,14 +3,16 @@ export const ERROR_MESSAGES = {
   ACCESS_DENIED: 'Access denied',
 
   // FOR LIVES
+  TIME_SLOT_ALREADY_BOOKED: 'Time slot already booked',
   INVALID_TIME_FORMAT: 'Invalid time format. Use HH:MM',
   INVALID_DURATION_FORMAT: 'Invalid duration format. Use HH:MM',
+  SCHEDULED_TIME_MUST_BE_IN_THE_FUTURE: 'Scheduled time must be in the future',
 
   // FOR CHANNEL MODULE
   CHANNEL_BLOCKED: 'Channel blocked',
+  PERMISSION_DENIED: 'Permission denied',
   CHANNEL_NOT_EXISTS: 'Channel not exists',
   WRONG_STATUS: 'Wrong channel status entered',
-  PERMISSION_DENIED: 'Permission denied',
 
   // FOR USER
   USER_NOT_EXISTS: 'User not exits',

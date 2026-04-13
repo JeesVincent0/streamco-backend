@@ -34,6 +34,38 @@ export class ScheduleLiveUseCase implements IScheduleLiveUseCase {
       throw new BadRequestError(ERROR_MESSAGES.SELECTED_CATEGORY_BLOCKED);
     }
 
+    const scheduledAt = Live.createStartDate(input.date, time);
+
+    if (scheduledAt <= new Date()) {
+      this._logger.error({
+        event: LOG_EVENTS.SCHEDULED_TIME_MUST_BE_IN_THE_FUTURE,
+        constext: 'ScheduleLiveUseCase',
+        channeId: input.channelId,
+      });
+      throw new BadRequestError(
+        ERROR_MESSAGES.SCHEDULED_TIME_MUST_BE_IN_THE_FUTURE,
+      );
+    }
+
+    const durationMinutes = duration.toMinutes();
+    const newStart = scheduledAt;
+    const newEnd = new Date(newStart.getTime() + durationMinutes * 60000);
+
+    const conflict = await this._liveRepo.findConflict(
+      input.channelId,
+      newStart,
+      newEnd,
+    );
+
+    if (conflict) {
+      this._logger.error({
+        event: ERROR_MESSAGES.TIME_SLOT_ALREADY_BOOKED,
+        constext: 'ScheduleLiveUseCase',
+        channeId: input.channelId,
+      });
+      throw new BadRequestError(ERROR_MESSAGES.TIME_SLOT_ALREADY_BOOKED);
+    }
+
     const thumbnailPath = await this._thumnailStroage.uploadBase64(
       input.thumbnail,
       'thumbnail',
@@ -44,8 +76,6 @@ export class ScheduleLiveUseCase implements IScheduleLiveUseCase {
       context: 'ScheduleLiveUseCase',
       channelId: input.channelId,
     });
-
-    const scheduledAt = Live.createStartDate(input.date, time);
 
     const scheduleLive = Live.create({
       scheduledAt,
@@ -70,7 +100,5 @@ export class ScheduleLiveUseCase implements IScheduleLiveUseCase {
       context: 'ScheduleLiveUseCase',
       scheduleLiveId: id,
     });
-
-    throw new BadRequestError(`TEST ERROR LIVE USECASE`);
   }
 }
