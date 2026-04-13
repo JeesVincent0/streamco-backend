@@ -3,10 +3,11 @@ import { UserModule } from '../user/user.module';
 import { ChannelLiveController } from './presentation/controllers';
 import { AuthSecurityModule } from '../auth-security/auth-security.module';
 import { ChannelModule } from '../channels/channel.module';
+import { channelLiveProviders } from './providers';
 
 @Module({
   imports: [UserModule, AuthSecurityModule, ChannelModule],
   controllers: [ChannelLiveController],
-  providers: [],
+  providers: [...channelLiveProviders],
 })
 export class LiveModule {}

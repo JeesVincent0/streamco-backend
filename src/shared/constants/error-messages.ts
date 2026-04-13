@@ -2,6 +2,10 @@ export const ERROR_MESSAGES = {
   // COMMON ERROS
   ACCESS_DENIED: 'Access denied',
 
+  // FOR LIVES
+  INVALID_TIME_FORMAT: 'Invalid time format. Use HH:MM',
+  INVALID_DURATION_FORMAT: 'Invalid duration format. Use HH:MM',
+
   // FOR CHANNEL MODULE
   CHANNEL_BLOCKED: 'Channel blocked',
   CHANNEL_NOT_EXISTS: 'Channel not exists',

@@ -7,14 +7,16 @@ import {
   UseGuards,
   HttpStatus,
   Controller,
+  Inject,
 } from '@nestjs/common';
 
 import { ScheduleLiveDto } from '../dto';
-import { BadRequestError } from '@/shared/errors';
 import { ROUTES } from '@/shared/constants/routes';
 import { ResponseMessage } from '@/shared/decorators';
 import { SCOPE } from '@/modules/auth-security/domain';
+import type { IScheduleLiveUseCase } from '../../application/ports';
 import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
+import { SCHEDULE_LIVE_USE_CASE_TOKEN } from '../../application/tokens';
 import { IsChannelActiveGuard } from '@/modules/channels/infrastructure/guards';
 import { AccessTokenGuard, Scopes } from '@/modules/auth-security/presentation';
 import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guard';
@@ -22,16 +24,27 @@ import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guar
 @Controller(ROUTES.LIVE.ROOT)
 @UseGuards(AccessTokenGuard, ActiveUserGuard, IsChannelActiveGuard)
 export class ChannelLiveController {
-  constructor() {}
+  constructor(
+    @Inject(SCHEDULE_LIVE_USE_CASE_TOKEN)
+    private readonly _scheduleLiveUseCase: IScheduleLiveUseCase,
+  ) {}
 
   @Post(`${ROUTES.COMMON.ID}/${ROUTES.LIVE.SCHEDULE}`)
   @HttpCode(HttpStatus.OK)
   @Scopes(SCOPE.USER_WRITE)
   @ResponseMessage(SUCCESS_MESSAGE.SCHEDULED_LIVE_SUCCESSFULLY)
   scheduleLive(@Body() body: ScheduleLiveDto, @Param('id') channelId: string) {
-    console.log('channelId: ', channelId);
-    console.log(body);
-    throw new BadRequestError('TEST ERROR MESSAGE');
+    this._scheduleLiveUseCase.execute({
+      time: body.time,
+      date: body.date,
+      title: body.title,
+      duration: body.duration,
+      thumbnail: body.thumbnail,
+      visibility: body.visibility,
+      categoryId: body.categoryId,
+      description: body.description,
+      channelId,
+    });
   }
 
   @Get(`${ROUTES.LIVE.SCHEDULED}/${ROUTES.COMMON.ID}`)
@@ -39,6 +52,10 @@ export class ChannelLiveController {
   @Scopes(SCOPE.USER_READ)
   @ResponseMessage(SUCCESS_MESSAGE.SCHEDULED_LIVE_FETCHED_SUCCESSFULLY)
   getSchedulesLive(@Param('id') channelId: string) {
+    console.log(
+      'This is channelId from getScheduledLive controller: ',
+      channelId,
+    );
     const dummyScheduledLives = [
       {
         id: '1',

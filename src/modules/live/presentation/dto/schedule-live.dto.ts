@@ -1,11 +1,6 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsOptional,
-  IsEnum,
-  Matches,
-} from 'class-validator';
 import { VISIBILITY } from '../../domain/enums';
+import { Duration, Time } from '../../domain/value-objects';
+import { IsString, IsNotEmpty, IsEnum, Matches } from 'class-validator';
 
 export class ScheduleLiveDto {
   @IsString()
@@ -16,8 +11,7 @@ export class ScheduleLiveDto {
   visibility!: VISIBILITY;
 
   @IsString()
-  @IsOptional()
-  description?: string;
+  description!: string;
 
   @IsString()
   @IsNotEmpty()
@@ -27,16 +21,16 @@ export class ScheduleLiveDto {
   @Matches(/^\d{4}-\d{2}-\d{2}$/, {
     message: 'Date must be in YYYY-MM-DD format',
   })
-  date!: string;
+  date!: Date;
 
   @IsString()
   @Matches(/^\d{2}:\d{2}$/, { message: 'Time must be in HH:mm format' })
-  time!: string;
+  time!: Time;
 
   @IsString()
   @IsNotEmpty()
-  duration!: string;
+  duration!: Duration;
 
   @IsString()
-  thumbnail?: string;
+  thumbnail!: string;
 }
