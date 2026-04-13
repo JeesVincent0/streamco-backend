@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { categoryProviders } from './providers/category.providers';
-import { CategoryController } from './presentation/controllers/category.controller';
-import { AuthSecurityModule } from '../auth-security/auth-security.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CategorySchema } from './infrastructure/schema';
+import { categoryProviders } from './providers/category.providers';
+import { CATEGORY_CHECKER_TOKEN } from '../live/application/tokens';
+import { AuthSecurityModule } from '../auth-security/auth-security.module';
+import { CategoryController } from './presentation/controllers/category.controller';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { CategorySchema } from './infrastructure/schema';
   ],
   controllers: [CategoryController],
   providers: [...categoryProviders],
-  exports: [],
+  exports: [CATEGORY_CHECKER_TOKEN],
 })
 export class CategoryModule {}

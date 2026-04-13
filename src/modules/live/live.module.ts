@@ -4,9 +4,10 @@ import { ChannelLiveController } from './presentation/controllers';
 import { AuthSecurityModule } from '../auth-security/auth-security.module';
 import { ChannelModule } from '../channels/channel.module';
 import { channelLiveProviders } from './providers';
+import { CategoryModule } from '../category/category.module';
 
 @Module({
-  imports: [UserModule, AuthSecurityModule, ChannelModule],
+  imports: [UserModule, AuthSecurityModule, ChannelModule, CategoryModule],
   controllers: [ChannelLiveController],
   providers: [...channelLiveProviders],
 })
