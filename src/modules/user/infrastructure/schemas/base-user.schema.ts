@@ -11,37 +11,37 @@ import { SocialLink } from '../../domain/value-objects';
 @Schema({ discriminatorKey: 'role', timestamps: true })
 export class BaseUserDocument extends Document {
   @Prop({ required: true, unique: true, index: true })
-  id: string;
+  id!: string;
 
   @Prop({ required: false })
-  firstName: string;
+  firstName!: string;
 
   @Prop({ required: false })
-  lastName: string;
+  lastName!: string;
 
   @Prop({ required: true })
-  displayName: string;
+  displayName!: string;
 
   @Prop({ required: false })
-  googleId: string;
+  googleId!: string;
 
   @Prop({ required: true, unique: true, index: true })
-  email: string;
+  email!: string;
 
   @Prop({ required: false })
-  password: string;
+  password!: string;
 
   @Prop({ required: true, enum: Object.values(UserRole), type: String })
-  role: UserRole;
+  role!: UserRole;
 
   @Prop({ required: true, enum: Object.values(UserStatus) })
-  status: string;
+  status!: string;
 
   @Prop({ required: true, type: Boolean, default: false })
-  isProfileCompleted: boolean;
+  isProfileCompleted!: boolean;
 
   @Prop({ required: true, type: Boolean, default: false })
-  isVerified: boolean;
+  isVerified!: boolean;
 
   @Prop({ required: false })
   avatarUrl?: string;
@@ -50,7 +50,7 @@ export class BaseUserDocument extends Document {
   deletedAt?: Date;
 
   @Prop({ required: true })
-  createdAt: Date;
+  createdAt!: Date;
 }
 
 export const BaseUserSchema = SchemaFactory.createForClass(BaseUserDocument);

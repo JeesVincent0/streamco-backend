@@ -8,19 +8,19 @@ export type ChannelDocument = ChannelModel & Document;
 @Schema({ timestamps: true, collection: 'channels' })
 export class ChannelModel {
   @Prop({ type: String, required: true, unique: true, index: true })
-  id: string;
+  id!: string;
 
   @Prop({ required: true, trim: true })
-  channelName: string;
+  channelName!: string;
 
   @Prop({ required: true, unique: true, trim: true, lowercase: true })
-  channelId: string;
+  channelId!: string;
 
   @Prop({ required: true, index: true })
-  userId: string;
+  userId!: string;
 
   @Prop({ default: '' })
-  bio: string;
+  bio!: string;
 
   @Prop({ default: null })
   profileImageUrl?: string;
@@ -29,18 +29,18 @@ export class ChannelModel {
   backgroundBannerUrl?: string;
 
   @Prop({ type: String, enum: CHANNEL_STATUS, default: CHANNEL_STATUS.ACTIVE })
-  status: CHANNEL_STATUS;
+  status!: CHANNEL_STATUS;
   @Prop({ default: false })
-  isLive: boolean;
+  isLive!: boolean;
 
   @Prop({ default: 0 })
-  subscribersCount: number;
+  subscribersCount!: number;
 
   @Prop({ default: 0 })
-  totalViews: number;
+  totalViews!: number;
 
   @Prop({ default: 0 })
-  totalVideos: number;
+  totalVideos!: number;
 
   createdAt?: Date;
   updatedAt?: Date;
