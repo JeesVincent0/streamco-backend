@@ -19,10 +19,16 @@ export const ROUTES = {
     SCHEDULED: 'scheduled',
   },
 
+  LIVES: {
+    ROOT: `lives`,
+  },
+
   // COMMIN ROUTES
   COMMON: {
     ID: ':id',
     STATUS: 'status',
     CREATE: 'create',
+    MONTH: `month`,
+    DAY: `day`,
   },
 };

@@ -8,18 +8,26 @@ import {
   UseGuards,
   HttpStatus,
   Controller,
+  Query,
 } from '@nestjs/common';
 
 import { ScheduleLiveDto } from '../dto';
 import { ROUTES } from '@/shared/constants/routes';
 import { ResponseMessage } from '@/shared/decorators';
 import { SCOPE } from '@/modules/auth-security/domain';
-import type { IScheduleLiveUseCase } from '../../application/ports';
+import type {
+  IMonthlyLivesUsecase,
+  IScheduleLiveUseCase,
+} from '../../application/ports';
 import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
-import { SCHEDULE_LIVE_USE_CASE_TOKEN } from '../../application/tokens';
+import {
+  MONTHLY_LIVES_USE_CASE_TOKEN,
+  SCHEDULE_LIVE_USE_CASE_TOKEN,
+} from '../../application/tokens';
 import { IsChannelActiveGuard } from '@/modules/channels/infrastructure/guards';
 import { AccessTokenGuard, Scopes } from '@/modules/auth-security/presentation';
 import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guard';
+import { MonthlyLivesQueryDto } from '../dto/monthly-lives-query.dto';
 
 @Controller(ROUTES.LIVE.ROOT)
 @UseGuards(AccessTokenGuard, ActiveUserGuard, IsChannelActiveGuard)
@@ -27,6 +35,9 @@ export class ChannelLiveController {
   constructor(
     @Inject(SCHEDULE_LIVE_USE_CASE_TOKEN)
     private readonly _scheduleLiveUseCase: IScheduleLiveUseCase,
+
+    @Inject(MONTHLY_LIVES_USE_CASE_TOKEN)
+    private readonly _monthlyLivesUseCase: IMonthlyLivesUsecase,
   ) {}
 
   @Post(`${ROUTES.COMMON.ID}/${ROUTES.LIVE.SCHEDULE}`)
@@ -48,6 +59,50 @@ export class ChannelLiveController {
       description: body.description,
       channelId,
     });
+  }
+
+  @Get(`${ROUTES.COMMON.ID}/${ROUTES.COMMON.MONTH}`)
+  @HttpCode(HttpStatus.OK)
+  @Scopes(SCOPE.USER_READ)
+  @ResponseMessage(SUCCESS_MESSAGE.MONTHLY_LIVES_DATA_FATECHED_SUCCESSFULLY)
+  async getMonthlyLives(
+    @Query() queryArgs: MonthlyLivesQueryDto,
+    @Param('id') channelId: string,
+  ) {
+    const result = await this._monthlyLivesUseCase.execute({
+      channelId,
+      month: queryArgs.month,
+      year: queryArgs.year,
+    });
+
+    return result;
+  }
+
+  @Get(`${ROUTES.COMMON.ID}/${ROUTES.COMMON.DAY}`)
+  @HttpCode(HttpStatus.OK)
+  @Scopes(SCOPE.USER_READ)
+  @ResponseMessage(SUCCESS_MESSAGE.MONTHLY_LIVES_DATA_FATECHED_SUCCESSFULLY)
+  getDayLives(@Query() queryArgs, @Param('id') channelId: string) {
+    console.log('ChannelId: ', channelId);
+    console.log('reached here lives monthly', queryArgs);
+    return [
+      {
+        id: 'live1',
+        title: 'Morning Session',
+        scheduledAt: '2026-04-13T10:00:00.000Z',
+        expectedEndAt: '2026-04-13T11:00:00.000Z',
+        status: 'SCHEDULED',
+        thumbnailUrl: 'url',
+      },
+      {
+        id: 'live2',
+        title: 'Evening Show',
+        scheduledAt: '2026-04-13T18:00:00.000Z',
+        expectedEndAt: '2026-04-13T19:30:00.000Z',
+        status: 'SCHEDULED',
+        thumbnailUrl: 'url',
+      },
+    ];
   }
 
   @Get(`${ROUTES.LIVE.SCHEDULED}/${ROUTES.COMMON.ID}`)

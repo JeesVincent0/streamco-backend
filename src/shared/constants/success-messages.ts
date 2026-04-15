@@ -5,6 +5,8 @@ export const SUCCESS_MESSAGE = {
   CHANNEL_STATUS_CHANGED_SUCCESSFULLY: 'Channel status changed successfully',
   BASE_CHANNEL_DATA_FETCHED_SUCCESSFULLY:
     'Base channel data fetched succesfully',
+  MONTHLY_LIVES_DATA_FATECHED_SUCCESSFULLY:
+    'Monthly lives data fetched successfully',
 
   // FOR USER MODULE CONTROLLERS
   BASE_USER_DATA_FETCHED_SUCCESSFULLY: 'Base user data fetched successfully',

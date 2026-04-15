@@ -5,6 +5,7 @@ import { Live } from '../../domain/entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ILiveRepo } from '../../application/ports';
+import { IMonthlyLivesOutput } from '../../application/outputs';
 
 @Injectable()
 export class LiveRepositoryMongooseImpl implements ILiveRepo {
@@ -47,5 +48,54 @@ export class LiveRepositoryMongooseImpl implements ILiveRepo {
     });
 
     return !!doc;
+  }
+
+  async findMonthlySummary(
+    channelId: string,
+    year: number,
+    month: number,
+  ): Promise<IMonthlyLivesOutput[]> {
+    const start = new Date(year, month - 1, 1);
+    const end = new Date(year, month, 0, 23, 59, 59, 999);
+
+    return this.liveModel.aggregate([
+      {
+        $match: {
+          channelId,
+          status: 'SCHEDULED',
+          scheduledAt: { $gte: start, $lte: end },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: '%Y-%m-%d', date: '$scheduledAt' },
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          date: '$_id',
+          count: 1,
+        },
+      },
+      { $sort: { date: 1 } },
+    ]);
+  }
+
+  async findByDate(channelId: string, date: Date): Promise<Live[]> {
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+
+    return this.liveModel.find({
+      channelId,
+      status: 'SCHEDULED',
+      scheduledAt: { $gte: start, $lte: end },
+    });
   }
 }
