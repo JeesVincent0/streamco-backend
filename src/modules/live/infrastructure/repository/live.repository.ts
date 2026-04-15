@@ -85,7 +85,10 @@ export class LiveRepositoryMongooseImpl implements ILiveRepo {
     ]);
   }
 
-  async findByDate(channelId: string, date: Date): Promise<Live[]> {
+  async findByDate(
+    channelId: string,
+    date: Date,
+  ): Promise<(Live & { expectedEndAt: Date })[]> {
     const start = new Date(date);
     start.setHours(0, 0, 0, 0);
 

@@ -15,5 +15,8 @@ export interface ILiveRepo extends IBaseRepositoryPort<Live> {
     month: number,
   ): Promise<IMonthlyLivesOutput[]>;
 
-  findByDate(channeId: string, date: Date): Promise<Live[]>;
+  findByDate(
+    channeId: string,
+    date: Date,
+  ): Promise<(Live & { expectedEndAt: Date })[]>;
 }

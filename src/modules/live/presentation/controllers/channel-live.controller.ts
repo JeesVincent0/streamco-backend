@@ -3,31 +3,41 @@ import {
   Post,
   Body,
   Param,
+  Query,
   Inject,
   HttpCode,
   UseGuards,
   HttpStatus,
   Controller,
-  Query,
 } from '@nestjs/common';
 
-import { ScheduleLiveDto } from '../dto';
-import { ROUTES } from '@/shared/constants/routes';
-import { ResponseMessage } from '@/shared/decorators';
-import { SCOPE } from '@/modules/auth-security/domain';
+import {
+  ScheduleLiveDto,
+  DayLivesQueryDto,
+  MonthlyLivesQueryDto,
+} from '../dto';
+
 import type {
+  IDayLivesUsecase,
   IMonthlyLivesUsecase,
   IScheduleLiveUseCase,
 } from '../../application/ports';
-import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
+
 import {
+  DAY_LIVES_USE_CASE_TOKEN,
   MONTHLY_LIVES_USE_CASE_TOKEN,
   SCHEDULE_LIVE_USE_CASE_TOKEN,
 } from '../../application/tokens';
+
+import { ROUTES } from '@/shared/constants/routes';
+import { ResponseMessage } from '@/shared/decorators';
+import { SCOPE } from '@/modules/auth-security/domain';
+import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
 import { IsChannelActiveGuard } from '@/modules/channels/infrastructure/guards';
 import { AccessTokenGuard, Scopes } from '@/modules/auth-security/presentation';
 import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guard';
-import { MonthlyLivesQueryDto } from '../dto/monthly-lives-query.dto';
+import { LiveResponseMappers } from '../mappers';
+import { Live } from '../../domain/entity';
 
 @Controller(ROUTES.LIVE.ROOT)
 @UseGuards(AccessTokenGuard, ActiveUserGuard, IsChannelActiveGuard)
@@ -38,6 +48,9 @@ export class ChannelLiveController {
 
     @Inject(MONTHLY_LIVES_USE_CASE_TOKEN)
     private readonly _monthlyLivesUseCase: IMonthlyLivesUsecase,
+
+    @Inject(DAY_LIVES_USE_CASE_TOKEN)
+    private readonly _dayLivesUsecase: IDayLivesUsecase,
   ) {}
 
   @Post(`${ROUTES.COMMON.ID}/${ROUTES.LIVE.SCHEDULE}`)
@@ -82,27 +95,20 @@ export class ChannelLiveController {
   @HttpCode(HttpStatus.OK)
   @Scopes(SCOPE.USER_READ)
   @ResponseMessage(SUCCESS_MESSAGE.MONTHLY_LIVES_DATA_FATECHED_SUCCESSFULLY)
-  getDayLives(@Query() queryArgs, @Param('id') channelId: string) {
-    console.log('ChannelId: ', channelId);
-    console.log('reached here lives monthly', queryArgs);
-    return [
-      {
-        id: 'live1',
-        title: 'Morning Session',
-        scheduledAt: '2026-04-13T10:00:00.000Z',
-        expectedEndAt: '2026-04-13T11:00:00.000Z',
-        status: 'SCHEDULED',
-        thumbnailUrl: 'url',
-      },
-      {
-        id: 'live2',
-        title: 'Evening Show',
-        scheduledAt: '2026-04-13T18:00:00.000Z',
-        expectedEndAt: '2026-04-13T19:30:00.000Z',
-        status: 'SCHEDULED',
-        thumbnailUrl: 'url',
-      },
-    ];
+  async getDayLives(
+    @Query() queryArgs: DayLivesQueryDto,
+    @Param('id') channelId: string,
+  ) {
+    const result = await this._dayLivesUsecase.execute({
+      channelId,
+      date: queryArgs.date,
+    });
+
+    const responseData = result.map((live: Live & { expectedEndAt: Date }) =>
+      LiveResponseMappers.toDayLivesResponse(live),
+    );
+
+    return responseData;
   }
 
   @Get(`${ROUTES.LIVE.SCHEDULED}/${ROUTES.COMMON.ID}`)
