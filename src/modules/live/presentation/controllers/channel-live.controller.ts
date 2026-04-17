@@ -36,8 +36,6 @@ import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
 import { IsChannelActiveGuard } from '@/modules/channels/infrastructure/guards';
 import { AccessTokenGuard, Scopes } from '@/modules/auth-security/presentation';
 import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guard';
-import { LiveResponseMappers } from '../mappers';
-import { Live } from '../../domain/entity';
 
 @Controller(ROUTES.LIVE.ROOT)
 @UseGuards(AccessTokenGuard, ActiveUserGuard, IsChannelActiveGuard)
@@ -104,11 +102,7 @@ export class ChannelLiveController {
       date: queryArgs.date,
     });
 
-    const responseData = result.map((live: Live & { expectedEndAt: Date }) =>
-      LiveResponseMappers.toDayLivesResponse(live),
-    );
-
-    return responseData;
+    return result;
   }
 
   @Get(`${ROUTES.LIVE.SCHEDULED}/${ROUTES.COMMON.ID}`)

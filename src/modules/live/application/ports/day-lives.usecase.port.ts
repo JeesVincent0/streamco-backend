@@ -1,6 +1,6 @@
-import { Live } from '../../domain/entity';
 import { IDayLivesInput } from '../inputs';
+import { IDayLiveOutput } from '../outputs';
 
 export interface IDayLivesUsecase {
-  execute(input: IDayLivesInput): Promise<(Live & { expectedEndAt: Date })[]>;
+  execute(input: IDayLivesInput): Promise<IDayLiveOutput[]>;
 }
