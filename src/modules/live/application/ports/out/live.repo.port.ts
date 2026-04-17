@@ -1,6 +1,7 @@
-import { Live } from '../../domain/entity';
+import { Live } from '../../../domain/entity';
 import { IBaseRepositoryPort } from '@/shared/application/ports';
-import { IMonthlyLivesOutput } from '../outputs';
+import { IMonthlyLivesOutput } from '../../outputs';
+import { IGetScheduledLivesInput } from '../../inputs';
 
 export interface ILiveRepo extends IBaseRepositoryPort<Live> {
   findConflict(
@@ -19,4 +20,13 @@ export interface ILiveRepo extends IBaseRepositoryPort<Live> {
     channeId: string,
     date: Date,
   ): Promise<(Live & { expectedEndAt: Date })[]>;
+
+  findByQueryScheduledLives(params: IGetScheduledLivesInput): Promise<{
+    lives: Live[];
+    pagination: {
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  }>;
 }
