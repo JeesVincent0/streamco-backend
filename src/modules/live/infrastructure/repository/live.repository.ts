@@ -4,9 +4,9 @@ import { LiveMappers } from '../mappers';
 import { Live } from '../../domain/entity';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { LIVESTATUS } from '../../domain/enums';
 import { ILiveRepo } from '../../application/ports';
 import { IMonthlyLivesOutput } from '../../application/outputs';
-import { LIVESTATUS } from '../../domain/enums';
 import { IGetScheduledLivesInput } from '../../application/inputs';
 
 @Injectable()
@@ -127,8 +127,8 @@ export class LiveRepositoryMongooseImpl implements ILiveRepo {
     };
 
     //Status
-    if (status && Object.values(LIVESTATUS).includes(status as LIVESTATUS)) {
-      filter.status = status; // specific status
+    if (status && Object.values(LIVESTATUS).includes(status)) {
+      filter.status = status;
     } else {
       filter.status = {
         $in: [LIVESTATUS.CANCELLED, LIVESTATUS.SCHEDULED],

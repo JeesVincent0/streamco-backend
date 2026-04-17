@@ -86,13 +86,11 @@ export class ChannelLiveController {
     @Query() queryArgs: MonthlyLivesQueryDto,
     @Param('id') channelId: string,
   ) {
-    const result = await this._monthlyLivesUseCase.execute({
+    return await this._monthlyLivesUseCase.execute({
       channelId,
       month: queryArgs.month,
       year: queryArgs.year,
     });
-
-    return result;
   }
 
   @Get(`${ROUTES.COMMON.ID}/${ROUTES.COMMON.DAY}`)
@@ -103,12 +101,10 @@ export class ChannelLiveController {
     @Query() queryArgs: DayLivesQueryDto,
     @Param('id') channelId: string,
   ) {
-    const result = await this._dayLivesUsecase.execute({
+    return await this._dayLivesUsecase.execute({
       channelId,
       date: queryArgs.date,
     });
-
-    return result;
   }
 
   @Get(`${ROUTES.LIVE.SCHEDULED}/${ROUTES.COMMON.ID}`)
