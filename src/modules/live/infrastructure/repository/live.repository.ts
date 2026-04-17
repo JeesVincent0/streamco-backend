@@ -6,6 +6,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ILiveRepo } from '../../application/ports';
 import { IMonthlyLivesOutput } from '../../application/outputs';
+import { LIVESTATUS } from '../../domain/enums';
+import { IGetScheduledLivesInput } from '../../application/inputs';
 
 @Injectable()
 export class LiveRepositoryMongooseImpl implements ILiveRepo {
@@ -100,5 +102,67 @@ export class LiveRepositoryMongooseImpl implements ILiveRepo {
       status: 'SCHEDULED',
       scheduledAt: { $gte: start, $lte: end },
     });
+  }
+
+  async findByQueryScheduledLives(params: IGetScheduledLivesInput): Promise<{
+    lives: Live[];
+    pagination: {
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  }> {
+    const {
+      channelId,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      order = 'desc',
+      status,
+      search,
+    } = params;
+
+    const filter: Record<string, any> = {
+      channelId,
+    };
+
+    //Status
+    if (status && Object.values(LIVESTATUS).includes(status as LIVESTATUS)) {
+      filter.status = status; // specific status
+    } else {
+      filter.status = {
+        $in: [LIVESTATUS.CANCELLED, LIVESTATUS.SCHEDULED],
+      };
+    }
+
+    // Search
+    if (search) {
+      filter.title = { $regex: search, $options: 'i' };
+    }
+
+    const sort: Record<string, 1 | -1> = {
+      [sortBy]: order === 'desc' ? -1 : 1,
+    };
+
+    const skip = (page - 1) * limit;
+
+    const docs = await this.liveModel
+      .find(filter)
+      .sort(sort)
+      .skip(skip)
+      .limit(limit);
+
+    const lives = docs.map((doc) => LiveMappers.toDomain(doc));
+
+    const total = await this.liveModel.countDocuments(filter);
+
+    return {
+      lives,
+      pagination: {
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit) || 1,
+      },
+    };
   }
 }
