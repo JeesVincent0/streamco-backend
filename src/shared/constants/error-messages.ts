@@ -3,6 +3,7 @@ export const ERROR_MESSAGES = {
   ACCESS_DENIED: 'Access denied',
 
   // FOR LIVES
+  SCHEDULED_LIVE_NOT_FOUND: 'Scheduled live not found',
   TIME_SLOT_ALREADY_BOOKED: 'Time slot already booked',
   INVALID_TIME_FORMAT: 'Invalid time format. Use HH:MM',
   INVALID_DURATION_FORMAT: 'Invalid duration format. Use HH:MM',

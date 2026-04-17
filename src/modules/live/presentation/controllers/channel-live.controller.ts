@@ -4,6 +4,7 @@ import {
   Body,
   Param,
   Query,
+  Patch,
   Inject,
   HttpCode,
   UseGuards,
@@ -23,13 +24,15 @@ import type {
   IMonthlyLivesUsecase,
   IScheduleLiveUseCase,
   IGetScheduledLivesUsecase,
+  ICancelScheduledLiveUsecase,
 } from '../../application/ports';
 
 import {
   DAY_LIVES_USE_CASE_TOKEN,
-  GET_SCHEDULED_LIVE_USE_CASE_TOKEN,
   MONTHLY_LIVES_USE_CASE_TOKEN,
   SCHEDULE_LIVE_USE_CASE_TOKEN,
+  GET_SCHEDULED_LIVE_USE_CASE_TOKEN,
+  CANCEL_SCHEDULED_LIVE_USE_CASE_TOKEN,
 } from '../../application/tokens';
 
 import { ROUTES } from '@/shared/constants/routes';
@@ -44,6 +47,9 @@ import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guar
 @UseGuards(AccessTokenGuard, ActiveUserGuard, IsChannelActiveGuard)
 export class ChannelLiveController {
   constructor(
+    @Inject(CANCEL_SCHEDULED_LIVE_USE_CASE_TOKEN)
+    private readonly _cancelScheduledLiveUsecase: ICancelScheduledLiveUsecase,
+
     @Inject(GET_SCHEDULED_LIVE_USE_CASE_TOKEN)
     private readonly _getScheduledLivesUsecase: IGetScheduledLivesUsecase,
 
@@ -124,5 +130,13 @@ export class ChannelLiveController {
       page: queryArgs.page as number,
       limit: queryArgs.limit as number,
     });
+  }
+
+  @Patch(`${ROUTES.LIVE.SCHEDULED}/${ROUTES.COMMON.ID}/${ROUTES.COMMON.ID2}`)
+  @HttpCode(HttpStatus.OK)
+  @Scopes(SCOPE.USER_WRITE)
+  @ResponseMessage(SUCCESS_MESSAGE.SCHEDULED_LIVE_STATUS_CHANGED_SUCCESSFULLY)
+  async cancelScheduledLive(@Param('id2') scheduledLiveId: string) {
+    return await this._cancelScheduledLiveUsecase.execute({ scheduledLiveId });
   }
 }

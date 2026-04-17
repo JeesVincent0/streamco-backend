@@ -16,4 +16,6 @@ export const SUCCESS_MESSAGE = {
   // FOR LIVE
   SCHEDULED_LIVE_SUCCESSFULLY: 'Scheduled live successfully',
   SCHEDULED_LIVE_FETCHED_SUCCESSFULLY: 'Scheduled live fetched successfully',
+  SCHEDULED_LIVE_STATUS_CHANGED_SUCCESSFULLY:
+    'Scheduled live status changed successfully',
 };

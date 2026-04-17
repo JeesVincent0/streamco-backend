@@ -5,9 +5,11 @@ import {
   MONTHLY_LIVES_USE_CASE_TOKEN,
   SCHEDULE_LIVE_USE_CASE_TOKEN,
   GET_SCHEDULED_LIVE_USE_CASE_TOKEN,
+  CANCEL_SCHEDULED_LIVE_USE_CASE_TOKEN,
 } from '../application/tokens';
 
 import {
+  CancelScheduledLiveUsecase,
   GetScheduledLivesUsecase,
   ScheduleLiveUseCase,
 } from '../application/usecase';
@@ -20,6 +22,14 @@ import { STORAGE_SERVICE_PORT_TOKEN } from '@/shared/infrastructure/storage/toke
 import { IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
 
 export const channelLiveProviders = [
+  {
+    provide: CANCEL_SCHEDULED_LIVE_USE_CASE_TOKEN,
+    useFactory: (liveRepo: ILiveRepo) => {
+      return new CancelScheduledLiveUsecase(liveRepo);
+    },
+    inject: [LIVE_REPOSITORY_TOKEN],
+  },
+
   {
     provide: GET_SCHEDULED_LIVE_USE_CASE_TOKEN,
     useFactory: (liveRepo: ILiveRepo) => {

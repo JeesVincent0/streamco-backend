@@ -26,6 +26,7 @@ export const ROUTES = {
   // COMMIN ROUTES
   COMMON: {
     ID: ':id',
+    ID2: ':id2',
     STATUS: 'status',
     CREATE: 'create',
     MONTH: `month`,

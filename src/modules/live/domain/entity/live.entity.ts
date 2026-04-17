@@ -278,6 +278,13 @@ export class Live {
     return this._deletedAt;
   }
 
+  public cancelLive() {
+    if (this._status === LIVESTATUS.SCHEDULED) {
+      this._status = LIVESTATUS.CANCELLED;
+      this.touch();
+    }
+  }
+
   public setTitle(title: string) {
     this._title = title;
     this.touch();

@@ -13,8 +13,6 @@ export class GetScheduledLivesUsecase implements IGetScheduledLivesUsecase {
     const finalResultOfLives =
       LiveResponseMappers.toScheduleLivesResponseForArray(result.lives);
 
-    console.log(finalResultOfLives);
-
     return {
       scheduledLives: finalResultOfLives,
       pagination: result.pagination,

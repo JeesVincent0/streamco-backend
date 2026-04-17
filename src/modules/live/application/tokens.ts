@@ -6,3 +6,6 @@ export const MONTHLY_LIVES_USE_CASE_TOKEN = Symbol('IMonthlyLivesUsecase');
 export const GET_SCHEDULED_LIVE_USE_CASE_TOKEN = Symbol(
   'IGetScheduledLivesUsecase',
 );
+export const CANCEL_SCHEDULED_LIVE_USE_CASE_TOKEN = Symbol(
+  'ICancelScheduledLiveUsecase',
+);
