@@ -80,6 +80,7 @@ export class ChannelLiveController {
       visibility: body.visibility,
       categoryId: body.categoryId,
       description: body.description,
+      scheduledAt: body.scheduledAt,
       channelId,
     });
   }

@@ -165,4 +165,15 @@ export class LiveRepositoryMongooseImpl implements ILiveRepo {
       },
     };
   }
+
+  async scheduledLiveAutoCancel(liveId: string): Promise<void> {
+    const live = await this.liveModel.findOne({ id: liveId });
+
+    if (!live) return;
+
+    if (live.status !== LIVESTATUS.SCHEDULED) return;
+
+    live.status = LIVESTATUS.CANCELLED;
+    await live.save();
+  }
 }

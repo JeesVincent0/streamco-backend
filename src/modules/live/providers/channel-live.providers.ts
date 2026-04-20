@@ -14,14 +14,16 @@ import {
   ScheduleLiveUseCase,
 } from '../application/usecase';
 
+import { Provider } from '@nestjs/common';
 import { ILogger, LOGGER_TOKEN } from '@/shared/logger';
-import { ICategoryChecker, ILiveRepo } from '../application/ports';
+import { BullMQLiveQueue, LIVE_QUEUE_SERVICE } from '../infrastructure/queue';
+import { ICategoryChecker, ILiveQueue, ILiveRepo } from '../application/ports';
 import { LiveRepositoryMongooseImpl } from '../infrastructure/repository';
 import { DayLivesUsecase, MonthlyLivesUsecase } from '../application/usecase';
 import { STORAGE_SERVICE_PORT_TOKEN } from '@/shared/infrastructure/storage/token';
 import { IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
 
-export const channelLiveProviders = [
+export const channelLiveProviders: Provider[] = [
   {
     provide: CANCEL_SCHEDULED_LIVE_USE_CASE_TOKEN,
     useFactory: (liveRepo: ILiveRepo) => {
@@ -41,12 +43,14 @@ export const channelLiveProviders = [
   {
     provide: SCHEDULE_LIVE_USE_CASE_TOKEN,
     useFactory: (
+      liveQueue: ILiveQueue,
       liveRepo: ILiveRepo,
       categoryChecker: ICategoryChecker,
       thumbnailStorage: IStorageService,
       logger: ILogger,
     ) => {
       return new ScheduleLiveUseCase(
+        liveQueue,
         liveRepo,
         categoryChecker,
         thumbnailStorage,
@@ -54,6 +58,7 @@ export const channelLiveProviders = [
       );
     },
     inject: [
+      LIVE_QUEUE_SERVICE,
       LIVE_REPOSITORY_TOKEN,
       CATEGORY_CHECKER_TOKEN,
       STORAGE_SERVICE_PORT_TOKEN,
@@ -80,5 +85,10 @@ export const channelLiveProviders = [
   {
     provide: LIVE_REPOSITORY_TOKEN,
     useClass: LiveRepositoryMongooseImpl,
+  },
+
+  {
+    provide: LIVE_QUEUE_SERVICE,
+    useClass: BullMQLiveQueue,
   },
 ];

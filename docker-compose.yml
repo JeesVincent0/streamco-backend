@@ -11,6 +11,8 @@ services:
       redis-server
       --requirepass ${REDIS_PASSWORD}
       --appendonly yes
+      --appendfsync everysec
+      --dir /data
     volumes:
       - redis_data:/data
     env_file:

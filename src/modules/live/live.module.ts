@@ -6,6 +6,7 @@ import { LiveSchema } from './infrastructure/schema';
 import { ChannelModule } from '../channels/channel.module';
 import { CategoryModule } from '../category/category.module';
 import { ChannelLiveController } from './presentation/controllers';
+import { LiveQueueWorker, queueProvider } from './infrastructure/queue';
 import { AuthSecurityModule } from '../auth-security/auth-security.module';
 import { StorageModule } from '@/shared/infrastructure/storage/storage.module';
 
@@ -19,6 +20,6 @@ import { StorageModule } from '@/shared/infrastructure/storage/storage.module';
     MongooseModule.forFeature([{ name: 'Live', schema: LiveSchema }]),
   ],
   controllers: [ChannelLiveController],
-  providers: [...channelLiveProviders],
+  providers: [queueProvider, LiveQueueWorker, ...channelLiveProviders],
 })
 export class LiveModule {}

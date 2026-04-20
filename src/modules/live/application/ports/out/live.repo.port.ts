@@ -1,7 +1,7 @@
 import { Live } from '../../../domain/entity';
-import { IBaseRepositoryPort } from '@/shared/application/ports';
 import { IMonthlyLivesOutput } from '../../outputs';
 import { IGetScheduledLivesInput } from '../../inputs';
+import { IBaseRepositoryPort } from '@/shared/application/ports';
 
 export interface ILiveRepo extends IBaseRepositoryPort<Live> {
   findConflict(
@@ -29,4 +29,6 @@ export interface ILiveRepo extends IBaseRepositoryPort<Live> {
       totalPages: number;
     };
   }>;
+
+  scheduledLiveAutoCancel(liveId: string): Promise<void>;
 }

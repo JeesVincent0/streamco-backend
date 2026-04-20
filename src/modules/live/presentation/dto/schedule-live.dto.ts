@@ -1,5 +1,6 @@
+import { Type } from 'class-transformer';
 import { VISIBILITY } from '../../domain/enums';
-import { IsString, IsNotEmpty, IsEnum, Matches } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, Matches, IsDate } from 'class-validator';
 
 export class ScheduleLiveDto {
   @IsString()
@@ -32,4 +33,8 @@ export class ScheduleLiveDto {
 
   @IsString()
   thumbnail!: string;
+
+  @Type(() => Date)
+  @IsDate()
+  scheduledAt!: Date;
 }

@@ -1,15 +1,22 @@
+import {
+  ILiveRepo,
+  ILiveQueue,
+  ICategoryChecker,
+  IScheduleLiveUseCase,
+} from '../ports';
+
 import { ILogger } from '@/shared/logger';
 import { Live } from '../../domain/entity';
 import { ScheduleLiveInput } from '../inputs';
 import { BadRequestError } from '@/shared/errors';
-import { Duration, Time } from '../../domain/value-objects';
-import { ICategoryChecker, ILiveRepo, IScheduleLiveUseCase } from '../ports';
+import { Duration } from '../../domain/value-objects';
 import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
 import { LOG_EVENTS } from '@/shared/constants/log-events.constants';
 import { IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
 
 export class ScheduleLiveUseCase implements IScheduleLiveUseCase {
   constructor(
+    private readonly _liveQueue: ILiveQueue,
     private readonly _liveRepo: ILiveRepo,
     private readonly _categoryChecker: ICategoryChecker,
     private readonly _thumnailStroage: IStorageService,
@@ -17,7 +24,6 @@ export class ScheduleLiveUseCase implements IScheduleLiveUseCase {
   ) {}
 
   async execute(input: ScheduleLiveInput): Promise<void> {
-    const time = Time.create(input.time);
     const duration = Duration.create(input.duration);
 
     const isCategoryActive = await this._categoryChecker.isCategoryActive(
@@ -34,7 +40,7 @@ export class ScheduleLiveUseCase implements IScheduleLiveUseCase {
       throw new BadRequestError(ERROR_MESSAGES.SELECTED_CATEGORY_BLOCKED);
     }
 
-    const scheduledAt = Live.createStartDate(input.date, time);
+    const scheduledAt = new Date(input.scheduledAt);
 
     if (scheduledAt <= new Date()) {
       this._logger.error({
@@ -94,6 +100,8 @@ export class ScheduleLiveUseCase implements IScheduleLiveUseCase {
     });
 
     const { id } = await this._liveRepo.save(scheduleLive);
+
+    await this._liveQueue.scheduledLiveAutoCancel(id, scheduledAt);
 
     this._logger.log({
       event: LOG_EVENTS.LIVE_SCHEDULED,
