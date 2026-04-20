@@ -7,7 +7,7 @@ import {
   IsOptional,
 } from 'class-validator';
 
-import { LIVESTATUS } from '../../domain/enums';
+import { LIVESTATUS } from '../../../domain/enums';
 import { Type, Transform } from 'class-transformer';
 
 export enum SortBy {

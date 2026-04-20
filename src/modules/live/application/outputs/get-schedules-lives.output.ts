@@ -1,12 +1,9 @@
 import { LIVESTATUS } from '../../domain/enums';
+import { IPagination } from '@/shared/application/output';
 
 export interface IGetScheduledLivesOutput {
   scheduledLives: IGetScheduledLives[];
-  pagination: {
-    page: number;
-    limit: number;
-    totalPages: number;
-  };
+  pagination: IPagination;
 }
 
 export interface IGetScheduledLives {

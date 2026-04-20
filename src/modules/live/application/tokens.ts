@@ -9,3 +9,6 @@ export const GET_SCHEDULED_LIVE_USE_CASE_TOKEN = Symbol(
 export const CANCEL_SCHEDULED_LIVE_USE_CASE_TOKEN = Symbol(
   'ICancelScheduledLiveUsecase',
 );
+export const ADVERTISER_SCHEDULED_LIVE_USE_CASE_TOKEN = Symbol(
+  'IAdvertiserScheduledLivesUsecase',
+);

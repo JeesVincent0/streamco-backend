@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { VISIBILITY } from '../../domain/enums';
+import { VISIBILITY } from '../../../domain/enums';
 import { IsString, IsNotEmpty, IsEnum, Matches, IsDate } from 'class-validator';
 
 export class ScheduleLiveDto {

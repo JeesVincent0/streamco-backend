@@ -5,6 +5,12 @@ export const ROUTES = {
     CHANNELS: 'channels',
   },
 
+  // FOR ADVERTISER
+  ADVERTISER: {
+    ROOT: 'advertiser',
+    SCHEDULED_LIVE: 'scheduled-live',
+  },
+
   // FOR CHANNEL
   CHANNEL: {
     ROOT: 'channel',
