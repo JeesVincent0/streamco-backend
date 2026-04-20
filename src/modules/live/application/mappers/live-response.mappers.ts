@@ -14,26 +14,11 @@ export class LiveResponseMappers {
   }
 
   static toScheduleLivesResponse(entity: Live): IGetScheduledLives {
-    const scheduledAt = entity.scheduledAt;
-
-    const date = scheduledAt
-      ? scheduledAt.toISOString().split('T')[0]
-      : undefined;
-
-    const time = scheduledAt
-      ? scheduledAt.toLocaleTimeString('en-US', {
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true,
-        })
-      : undefined;
-
     return {
       id: entity.id,
       title: entity.title,
-      date,
-      time,
       status: entity.status,
+      scheduledAt: entity.scheduledAt,
     };
   }
 

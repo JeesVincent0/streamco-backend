@@ -4,7 +4,7 @@ export interface IGetScheduledLivesInput {
   channelId: string;
   page: number;
   limit: number;
-  sortBy?: 'createdAt' | 'time' | 'title';
+  sortBy?: 'createdAt' | 'scheduledAt' | 'title';
   order?: 'desc' | 'asc';
   status?: LIVESTATUS;
   search?: string;

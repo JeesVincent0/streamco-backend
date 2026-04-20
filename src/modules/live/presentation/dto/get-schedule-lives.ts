@@ -12,7 +12,7 @@ import { Type, Transform } from 'class-transformer';
 
 export enum SortBy {
   CREATED_AT = 'createdAt',
-  TIME = 'time',
+  TIME = 'scheduledAt',
   TITLE = 'title',
 }
 

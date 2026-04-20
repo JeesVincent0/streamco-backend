@@ -12,7 +12,6 @@ export interface IGetScheduledLivesOutput {
 export interface IGetScheduledLives {
   id: string;
   title: string;
-  date?: string;
-  time?: string;
+  scheduledAt?: Date;
   status: LIVESTATUS;
 }
