@@ -29,4 +29,25 @@ export class LiveResponseMappers {
       this.toScheduleLivesResponse(entity),
     );
   }
+
+  static toScheduledLivesForAdvertiser(
+    entity: Live & { channelName: string; categoryName: string },
+  ) {
+    return {
+      id: entity.id,
+      title: entity.title,
+      category: entity.categoryName,
+      scheduledAt: entity.scheduledAt,
+      channelName: entity.channelName,
+    };
+  }
+
+  static toScheduledLivesForAdvertiserArray(
+    entityArray: (Live & { channelName: string; categoryName: string })[],
+  ) {
+    const result = entityArray.map((entity) =>
+      this.toScheduledLivesForAdvertiser(entity),
+    );
+    return result;
+  }
 }

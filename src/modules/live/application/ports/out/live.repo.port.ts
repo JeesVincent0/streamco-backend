@@ -1,6 +1,10 @@
+import {
+  IGetScheduledLivesInput,
+  IAdvertiserScheduledLivesInput,
+} from '../../inputs';
+
 import { Live } from '../../../domain/entity';
 import { IMonthlyLivesOutput } from '../../outputs';
-import { IGetScheduledLivesInput } from '../../inputs';
 import { IBaseRepositoryPort } from '@/shared/application/ports';
 
 export interface ILiveRepo extends IBaseRepositoryPort<Live> {
@@ -31,4 +35,13 @@ export interface ILiveRepo extends IBaseRepositoryPort<Live> {
   }>;
 
   scheduledLiveAutoCancel(liveId: string): Promise<void>;
+
+  scheduledLivesForAdvertiser(params: IAdvertiserScheduledLivesInput): Promise<{
+    scheduledLives: (Live & { channelName: string; categoryName: string })[];
+    pagination: {
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  }>;
 }

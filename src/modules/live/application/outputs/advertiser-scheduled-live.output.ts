@@ -9,6 +9,6 @@ export interface IScheduledLives {
   id: string;
   title: string;
   category: string;
-  scheduledAt: string;
+  scheduledAt?: Date;
   channelName: string;
 }

@@ -100,4 +100,15 @@ export class LiveMappers {
       deletedAt: doc.deletedAt,
     });
   }
+
+  static toDomainAdvertiserScheduledLives(
+    doc: LiveDocument & { channelName: string; categoryName: string },
+  ): Live & { channelName: string; categoryName: string } {
+    const domain = this.toDomain(doc);
+
+    return Object.assign(domain, {
+      channelName: doc.channelName,
+      categoryName: doc.categoryName,
+    });
+  }
 }

@@ -7,7 +7,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { LIVESTATUS } from '../../domain/enums';
 import { ILiveRepo } from '../../application/ports';
 import { IMonthlyLivesOutput } from '../../application/outputs';
-import { IGetScheduledLivesInput } from '../../application/inputs';
+import {
+  IAdvertiserScheduledLivesInput,
+  IGetScheduledLivesInput,
+} from '../../application/inputs';
 
 @Injectable()
 export class LiveRepositoryMongooseImpl implements ILiveRepo {
@@ -175,5 +178,111 @@ export class LiveRepositoryMongooseImpl implements ILiveRepo {
 
     live.status = LIVESTATUS.CANCELLED;
     await live.save();
+  }
+
+  async scheduledLivesForAdvertiser(
+    params: IAdvertiserScheduledLivesInput,
+  ): Promise<{
+    scheduledLives: (Live & { channelName: string; categoryName: string })[];
+    pagination: {
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  }> {
+    const {
+      limit = 10,
+      page = 1,
+      order = 'desc',
+      sortBy = 'createdAt',
+      search,
+    } = params;
+
+    const matchStage: {
+      status: LIVESTATUS;
+
+      $or?: [
+        { title: { $regex: string; $options: 'i' } },
+
+        { description: { $regex: string; $options: 'i' } },
+      ];
+    } = {
+      status: LIVESTATUS.SCHEDULED,
+    };
+
+    if (search) {
+      matchStage.$or = [
+        { title: { $regex: search, $options: 'i' } },
+        { description: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const sortDirection = order.toLowerCase() === 'desc' ? -1 : 1;
+
+    const pipeline: any[] = [
+      { $match: matchStage },
+      {
+        $lookup: {
+          from: 'channels',
+          localField: 'channelId',
+          foreignField: 'channelId',
+          as: 'channelData',
+        },
+      },
+      {
+        $unwind: {
+          path: '$channelData',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'categoryId',
+          foreignField: 'id',
+          as: 'categoryData',
+        },
+      },
+      {
+        $unwind: {
+          path: '$categoryData',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $addFields: {
+          channelName: '$channelData.channelName',
+          categoryName: '$categoryData.name',
+        },
+      },
+      {
+        $project: {
+          channelData: 0,
+        },
+      },
+      { $sort: { [sortBy]: sortDirection } },
+      { $skip: (page - 1) * limit },
+      { $limit: Number(limit) },
+    ];
+
+    const results = await this.liveModel.aggregate(pipeline).exec();
+    const totalRecords = await this.liveModel.countDocuments(matchStage).exec();
+
+    const mappedResult = results.map(
+      (doc: LiveDocument & { channelName: string; categoryName: string }) => {
+        return LiveMappers.toDomainAdvertiserScheduledLives(doc);
+      },
+    );
+
+    const totalPages = Math.ceil(totalRecords / limit) || 1;
+
+    return {
+      scheduledLives: mappedResult,
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        totalPages,
+      },
+    };
   }
 }
