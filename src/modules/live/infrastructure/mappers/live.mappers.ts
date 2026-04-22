@@ -53,6 +53,10 @@ export class LiveMappers {
 
       duration: entity.duration,
       deletedAt: entity.deletedAt,
+
+      isAuctionAvailable: entity.isAuctionAvailable,
+      auctionStart: entity.auctionStart,
+      auctionEnds: entity.auctionEnds,
     };
   }
 
@@ -98,6 +102,10 @@ export class LiveMappers {
 
       duration: doc.duration,
       deletedAt: doc.deletedAt,
+
+      isAuctionAvailable: doc.isAuctionAvailable,
+      auctionStart: doc.auctionStart,
+      auctionEnds: doc.auctionEnds,
     });
   }
 

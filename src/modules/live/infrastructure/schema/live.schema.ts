@@ -90,6 +90,15 @@ export class LiveModel {
   @Prop({ type: Number })
   duration?: number;
 
+  @Prop({ type: Boolean })
+  isAuctionAvailable?: boolean;
+
+  @Prop({ type: Date })
+  auctionStart?: Date;
+
+  @Prop({ type: Date })
+  auctionEnds?: Date;
+
   @Prop({ type: Date, default: null })
   deletedAt?: Date | null;
 }

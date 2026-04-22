@@ -93,6 +93,8 @@ export class ScheduleLiveUseCase implements IScheduleLiveUseCase {
       description: input.description,
     });
 
+    scheduleLive.setAuction();
+
     this._logger.log({
       event: LOG_EVENTS.ENTITY_CREATED,
       context: 'ScheduleLiveUseCase',

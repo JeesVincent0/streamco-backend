@@ -1,6 +1,6 @@
 import { LIVESTATUS } from '../enums';
 import { VISIBILITY } from '../enums';
-import { CreateLiveInput } from '../interfaces';
+import { CreateLiveInput, RestoreLive } from '../interfaces';
 import { UniqueIdService } from '@/shared/domain';
 import { Duration, Time } from '../value-objects';
 
@@ -44,6 +44,10 @@ export class Live {
 
     private _duration?: number,
     private _deletedAt?: Date | null,
+
+    private _isAuctionAvailable?: boolean,
+    private _auctionStart?: Date,
+    private _auctionEnds?: Date,
   ) {}
 
   public static createStartDate(date: Date, time: Time): Date {
@@ -101,46 +105,7 @@ export class Live {
     );
   }
 
-  public static restore(data: {
-    id: string;
-    title: string;
-    channelId: string;
-
-    status: LIVESTATUS;
-    visibility: VISIBILITY;
-
-    viewerCount: number;
-    peakViewerCount: number;
-    likeCount: number;
-    commentCount: number;
-
-    isChatEnabled: boolean;
-    isRecordingEnabled: boolean;
-
-    createdAt: Date;
-    updatedAt: Date;
-
-    description?: string;
-    categoryId?: string;
-    thumbnailUrl?: string;
-
-    rtcRoomId?: string;
-    scheduledAt?: Date;
-    expectedDuration?: Duration;
-
-    startedAt?: Date;
-    endedAt?: Date;
-
-    streamUrl?: string;
-    playbackUrl?: string;
-    recordingUrl?: string;
-
-    isBlocked?: boolean;
-    blockedReason?: string;
-
-    duration?: number;
-    deletedAt?: Date | null;
-  }): Live {
+  public static restore(data: RestoreLive): Live {
     return new Live(
       data.id,
       data.title,
@@ -180,6 +145,10 @@ export class Live {
 
       data.duration,
       data.deletedAt,
+
+      data.isAuctionAvailable,
+      data.auctionStart,
+      data.auctionEnds,
     );
   }
   // GETTERS
@@ -276,6 +245,33 @@ export class Live {
   }
   get deletedAt() {
     return this._deletedAt;
+  }
+
+  get isAuctionAvailable() {
+    return this._isAuctionAvailable;
+  }
+  get auctionStart() {
+    return this._auctionStart;
+  }
+  get auctionEnds() {
+    return this._auctionEnds;
+  }
+
+  public setAuction() {
+    const minAuctionGap = 3 * 60 * 60000;
+
+    if (!this._scheduledAt) return;
+
+    if (
+      this._scheduledAt.getTime() - this._createdAt.getTime() >=
+      minAuctionGap
+    ) {
+      this._isAuctionAvailable = true;
+
+      this._auctionStart = new Date(this._createdAt.getTime() + 60 * 60000);
+
+      this._auctionEnds = new Date(this._scheduledAt.getTime() - 60 * 60000);
+    }
   }
 
   public cancelLive() {
