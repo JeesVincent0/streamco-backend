@@ -42,6 +42,7 @@ export class AdvertiserLiveController {
       order: queryArgs.order,
       search: queryArgs.search,
       sortBy: queryArgs.sortBy,
+      isAuctionStarted: queryArgs.isAuctionStarted,
     });
   }
 }

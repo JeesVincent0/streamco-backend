@@ -11,4 +11,5 @@ export interface IScheduledLives {
   category: string;
   scheduledAt?: Date;
   channelName: string;
+  isAuctionRunning?: boolean;
 }

@@ -1,5 +1,11 @@
 import { Transform, Type } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { Order } from '../channel-live.dto.ts';
 
 export enum SortBy {
@@ -32,4 +38,14 @@ export class AdvertiserScheduledLivesDto {
   )
   @IsString()
   search?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }): undefined | boolean => {
+    if (value === '') return undefined;
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
+  isAuctionStarted?: boolean;
 }

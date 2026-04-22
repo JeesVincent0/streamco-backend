@@ -196,10 +196,14 @@ export class LiveRepositoryMongooseImpl implements ILiveRepo {
       order = 'desc',
       sortBy = 'createdAt',
       search,
+      isAuctionStarted,
     } = params;
 
     const matchStage: {
       status: LIVESTATUS;
+      isAuctionAvailable?: boolean;
+      auctionStart?: { $lte: Date } | { $gt: Date };
+      auctionEnds?: { $gt: Date };
 
       $or?: [
         { title: { $regex: string; $options: 'i' } },
@@ -208,6 +212,7 @@ export class LiveRepositoryMongooseImpl implements ILiveRepo {
       ];
     } = {
       status: LIVESTATUS.SCHEDULED,
+      isAuctionAvailable: true,
     };
 
     if (search) {
@@ -218,6 +223,17 @@ export class LiveRepositoryMongooseImpl implements ILiveRepo {
     }
 
     const sortDirection = order.toLowerCase() === 'desc' ? -1 : 1;
+
+    if (isAuctionStarted !== undefined) {
+      const now = new Date();
+
+      if (isAuctionStarted === true) {
+        matchStage.auctionStart = { $lte: now };
+        matchStage.auctionEnds = { $gt: now };
+      } else if (isAuctionStarted === false) {
+        matchStage.auctionStart = { $gt: now };
+      }
+    }
 
     const pipeline: any[] = [
       { $match: matchStage },

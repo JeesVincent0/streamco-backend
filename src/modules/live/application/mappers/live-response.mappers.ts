@@ -33,12 +33,22 @@ export class LiveResponseMappers {
   static toScheduledLivesForAdvertiser(
     entity: Live & { channelName: string; categoryName: string },
   ) {
+    let isAuctionRunning: boolean | undefined;
+    if (
+      entity.isAuctionAvailable &&
+      entity.auctionStart &&
+      entity.auctionEnds
+    ) {
+      isAuctionRunning =
+        entity.auctionStart <= new Date() && new Date() <= entity.auctionEnds;
+    }
     return {
       id: entity.id,
       title: entity.title,
       category: entity.categoryName,
       scheduledAt: entity.scheduledAt,
       channelName: entity.channelName,
+      isAuctionRunning,
     };
   }
 

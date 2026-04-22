@@ -4,4 +4,5 @@ export interface IAdvertiserScheduledLivesInput {
   sortBy?: 'createdAt' | 'scheduledAt' | 'title' | 'category';
   order?: 'desc' | 'asc';
   search?: string;
+  isAuctionStarted?: boolean;
 }
