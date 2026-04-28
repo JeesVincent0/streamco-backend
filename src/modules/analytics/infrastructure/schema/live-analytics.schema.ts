@@ -12,6 +12,20 @@ export class LiveAnalytics {
   @Prop({ required: true, index: true })
   channelId!: string;
 
+  @Prop({
+    type: {
+      sponsorId: String,
+      sponsorName: String,
+      bidAmount: Number,
+    },
+    default: null,
+  })
+  sponsor!: {
+    sponsorId: string;
+    sponsorName: string;
+    bidAmount: number;
+  };
+
   // -------------------- VIEW METRICS --------------------
 
   @Prop({ default: 0 })

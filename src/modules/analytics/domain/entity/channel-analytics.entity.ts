@@ -1,7 +1,7 @@
 import { UserGender } from '@/modules/user/domain';
-
-type GenderMap = Record<UserGender, number>;
-type AgeGroupMap = Record<string, number>;
+import { GenderMap } from '../interfaces';
+import { AgeGroupMap } from '../interfaces/age-interface';
+import { Sponsor } from '../interfaces/sponser.interface';
 
 export class ChannelAnalytics {
   private constructor(
@@ -20,6 +20,14 @@ export class ChannelAnalytics {
 
     private _viewerGenderCount: GenderMap,
     private _viewerAgeWiseCount: AgeGroupMap,
+
+    private _totalBidAmount: number,
+    private _avgBidAmount: number,
+
+    private _lastSponsor: {
+      sponsorId: string;
+      sponsorName: string;
+    } | null,
   ) {}
 
   // -------------------- STATIC METHODS --------------------
@@ -28,14 +36,17 @@ export class ChannelAnalytics {
     return new ChannelAnalytics(
       id,
       channelId,
-      0,
-      0,
-      0,
-      0,
-      0,
-      0,
+      0, // totalLives
+      0, // totalViews
+      0, // uniqueViewers
+      0, // totalWatchTime
+      0, // avgWatchTime
+      0, // avgConcurrentViewers
       {} as GenderMap,
       {} as AgeGroupMap,
+      0, // totalBidAmount
+      0, // avgBidAmount
+      null, // lastSponsor
     );
   }
 
@@ -50,6 +61,12 @@ export class ChannelAnalytics {
     avgConcurrentViewers: number;
     viewerGenderCount: GenderMap;
     viewerAgeWiseCount: AgeGroupMap;
+    totalBidAmount: number;
+    avgBidAmount: number;
+    lastSponsor: {
+      sponsorId: string;
+      sponsorName: string;
+    } | null;
   }): ChannelAnalytics {
     return new ChannelAnalytics(
       data.id,
@@ -62,6 +79,9 @@ export class ChannelAnalytics {
       data.avgConcurrentViewers,
       data.viewerGenderCount,
       data.viewerAgeWiseCount,
+      data.totalBidAmount,
+      data.avgBidAmount,
+      data.lastSponsor,
     );
   }
 
@@ -103,14 +123,24 @@ export class ChannelAnalytics {
     return this._viewerAgeWiseCount;
   }
 
+  get avgBidAmount() {
+    return this._avgBidAmount;
+  }
+
+  get lastSponsor() {
+    return this._lastSponsor;
+  }
+
+  // -------------------- DOMAIN METHOD --------------------
+
   updateFromLive(live: {
     totalViews: number;
     uniqueViewers: number;
     totalWatchTime: number;
-    avgWatchTime: number;
     avgConcurrentViewers: number;
     viewerGenderCount: GenderMap;
     viewerAgeWiseCount: AgeGroupMap;
+    sponsor?: Sponsor;
   }) {
     this._totalLives += 1;
 
@@ -127,6 +157,7 @@ export class ChannelAnalytics {
       this._totalViews / (this._totalLives || 1),
     );
 
+    // Merge gender
     for (const key of Object.keys(live.viewerGenderCount) as UserGender[]) {
       const value = live.viewerGenderCount[key] ?? 0;
 
@@ -134,9 +165,24 @@ export class ChannelAnalytics {
         (this._viewerGenderCount[key] ?? 0) + value;
     }
 
-    for (const key in live.viewerAgeWiseCount) {
+    // Merge age
+    for (const key of Object.keys(live.viewerAgeWiseCount)) {
+      const value = live.viewerAgeWiseCount[key] ?? 0;
+
       this._viewerAgeWiseCount[key] =
-        (this._viewerAgeWiseCount[key] || 0) + live.viewerAgeWiseCount[key];
+        (this._viewerAgeWiseCount[key] ?? 0) + value;
+    }
+
+    // Sponsor logic
+    if (live.sponsor) {
+      this._totalBidAmount += live.sponsor.bidAmount;
+
+      this._avgBidAmount = Math.floor(this._totalBidAmount / this._totalLives);
+
+      this._lastSponsor = {
+        sponsorId: live.sponsor.sponsorId,
+        sponsorName: live.sponsor.sponsorName,
+      };
     }
   }
 }

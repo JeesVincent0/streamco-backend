@@ -29,6 +29,24 @@ export class ChannelAnalytics {
   @Prop({ default: 0 })
   avgConcurrentViewers!: number;
 
+  @Prop({ default: 0 })
+  totalBidAmount!: number;
+
+  @Prop({ default: 0 })
+  avgBidAmount!: number;
+
+  @Prop({
+    type: {
+      sponsorId: String,
+      sponsorName: String,
+    },
+    default: null,
+  })
+  lastSponsor!: {
+    sponsorId: string;
+    sponsorName: string;
+  };
+
   // -------------------- AUDIENCE --------------------
 
   @Prop({

@@ -1,8 +1,8 @@
+import { GenderMap } from '../interfaces';
 import { UserGender } from '@/modules/user/domain';
+import { AgeGroupMap } from '../interfaces/age-interface';
+import { Sponsor } from '../interfaces/sponser.interface';
 import { Duration } from '@/modules/live/domain/value-objects';
-
-type AgeGroupMap = Record<string, number>;
-type GenderMap = Record<UserGender, number>;
 
 export class LiveAnalytics {
   private constructor(
@@ -21,6 +21,7 @@ export class LiveAnalytics {
 
     private _viewerGenderCount: GenderMap,
     private _viewerAgeWiseCount: AgeGroupMap,
+    private _sponsor: Sponsor,
   ) {}
 
   // -------------------- STATIC METHODS --------------------
@@ -30,23 +31,21 @@ export class LiveAnalytics {
     liveId: string;
     channelId: string;
     duration: Duration;
+    sponsor?: Sponsor;
   }): LiveAnalytics {
     return new LiveAnalytics(
       params.id,
       params.liveId,
       params.channelId,
-
       0,
       0,
       0,
-
       0,
       0,
-
       params.duration,
-
       {} as GenderMap,
       {} as AgeGroupMap,
+      params.sponsor ?? null,
     );
   }
 
@@ -62,6 +61,7 @@ export class LiveAnalytics {
     duration: Duration;
     viewerGenderCount: GenderMap;
     viewerAgeWiseCount: AgeGroupMap;
+    sponser: Sponsor;
   }): LiveAnalytics {
     return new LiveAnalytics(
       data.id,
@@ -75,6 +75,7 @@ export class LiveAnalytics {
       data.duration,
       data.viewerGenderCount,
       data.viewerAgeWiseCount,
+      data.sponser,
     );
   }
 
@@ -122,6 +123,10 @@ export class LiveAnalytics {
 
   get viewerAgeWiseCount() {
     return this._viewerAgeWiseCount;
+  }
+
+  get sponsor() {
+    return this._sponsor;
   }
 
   // -------------------- DOMAIN METHODS --------------------
