@@ -9,6 +9,7 @@ import { ChannelModule } from './modules/channels/channel.module';
 import { CategoryModule } from './modules/category/category.module';
 import { HealthController } from './shared/health/health.controller';
 import { TransformResponseInterceptor } from './shared/interceptors';
+import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { MongoDatabaseModule } from '@/shared/infrastructure/database/mongo/mongo.module';
 
 @Module({
@@ -24,6 +25,7 @@ import { MongoDatabaseModule } from '@/shared/infrastructure/database/mongo/mong
     CategoryModule,
     ChannelModule,
     LiveModule,
+    AnalyticsModule,
   ],
   controllers: [HealthController],
   providers: [

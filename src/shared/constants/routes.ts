@@ -25,6 +25,12 @@ export const ROUTES = {
     SCHEDULED: 'scheduled',
   },
 
+  // AUCTION
+  AUCTION: {
+    ROOT: 'auction',
+    ANALYTICS: 'auction-analytics',
+  },
+
   LIVES: {
     ROOT: `lives`,
   },
