@@ -18,4 +18,8 @@ export const SUCCESS_MESSAGE = {
   SCHEDULED_LIVE_FETCHED_SUCCESSFULLY: 'Scheduled live fetched successfully',
   SCHEDULED_LIVE_STATUS_CHANGED_SUCCESSFULLY:
     'Scheduled live status changed successfully',
+
+  // ANALYTICS
+  AUCTION_ANALYTICS_DATA_FETCHED_SUCCESSFULLY:
+    'Auction analytics data fetched successfully',
 };

@@ -4,40 +4,39 @@ import {
   AccessTokenGuard,
 } from '@/modules/auth-security/presentation';
 
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Inject,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 
 import { ROUTES } from '@/shared/constants/routes';
 import { SCOPE } from '@/modules/auth-security/domain';
 import { ActiveUserGuard } from '@/shared/infrastructure/guards/active-user.guard';
+import { GET_AUCTION_ANALYTICS_USECASE_TOKEN } from '../../application/tokens';
+import type { IGetAuctionAnalyticsUsecase } from '../../application/port';
+import { ResponseMessage } from '@/shared/decorators';
+import { SUCCESS_MESSAGE } from '@/shared/constants/success-messages';
 
 @Controller(ROUTES.ADVERTISER.ROOT)
 @UseGuards(AccessTokenGuard, ActiveUserGuard, ScopeGuard)
 export class AdvertiserAnalyticsController {
-  constructor() {}
+  constructor(
+    @Inject(GET_AUCTION_ANALYTICS_USECASE_TOKEN)
+    private readonly _getAuctionAnalyticsUsecase: IGetAuctionAnalyticsUsecase,
+  ) {}
 
   @Get(
     `${ROUTES.ADVERTISER.SCHEDULED_LIVE}/${ROUTES.COMMON.ID}/${ROUTES.AUCTION.ANALYTICS}`,
   )
   @Scopes(SCOPE.USER_READ)
+  @HttpCode(HttpStatus.OK)
+  @ResponseMessage(SUCCESS_MESSAGE.AUCTION_ANALYTICS_DATA_FETCHED_SUCCESSFULLY)
   getAuctionAnalytics(@Param('id') liveId: string) {
-    console.log('GetAuctionAnalytics, liveId: ', liveId);
-    return {
-      id: '1',
-      channelName: 'CallMeShazzam TECH',
-      avatarUrl: 'https://i.pravatar.cc/150?u=shazzam',
-      category: 'Tech',
-      date: '25-Jan-2026',
-      time: '09:00am',
-      thumbnailUrl:
-        'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300&q=80',
-      title: 'Custom Duty In India | My Experience | be careful!! | Malayalam',
-      duration: '1 Hour',
-      avgBidPrice: '₹84,500/-',
-      liveSubscribedLive: '3456',
-      subscribers: '1.45m',
-      avgViewers: '53485',
-      liveSubscribedChannel: '3456',
-      lastSponsor: 'Kalyan Silks',
-    };
+    return this._getAuctionAnalyticsUsecase.execute({ liveId });
   }
 }
