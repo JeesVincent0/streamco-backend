@@ -13,6 +13,7 @@ import { LiveQueueWorker, queueProvider } from './infrastructure/queue';
 import { advertiserLiveProvider, channelLiveProviders } from './providers';
 import { AuthSecurityModule } from '../auth-security/auth-security.module';
 import { StorageModule } from '@/shared/infrastructure/storage/storage.module';
+import { LIVE_REPOSITORY_TOKEN } from './application/tokens';
 
 @Module({
   imports: [
@@ -30,5 +31,6 @@ import { StorageModule } from '@/shared/infrastructure/storage/storage.module';
     ...channelLiveProviders,
     ...advertiserLiveProvider,
   ],
+  exports: [LIVE_REPOSITORY_TOKEN],
 })
 export class LiveModule {}

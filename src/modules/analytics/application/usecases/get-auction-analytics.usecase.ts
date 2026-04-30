@@ -1,31 +1,58 @@
+import { BadRequestError } from '@/shared/errors';
+import { AdvertiserReponseMappers } from '../mappers';
 import { IGetAuctionAnalyticsUsecase } from '../port';
 import { IGetAuctionAnalyticsOutput } from '../output';
-import { Duration } from '@/modules/live/domain/value-objects';
+import { LIVESTATUS } from '@/modules/live/domain/enums';
+import { ILiveRepo } from '@/modules/live/application/ports';
+import { ERROR_MESSAGES } from '@/shared/constants/error-messages';
+import { IChannelRepo } from '@/modules/channels/application/ports';
+import { ICategoryRepo } from '@/modules/category/application/ports';
+import { CATEGORY_STATUS } from '@/modules/category/domain/enums/category-status.enum';
+import { IStorageService } from '@/shared/infrastructure/storage/storage-service.port';
 
 export class GetAuctionAnalyticsUsecase implements IGetAuctionAnalyticsUsecase {
-  constructor() {}
-  execute(input: { liveId: string }): IGetAuctionAnalyticsOutput {
-    console.log('This is input for GetAuctionAnalyticsUsecase: ', input);
-    const duration = Duration.create('01:00').getValue();
-    console.log(duration);
+  constructor(
+    private readonly _liveRepo: ILiveRepo,
+    private readonly _channelRepo: IChannelRepo,
+    private readonly _categoryRepo: ICategoryRepo,
+    private readonly _storageService: IStorageService,
+  ) {}
+  async execute(input: {
+    liveId: string;
+  }): Promise<IGetAuctionAnalyticsOutput> {
+    const scheduledLive = await this._liveRepo.findById(input.liveId);
 
-    return {
-      id: '1',
-      channelName: 'CallMeShazzam TECH',
-      profileImageUrl: 'https://i.pravatar.cc/150?u=shazzam',
-      category: 'Tech',
-      date: new Date('25-01-2026'),
-      time: '09:00am',
-      thumbnailUrl:
-        'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300&q=80',
-      title: 'Custom Duty In India | My Experience | be careful!! | Malayalam',
-      duration,
-      avgBidPrice: 84500,
-      liveSubscribedLive: 3456,
-      subscribers: 5000,
-      avgViewers: 53485,
-      liveSubscribedChannel: 3456,
-      lastSponsor: 'Kalyan Silks',
-    };
+    if (
+      !scheduledLive ||
+      scheduledLive.status !== LIVESTATUS.SCHEDULED ||
+      !scheduledLive.isAuctionAvailable
+    ) {
+      throw new BadRequestError(ERROR_MESSAGES.LIVE_IS_CANCELLED);
+    }
+
+    const category = await this._categoryRepo.findById(
+      scheduledLive.categoryId as string,
+    );
+
+    if (!category || category.status === CATEGORY_STATUS.BLOCKED) {
+      throw new BadRequestError(ERROR_MESSAGES.SOMETHING_WENT_WRONG);
+    }
+
+    const channel = await this._channelRepo.findByChannelId(
+      scheduledLive.channelId,
+    );
+
+    if (!channel) {
+      throw new BadRequestError(ERROR_MESSAGES.SOMETHING_WENT_WRONG);
+    }
+
+    const finalResponse = await AdvertiserReponseMappers.toAuctionAnalytics(
+      channel,
+      category,
+      scheduledLive,
+      this._storageService,
+    );
+
+    return finalResponse;
   }
 }
