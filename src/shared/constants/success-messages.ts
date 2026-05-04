@@ -5,9 +5,21 @@ export const SUCCESS_MESSAGE = {
   CHANNEL_STATUS_CHANGED_SUCCESSFULLY: 'Channel status changed successfully',
   BASE_CHANNEL_DATA_FETCHED_SUCCESSFULLY:
     'Base channel data fetched succesfully',
+  MONTHLY_LIVES_DATA_FATECHED_SUCCESSFULLY:
+    'Monthly lives data fetched successfully',
 
   // FOR USER MODULE CONTROLLERS
   BASE_USER_DATA_FETCHED_SUCCESSFULLY: 'Base user data fetched successfully',
   USER_DATA_FETCHED_SUCCESSFULLY: 'User data fetched successfully',
   ALL_USER_DATA_FETCHED_SUCCESSFULLY: 'All users data fetched successfully',
+
+  // FOR LIVE
+  SCHEDULED_LIVE_SUCCESSFULLY: 'Scheduled live successfully',
+  SCHEDULED_LIVE_FETCHED_SUCCESSFULLY: 'Scheduled live fetched successfully',
+  SCHEDULED_LIVE_STATUS_CHANGED_SUCCESSFULLY:
+    'Scheduled live status changed successfully',
+
+  // ANALYTICS
+  AUCTION_ANALYTICS_DATA_FETCHED_SUCCESSFULLY:
+    'Auction analytics data fetched successfully',
 };

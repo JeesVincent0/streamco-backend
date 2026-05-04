@@ -6,11 +6,13 @@ services:
     container_name: streamco-redis
     restart: always
     ports:
-      - "7000:6379"
+      - "6379:6379"
     command: >
       redis-server
       --requirepass ${REDIS_PASSWORD}
       --appendonly yes
+      --appendfsync everysec
+      --dir /data
     volumes:
       - redis_data:/data
     env_file:

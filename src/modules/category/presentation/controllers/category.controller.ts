@@ -59,7 +59,7 @@ export class CategoryController {
   }
 
   @Get()
-  @Scopes(SCOPE.ADMIN_READ)
+  // @Scopes(SCOPE.ADMIN_READ)
   @HttpCode(HttpStatus.OK)
   getCategories(@Query() params: GetCategoriesDto) {
     return this._getAllCategories.execute(params);

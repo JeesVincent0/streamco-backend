@@ -1,6 +1,3 @@
-// repo interfaces
-import { ICategoriesQuery, ICategoryRepo } from '../application/ports';
-
 // tokens
 import {
   CATEGORY_REPO_TOKEN,
@@ -22,6 +19,10 @@ import {
   GetAllCategoriesRepository,
   CategoryRepositoryImplMonogoDB,
 } from '../infrastructure/repositories';
+
+import { CategoryCheckerImpl } from '../infrastructure/adapters';
+import { ICategoriesQuery, ICategoryRepo } from '../application/ports';
+import { CATEGORY_CHECKER_TOKEN } from '@/modules/live/application/tokens';
 
 export const categoryProviders = [
   {
@@ -56,5 +57,10 @@ export const categoryProviders = [
   {
     provide: GET_CATEGORIES_QUERY_TOKEN,
     useClass: GetAllCategoriesRepository,
+  },
+
+  {
+    provide: CATEGORY_CHECKER_TOKEN,
+    useClass: CategoryCheckerImpl,
   },
 ];

@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Global, Injectable } from '@nestjs/common';
 import {
   GetObjectCommand,
   PutObjectCommand,
@@ -8,6 +8,7 @@ import { IStorageService } from './storage-service.port';
 
 import { getSignedUrl as awsGetSignedUrl } from '@aws-sdk/s3-request-presigner';
 
+@Global()
 @Injectable()
 export class S3Service implements IStorageService {
   private readonly client: S3Client;

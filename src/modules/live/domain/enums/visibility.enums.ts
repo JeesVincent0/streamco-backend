@@ -1,0 +1,5 @@
+export enum VISIBILITY {
+  PUBLIC = 'PUBLIC',
+  PRIVATE = 'PRIVATE',
+  UNLISTED = 'UNLISTED',
+}

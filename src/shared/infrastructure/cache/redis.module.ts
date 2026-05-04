@@ -1,6 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { redisProvider } from './redis.provider';
+import { REDIS_CLIENT, redisProvider } from './redis.provider';
 import { RedisService } from './redis.service';
 import { FileLogger } from '@/shared/logger/file-logger';
 
@@ -22,6 +22,6 @@ import { CHACHE_REPO_TOKEN } from './token';
       inject: [RedisService],
     },
   ],
-  exports: [RedisService, CHACHE_REPO_TOKEN],
+  exports: [RedisService, CHACHE_REPO_TOKEN, REDIS_CLIENT],
 })
 export class RedisModule {}
