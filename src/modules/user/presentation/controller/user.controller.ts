@@ -180,12 +180,12 @@ export class UserController {
   @Post('profile/avatar')
   @UseInterceptors(FileInterceptor('file'))
   uploadAvatar(
-    @UploadedFile() file: Express.MulterS3.File,
+    @UploadedFile() file: Express.Multer.File,
     @Req() req: RequestWithUserInterface,
   ) {
     return this._updateUserAvatarUrl.execute({
       userId: req.user.sub,
-      avatarUrl: file.key,
+      avatarUrl: file.path,
     });
   }
 }

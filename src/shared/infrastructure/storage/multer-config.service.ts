@@ -1,35 +1,32 @@
-import { Injectable, BadRequestException, Inject } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import {
   MulterModuleOptions,
   MulterOptionsFactory,
 } from '@nestjs/platform-express';
-import multerS3 from 'multer-s3';
-import { type IStorageService } from './storage-service.port';
-import { STORAGE_SERVICE_PORT_TOKEN } from './token';
-import { S3Service } from './s3.service';
+import { type UploadApiOptions, v2 as cloudinaryInstance } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 @Injectable()
 export class MulterConfigService implements MulterOptionsFactory {
-  constructor(
-    @Inject(STORAGE_SERVICE_PORT_TOKEN)
-    private readonly s3Service: IStorageService,
-  ) {}
-
   createMulterOptions(): MulterModuleOptions {
-    return {
-      storage: multerS3({
-        s3: (this.s3Service as S3Service).s3Client,
-        bucket: process.env.AWS_S3_BUCKET_NAME as string,
-        contentType: (req, file, cb) =>
-          multerS3.AUTO_CONTENT_TYPE(req, file, cb),
-        key: (req, file, cb) => {
-          const folder =
-            file.fieldname === 'backgroundBanner' ? 'banners' : 'profiles';
-          const cleanFileName = file.originalname.replace(/\s+/g, '_');
-          const fileName = `channels/${folder}/${Date.now()}-${cleanFileName}`;
+    cloudinaryInstance.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+      secure: true,
+    });
 
-          cb(null, fileName);
-        },
+    return {
+      storage: new CloudinaryStorage({
+        cloudinary: cloudinaryInstance,
+        params: (_req, file): UploadApiOptions => ({
+          folder: this.getFolder(file),
+          public_id: `${Date.now()}-${this.toPublicId(file.originalname)}`,
+          resource_type: 'image',
+          type: 'authenticated',
+          allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+          overwrite: false,
+        }),
       }),
       fileFilter: (req, file, cb) => {
         if (!file.mimetype.match(/\/(jpg|jpeg|png|webp)$/)) {
@@ -42,5 +39,19 @@ export class MulterConfigService implements MulterOptionsFactory {
       },
       limits: { fileSize: 5 * 1024 * 1024 },
     };
+  }
+
+  private getFolder(file: Express.Multer.File): string {
+    const folder =
+      file.fieldname === 'backgroundBanner' ? 'banners' : 'profiles';
+
+    return `channels/${folder}`;
+  }
+
+  private toPublicId(value: string): string {
+    return value
+      .replace(/\.[^/.]+$/, '')
+      .replace(/\s+/g, '_')
+      .replace(/[^a-zA-Z0-9_.-]/g, '_');
   }
 }
